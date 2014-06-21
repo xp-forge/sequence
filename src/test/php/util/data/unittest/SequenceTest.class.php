@@ -8,11 +8,14 @@ class SequenceTest extends \unittest\TestCase {
 
   /** @return var[] */
   protected function input() {
-    return [
+    $fixtures= [
       [[1, 2, 3], 'array'],
       [new \lang\types\ArrayList(1, 2, 3), 'traversable']
-      // PHP 5.5 only: [function() { yield 1; yield 2; yield 3; }, 'generator']
     ];
+    if (version_compare(PHP_VERSION, '5.5.0', 'ge')) {
+      $fixtures[]= [eval('return function() { yield 1; yield 2; yield 3; };'), 'generator'];
+    }
+    return $fixtures;
   }
 
   #[@test, @values('input')]

@@ -6,9 +6,18 @@ use util\data\Collector;
 
 class SequenceTest extends \unittest\TestCase {
 
-  #[@test]
-  public function can_create_via_of() {
-    $this->assertInstanceOf('util.data.Sequence', Sequence::of([1, 2, 3]));
+  /** @return var[] */
+  protected function input() {
+    return [
+      [[1, 2, 3], 'array'],
+      [new \lang\types\ArrayList(1, 2, 3), 'traversable']
+      // PHP 5.5 only: [function() { yield 1; yield 2; yield 3; }, 'generator']
+    ];
+  }
+
+  #[@test, @values('input')]
+  public function can_create_via_of($input, $name) {
+    $this->assertInstanceOf('util.data.Sequence', Sequence::of($input), $name);
   }
 
   #[@test]
@@ -21,12 +30,9 @@ class SequenceTest extends \unittest\TestCase {
     $this->assertInstanceOf('util.data.Sequence', Sequence::generate(function() { return rand(1, 1000); }));
   }
 
-  #[@test, @values([
-  #  [[1, 2, 3]],
-  #  [new \lang\types\ArrayList(1, 2, 3)]
-  #])]
-  public function toArray_returns_elements_as_array($input) {
-    $this->assertEquals([1, 2, 3], Sequence::of($input)->toArray());
+  #[@test, @values('input')]
+  public function toArray_returns_elements_as_array($input, $name) {
+    $this->assertEquals([1, 2, 3], Sequence::of($input)->toArray(), $name);
   }
 
   #[@test]

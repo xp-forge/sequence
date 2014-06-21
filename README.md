@@ -12,6 +12,7 @@ Examples
 
 ```php
 use util\data\Sequence;
+use util\data\Collectors;
 
 $return= Sequence::of([1, 2, 3, 4])
   ->filter(function($e) { return 0 === $e % 2; })

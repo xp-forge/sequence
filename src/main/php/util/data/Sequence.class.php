@@ -198,17 +198,20 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Performs a mutable reduction operation on the elements of this stream.
    *
-   * @param  function<(): R> $supplier
-   * @param  function<R, T: void> $accumulator
-   * @param  function<R: R> $finisher
+   * @param  util.data.ICollector
    * @return R
    */
-  public function collect($supplier, $accumulator, $finisher= null) {
+  public function collect(ICollector $collector) {
+    $accumulator= $collector->accumulator();
+    $finisher= $collector->finisher();
+    $supplier= $collector->supplier();
+
     $return= $supplier();
     $f= function($arg) use(&$return, $accumulator) { return $accumulator($return, $arg); };
     foreach ($this->elements as $element) {
       $f($element);
     }
+
     return $finisher ? $finisher($return) : $return;
   }
 

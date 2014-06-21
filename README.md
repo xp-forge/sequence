@@ -38,8 +38,8 @@ $experience= Sequence::of($this->employees)
   ))
 ;
 // HashTable[2] {
-//  Department("A") => 12.8
-//  Department("B") => 3.5
+//   Department("A") => 12.8
+//   Department("B") => 3.5
 // }
 ```
 

@@ -159,4 +159,12 @@ class CollectorsTest extends \unittest\TestCase {
       ))
     );
   }
+
+  #[@test]
+  public function partitioningBy() {
+    $this->assertHashTable(
+      [true => new Vector([$this->people[1549], $this->people[1552]]), false => new Vector([$this->people[6100]])],
+      Sequence::of($this->people)->collect(Collectors::partitioningBy(function($e) { return $e->years() > 10; }))
+    );
+  }
 }

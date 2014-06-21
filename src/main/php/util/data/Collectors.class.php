@@ -116,6 +116,30 @@ final class Collectors extends \lang\Object {
   }
 
   /**
+   * Creates a new collector gathering the elements in a map.
+   *
+   * @param  function<var, var> $predicate
+   * @return util.data.ICollector
+   */
+  public static function partitioningBy($predicate, ICollector $collector= null) {
+    if (null === $collector) $collector= self::toList();
+    $supplier= $collector->supplier();
+    $accumulator= $collector->accumulator();
+
+    return new Collector(
+      function() use($supplier) {
+        $result= new HashTable();
+        $result[true]= $supplier();
+        $result[false]= $supplier();
+        return $result;
+      },
+      function($result, $arg) use($predicate, $accumulator) {
+        $accumulator($result[$predicate($arg)], $arg);
+      }
+    );
+  }
+
+  /**
    * Adapts a collector in a way that each element gets passed to a given mapper
    * prior to accumulation by the collector.
    *

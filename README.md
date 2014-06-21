@@ -22,8 +22,25 @@ $return= Sequence::of([1, 2, 3, 4])
 $return= Sequence::of([1, 2, 3, 4])
   ->map(function($e) { return $e * 2; })
   ->toArray()
-);
+;
 // [2, 4, 6, 8]
+
+$names= Sequence::of($this->people)
+  ->map(function($e) { return $e->name(); })
+  ->collect(Collectors::joining(', '))
+;
+// "Timm, Alex, Dude"
+
+$experience= Sequence::of($this->employees)
+  ->collect(Collectors::groupingBy(
+    function($e) { return $e->department(); },
+    Collectors::averaging(function($e) { return $e->years(); })
+  ))
+;
+// HashTable[2] {
+//  Department("A") => 12.8
+//  Department("B") => 3.5
+// }
 ```
 
 Further reading

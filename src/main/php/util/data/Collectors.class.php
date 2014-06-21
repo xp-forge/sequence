@@ -1,7 +1,6 @@
 <?php namespace util\data;
 
 use lang\XPClass;
-use lang\reflect\Package;
 use util\collections\Vector;
 use util\collections\HashTable;
 use util\collections\HashSet;

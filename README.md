@@ -11,6 +11,8 @@ Examples
 --------
 
 ```php
+use util\data\Sequence;
+
 $return= Sequence::of([1, 2, 3, 4])
   ->filter(function($e) { return 0 === $e % 2; })
   ->toArray()

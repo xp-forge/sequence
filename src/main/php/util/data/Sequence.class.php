@@ -1,4 +1,4 @@
-<?php namespace data;
+<?php namespace util\data;
 
 use util\Objects;
 

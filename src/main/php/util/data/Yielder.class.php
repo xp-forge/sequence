@@ -1,4 +1,4 @@
-<?php namespace data;
+<?php namespace util\data;
 
 class Yielder extends \lang\Object implements \Iterator {
   protected $result;

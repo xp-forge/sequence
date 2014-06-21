@@ -1,23 +1,23 @@
-<?php namespace data\unittest;
+<?php namespace util\data\unittest;
 
 use lang\types\String;
-use data\Sequence;
+use util\data\Sequence;
 
 class SequenceTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_via_of() {
-    $this->assertInstanceOf('data.Sequence', Sequence::of([1, 2, 3]));
+    $this->assertInstanceOf('util.data.Sequence', Sequence::of([1, 2, 3]));
   }
 
   #[@test]
   public function can_create_via_iterate() {
-    $this->assertInstanceOf('data.Sequence', Sequence::iterate(0, function($i) { return $i++; }));
+    $this->assertInstanceOf('util.data.Sequence', Sequence::iterate(0, function($i) { return $i++; }));
   }
 
   #[@test]
   public function can_create_via_generate() {
-    $this->assertInstanceOf('data.Sequence', Sequence::generate(function() { return rand(1, 1000); }));
+    $this->assertInstanceOf('util.data.Sequence', Sequence::generate(function() { return rand(1, 1000); }));
   }
 
   #[@test, @values([

@@ -24,9 +24,10 @@ class SequenceTest extends \unittest\TestCase {
   }
 
   /**
-   * Returns valid arguments for the `of()` method.
+   * Returns valid arguments for the `of()` method: Arrays, iterables, and
+   * generators (the latter only if available in the underlying runtime).
    *
-   * @return var[]
+   * @return var[][]
    */
   protected function valid() {
     return array_merge(self::$generators, [
@@ -40,13 +41,41 @@ class SequenceTest extends \unittest\TestCase {
    * Returns invalid arguments for the `of()` method: Primitives, non-iterable
    * objects, and a function which is not a generator.
    *
-   * @return var[]
+   * @return var[][]
    */
   protected function invalid() {
     return [
       [null], [''], ['...'], [-1], [0], [1], [0.5], [false], [true],
       [new \lang\Object()], [new String('...')], [$this],
       [function() { return 1; }]
+    ];
+  }
+
+  /**
+   * Returns valid arguments for the `iterate()` and `generate()` methods.
+   *
+   * @return var[][]
+   */
+  protected function callables() {
+    return [
+      [function() { return 1; }, 'closure'],
+      [[$this, 'getName'], 'method'], [[$this, 'nonExistant'], '__call'],
+      [['xp', 'gc'], 'static-method'], [['self', 'nonExistant'], '__callStatic'],
+      ['xp::gc', 'static-method-string'], ['typeof', 'function']
+    ];
+  }
+
+  /**
+   * Returns invalid arguments for the `iterate()` and `generate()` methods.
+   *
+   * @return var[][]
+   */
+  protected function noncallables() {
+    return [
+      [null], [''], ['...'], [-1], [0], [1], [0.5], [false], [true],
+      [new \lang\Object()], [new String('...')], [$this],
+      [[]], [[$this]], [['xp']], [['xp', 'g']], [[$this, 'getName', 'excess-element']],
+      ['xp:g'], ['xp::'], ['xp::g'], ['::gc'], ['typeo']
     ];
   }
 
@@ -60,14 +89,24 @@ class SequenceTest extends \unittest\TestCase {
     Sequence::of($input);
   }
 
-  #[@test]
-  public function can_create_via_iterate() {
-    $this->assertInstanceOf('util.data.Sequence', Sequence::iterate(0, function($i) { return $i++; }));
+  #[@test, @values('callables')]
+  public function can_create_via_iterate($input, $name) {
+    $this->assertInstanceOf('util.data.Sequence', Sequence::iterate(0, $input), $name);
   }
 
-  #[@test]
-  public function can_create_via_generate() {
-    $this->assertInstanceOf('util.data.Sequence', Sequence::generate(function() { return rand(1, 1000); }));
+  #[@test, @expect('lang.IllegalArgumentException'), @values('noncallables')]
+  public function invalid_type_for_iterate($input) {
+    Sequence::iterate(0, $input);
+  }
+
+  #[@test, @values('callables')]
+  public function can_create_via_generate($input) {
+    $this->assertInstanceOf('util.data.Sequence', Sequence::generate($input));
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @values('noncallables')]
+  public function invalid_type_for_generate($input) {
+    Sequence::generate($input);
   }
 
   #[@test, @values('valid')]

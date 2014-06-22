@@ -1,6 +1,7 @@
 <?php namespace util\data;
 
 use util\Objects;
+use lang\IllegalArgumentException;
 
 /**
  * Sequences API for PHP
@@ -35,18 +36,24 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Creates a new stream
    *
-   * @param  var $elements an iterator, generator or array
+   * @param  var $elements an iterator, iterable, generator or array
    * @return self<R>
+   * @throws lang.IllegalArgumentException if type of elements argument is incorrect
    */
   #[@generic(return= 'self<R>')]
   public static function of($elements) {
     if ($elements instanceof \Traversable) {
       return new self($elements);
     } else if ($elements instanceof \Closure) {
-      return new self($elements());
-    } else {
+      $generator= $elements();
+      if ($generator instanceof \Generator) {
+        return new self($generator);
+      }
+    } else if (is_array($elements)) {
       return new self($elements);
     }
+
+    throw new IllegalArgumentException('Expecting either an iterator, iterable, generator or an array');
   }
 
   /**

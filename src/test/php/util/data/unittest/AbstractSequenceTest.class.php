@@ -1,6 +1,7 @@
 <?php namespace util\data\unittest;
 
 use lang\types\String;
+use lang\types\ArrayList;
 use util\data\Sequence;
 use util\data\Collector;
 
@@ -32,7 +33,7 @@ abstract class AbstractSequenceTest extends \unittest\TestCase {
   protected function valid() {
     return array_merge(self::$generators, [
       [[1, 2, 3], 'array'],
-      [new \lang\types\ArrayList(1, 2, 3), 'iterable'],
+      [new ArrayList(1, 2, 3), 'iterable'],
       [Sequence::of([1, 2, 3]), 'self'],
     ]);
   }

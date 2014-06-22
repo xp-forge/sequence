@@ -7,6 +7,7 @@ use lang\IllegalArgumentException;
  * Sequences API for PHP
  *
  * @test xp://util.data.unittest.SequenceTest
+ * @test xp://util.data.unittest.SequenceCreationTest
  */
 #[@generic(self= 'T')]
 class Sequence extends \lang\Object implements \IteratorAggregate {

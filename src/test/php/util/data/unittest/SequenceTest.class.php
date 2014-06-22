@@ -4,110 +4,7 @@ use lang\types\String;
 use util\data\Sequence;
 use util\data\Collector;
 
-class SequenceTest extends \unittest\TestCase {
-  protected static $generators= [];
-
-  /**
-   * Defines generator fixtures. Since their definition involves new syntax
-   * unparseable with previous PHP versions, wrap in eval() statements.
-   *
-   * @see   php://generators
-   */
-  #[@beforeClass]
-  public static function defineGenerators() {
-    if (class_exists('Generator', false)) {
-      self::$generators= [
-        [eval('return function() { yield 1; yield 2; yield 3; };'), 'closure'],
-        [eval('$f= function() { yield 1; yield 2; yield 3; }; return $f();'), 'generator']
-      ];
-    }
-  }
-
-  /**
-   * Returns valid arguments for the `of()` method: Arrays, iterables, and
-   * generators (the latter only if available in the underlying runtime).
-   *
-   * @return var[][]
-   */
-  protected function valid() {
-    return array_merge(self::$generators, [
-      [[1, 2, 3], 'array'],
-      [new \lang\types\ArrayList(1, 2, 3), 'iterable'],
-      [Sequence::of([1, 2, 3]), 'self'],
-    ]);
-  }
-
-  /**
-   * Returns invalid arguments for the `of()` method: Primitives, non-iterable
-   * objects, and a function which is not a generator.
-   *
-   * @return var[][]
-   */
-  protected function invalid() {
-    return [
-      [null], [''], ['...'], [-1], [0], [1], [0.5], [false], [true],
-      [new \lang\Object()], [new String('...')], [$this],
-      [function() { return 1; }]
-    ];
-  }
-
-  /**
-   * Returns valid arguments for the `iterate()` and `generate()` methods.
-   *
-   * @return var[][]
-   */
-  protected function callables() {
-    return [
-      [function() { return 1; }, 'closure'],
-      [[$this, 'getName'], 'method'], [[$this, 'nonExistant'], '__call'],
-      [['xp', 'gc'], 'static-method'], [['self', 'nonExistant'], '__callStatic'],
-      ['xp::gc', 'static-method-string'], ['typeof', 'function']
-    ];
-  }
-
-  /**
-   * Returns invalid arguments for the `iterate()` and `generate()` methods.
-   *
-   * @return var[][]
-   */
-  protected function noncallables() {
-    return [
-      [null], [''], ['...'], [-1], [0], [1], [0.5], [false], [true],
-      [new \lang\Object()], [new String('...')], [$this],
-      [[]], [[$this]], [['xp']], [['xp', 'g']], [[$this, 'getName', 'excess-element']],
-      ['xp:g'], ['xp::'], ['xp::g'], ['::gc'], ['typeo']
-    ];
-  }
-
-  #[@test, @values('valid')]
-  public function can_create_via_of($input, $name) {
-    $this->assertInstanceOf('util.data.Sequence', Sequence::of($input), $name);
-  }
-
-  #[@test, @expect('lang.IllegalArgumentException'), @values('invalid')]
-  public function invalid_type_for_of($input) {
-    Sequence::of($input);
-  }
-
-  #[@test, @values('callables')]
-  public function can_create_via_iterate($input, $name) {
-    $this->assertInstanceOf('util.data.Sequence', Sequence::iterate(0, $input), $name);
-  }
-
-  #[@test, @expect('lang.IllegalArgumentException'), @values('noncallables')]
-  public function invalid_type_for_iterate($input) {
-    Sequence::iterate(0, $input);
-  }
-
-  #[@test, @values('callables')]
-  public function can_create_via_generate($input) {
-    $this->assertInstanceOf('util.data.Sequence', Sequence::generate($input));
-  }
-
-  #[@test, @expect('lang.IllegalArgumentException'), @values('noncallables')]
-  public function invalid_type_for_generate($input) {
-    Sequence::generate($input);
-  }
+class SequenceTest extends AbstractSequenceTest {
 
   #[@test, @values('valid')]
   public function toArray_returns_elements_as_array($input, $name) {
@@ -195,7 +92,7 @@ class SequenceTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function collect() {
+  public function collect_used_for_averaging() {
     $result= Sequence::of([1, 2, 3, 4])->collect(new Collector(
       function() { return ['total' => 0, 'sum' => 0]; },
       function(&$result, $arg) { $result['total']++; $result['sum']+= $arg; }
@@ -226,7 +123,9 @@ class SequenceTest extends \unittest\TestCase {
   #[@test]
   public function each() {
     $collect= [];
-    Sequence::of([1, 2, 3, 4])->each(function($e) use(&$collect) { $collect[]= $e; });
+    Sequence::of([1, 2, 3, 4])->each(function($e) use(&$collect) {
+      $collect[]= $e;
+    });
     $this->assertEquals([1, 2, 3, 4], $collect);
   }
 

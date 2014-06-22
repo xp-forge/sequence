@@ -28,9 +28,19 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertSequence([2, 4], Sequence::of([1, 2, 3, 4])->filter(function($e) { return 0 === $e % 2; }));
   }
 
+  #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
+  public function filter_raises_exception_when_given($noncallable) {
+    Sequence::of([])->filter($noncallable);
+  }
+
   #[@test]
   public function map() {
     $this->assertSequence([2, 4, 6, 8], Sequence::of([1, 2, 3, 4])->map(function($e) { return $e * 2; }));
+  }
+
+  #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
+  public function map_raises_exception_when_given($noncallable) {
+    Sequence::of([])->map($noncallable);
   }
 
   #[@test, @values([
@@ -133,6 +143,11 @@ class SequenceTest extends AbstractSequenceTest {
       $collect[]= $e;
     });
     $this->assertEquals([1, 2, 3, 4], $collect);
+  }
+
+  #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
+  public function each_raises_exception_when_given($noncallable) {
+    Sequence::of([])->each($noncallable);
   }
 
   #[@test]

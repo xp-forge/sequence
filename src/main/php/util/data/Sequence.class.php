@@ -228,7 +228,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @param  function<T> $function
    * @return void
    */
-  public function each($consumer) {
+  public function each(callable $consumer) {
     foreach ($this->elements as $element) {
       $consumer($element);
     }
@@ -252,7 +252,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self<T>
    */
   #[@generic(return= 'self<T>')]
-  public function filter($predicate) {
+  public function filter(callable $predicate) {
     return new self(new \CallbackFilterIterator($this->getIterator(), $predicate));
   }
 
@@ -263,7 +263,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
-  public function map($function) {
+  public function map(callable $function) {
     return new self(new Mapper($this->getIterator(), $function));
   }
 

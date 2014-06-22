@@ -6,25 +6,31 @@ use util\data\Collector;
 
 class SequenceTest extends AbstractSequenceTest {
 
+  /**
+   * Assertion helper
+   *
+   * @param  var[] $expected
+   * @param  util.data.Sequence $sequence
+   * @param  string $message
+   * @throws unittest.AssertionFailedError
+   */
+  protected function assertSequence($expected, $sequence, $message= '!=') {
+    $this->assertEquals($expected, $sequence->toArray(), $message);
+  }
+
   #[@test, @values('valid')]
   public function toArray_returns_elements_as_array($input, $name) {
-    $this->assertEquals([1, 2, 3], Sequence::of($input)->toArray(), $name);
+    $this->assertSequence([1, 2, 3], Sequence::of($input), $name);
   }
 
   #[@test]
   public function filter() {
-    $this->assertEquals([2, 4], Sequence::of([1, 2, 3, 4])
-      ->filter(function($e) { return 0 === $e % 2; })
-      ->toArray()
-    );
+    $this->assertSequence([2, 4], Sequence::of([1, 2, 3, 4])->filter(function($e) { return 0 === $e % 2; }));
   }
 
   #[@test]
   public function map() {
-    $this->assertEquals([2, 4, 6, 8], Sequence::of([1, 2, 3, 4])
-      ->map(function($e) { return $e * 2; })
-      ->toArray()
-    );
+    $this->assertSequence([2, 4, 6, 8], Sequence::of([1, 2, 3, 4])->map(function($e) { return $e * 2; }));
   }
 
   #[@test, @values([
@@ -131,31 +137,23 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test]
   public function limit_stops_at_nth_array_element() {
-    $this->assertEquals([1, 2], Sequence::of([1, 2, 3])->limit(2)->toArray());
+    $this->assertSequence([1, 2], Sequence::of([1, 2, 3])->limit(2));
   }
 
   #[@test]
   public function limit_stops_at_nth_iterator_element() {
-    $this->assertEquals([1, 2], Sequence::iterate(1, function($i) { return ++$i; })
-      ->limit(2)
-      ->toArray()
-    );
+    $this->assertSequence([1, 2], Sequence::iterate(1, function($i) { return ++$i; })->limit(2));
   }
 
   #[@test]
   public function limit_stops_at_nth_generator_element() {
     $i= 1;
-    $this->assertEquals([1, 2], Sequence::generate(function() use(&$i) { return $i++; })
-      ->limit(2)
-      ->toArray()
-    );
+    $this->assertSequence([1, 2], Sequence::generate(function() use(&$i) { return $i++; })->limit(2));
   }
 
   #[@test]
   public function concat() {
-    $this->assertEquals([1, 2, 3, 4], Sequence::concat(Sequence::of([1, 2]), Sequence::of([3, 4]))
-      ->toArray()
-    );
+    $this->assertSequence([1, 2, 3, 4], Sequence::concat(Sequence::of([1, 2]), Sequence::of([3, 4])));
   }
 
   #[@test, @values([
@@ -163,7 +161,7 @@ class SequenceTest extends AbstractSequenceTest {
   #  [[new String("a"), new String("b")], [new String("a"), new String("a"), new String("b")]]
   #])]
   public function distinct($result, $input) {
-    $this->assertEquals($result, Sequence::of($input)->distinct()->toArray());
+    $this->assertSequence($result, Sequence::of($input)->distinct());
   }
 
   #[@test]

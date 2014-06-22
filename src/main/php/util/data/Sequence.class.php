@@ -6,7 +6,7 @@ use lang\IllegalArgumentException;
 /**
  * Sequences API for PHP
  *
- * @test xp://data.unittest.SequenceTest
+ * @test xp://util.data.unittest.SequenceTest
  */
 #[@generic(self= 'T')]
 class Sequence extends \lang\Object implements \IteratorAggregate {
@@ -34,26 +34,16 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Creates a new stream
+   * Creates a new stream with an enumeration of elements
    *
+   * @see    xp://util.data.Enumeration
    * @param  var $elements an iterator, iterable, generator or array
    * @return self<R>
    * @throws lang.IllegalArgumentException if type of elements argument is incorrect
    */
   #[@generic(return= 'self<R>')]
   public static function of($elements) {
-    if ($elements instanceof \Traversable) {
-      return new self($elements);
-    } else if ($elements instanceof \Closure) {
-      $generator= $elements();
-      if ($generator instanceof \Generator) {
-        return new self($generator);
-      }
-    } else if (is_array($elements)) {
-      return new self($elements);
-    }
-
-    throw new IllegalArgumentException('Expecting either an iterator, iterable, generator or an array');
+    return new self(Enumeration::of($elements));
   }
 
   /**

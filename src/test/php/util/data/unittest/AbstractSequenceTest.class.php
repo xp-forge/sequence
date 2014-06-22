@@ -35,6 +35,11 @@ abstract class AbstractSequenceTest extends \unittest\TestCase {
       [[1, 2, 3], 'array'],
       [new ArrayList(1, 2, 3), 'iterable'],
       [new \ArrayIterator([1, 2, 3]), 'iterator'],
+      [newinstance('util.XPIterator', [], [
+        'numbers' => [1, 2, 3],
+        'hasNext' => function() { return $this->numbers; },
+        'next'    => function() { return array_shift($this->numbers); }
+      ]), 'xp-iterator'],
       [Sequence::of([1, 2, 3]), 'self'],
     ]);
   }

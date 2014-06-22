@@ -66,8 +66,8 @@ abstract class AbstractSequenceTest extends \unittest\TestCase {
   protected function callables() {
     return [
       [function() { return 1; }, 'closure'],
-      [[$this, 'getName'], 'method'], [[$this, 'nonExistant'], 'via__call'],
-      [['xp', 'gc'], 'static-method'], [['self', 'nonExistant'], '__callStatic'],
+      [[$this, 'getName'], 'method'], [[$this, 'nonExistant'], '__call'],
+      [['xp', 'gc'], 'static-method'], [[__CLASS__, 'nonExistant'], '__callStatic'],
       ['xp::gc', 'static-method-string'], ['typeof', 'function']
     ];
   }

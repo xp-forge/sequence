@@ -1,8 +1,10 @@
 <?php namespace util\data\unittest;
 
 use lang\types\String;
+use util\cmd\Console;
 use util\data\Sequence;
 use util\data\Collector;
+use io\streams\MemoryOutputStream;
 
 class SequenceTest extends AbstractSequenceTest {
 
@@ -28,6 +30,11 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertSequence([2, 4], Sequence::of([1, 2, 3, 4])->filter(function($e) { return 0 === $e % 2; }));
   }
 
+  #[@test]
+  public function filter_with_is_string_native_function() {
+    $this->assertSequence(['Hello', 'World'], Sequence::of(['Hello', 1337, 'World'])->filter('is_string'));
+  }
+
   #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
   public function filter_raises_exception_when_given($noncallable) {
     Sequence::of([])->filter($noncallable);
@@ -36,6 +43,11 @@ class SequenceTest extends AbstractSequenceTest {
   #[@test]
   public function map() {
     $this->assertSequence([2, 4, 6, 8], Sequence::of([1, 2, 3, 4])->map(function($e) { return $e * 2; }));
+  }
+
+  #[@test]
+  public function map_with_with_floor_native_function() {
+    $this->assertSequence([1.0, 2.0, 3.0], Sequence::of([1.9, 2.5, 3.1])->map('floor'));
   }
 
   #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
@@ -94,10 +106,8 @@ class SequenceTest extends AbstractSequenceTest {
   }
 
   #[@test]
-  public function reduce_used_for_max() {
-    $this->assertEquals(10, Sequence::of([7, 1, 10, 3])->reduce(0, function($a, $b) {
-      return max($a, $b);
-    }));
+  public function reduce_used_for_max_with_native_max_function() {
+    $this->assertEquals(10, Sequence::of([7, 1, 10, 3])->reduce(0, 'max'));
   }
 
   #[@test]
@@ -143,6 +153,38 @@ class SequenceTest extends AbstractSequenceTest {
       $collect[]= $e;
     });
     $this->assertEquals([1, 2, 3, 4], $collect);
+  }
+
+  #[@test]
+  public function each_writing_to_stream() {
+    $out= new MemoryOutputStream();
+
+    Sequence::of([1, 2, 3, 4])->each([$out, 'write']);
+
+    $this->assertEquals('1234', $out->getBytes());
+  }
+
+  #[@test]
+  public function each_writing_to_console_out() {
+    $orig= Console::$out->getStream();
+    $out= new MemoryOutputStream();
+    Console::$out->setStream($out);
+
+    Sequence::of([1, 2, 3, 4])->each('util\cmd\Console::write');
+
+    Console::$out->setStream($orig);    
+    $this->assertEquals('1234', $out->getBytes());
+  }
+
+  #[@test]
+  public function each_with_var_export() {
+    ob_start();
+
+    Sequence::of([1, 2, 3, 4])->each('var_export');
+
+    $bytes= ob_get_contents();
+    ob_end_clean();   
+    $this->assertEquals('1234', $bytes);
   }
 
   #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]

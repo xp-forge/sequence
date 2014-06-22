@@ -19,17 +19,17 @@ class Collector extends \lang\Object implements ICollector {
    * @param  function<var, var> $finisher
    */
   public function __construct($supplier, $accumulator, $finisher= null) {
-    $this->supplier= $supplier;
-    $this->accumulator= $accumulator;
-    $this->finisher= $finisher;
+    $this->supplier= Closure::of($supplier);
+    $this->accumulator= Closure::of($accumulator);
+    $this->finisher= null === $finisher ? null : Closure::of($finisher);
   }
 
-  /** @return function<var, var> */
+  /** @return php.Closure */
   public function supplier() { return $this->supplier; }
 
-  /** @return function<var, var> */
+  /** @return php.Closure */
   public function accumulator() { return $this->accumulator; }
 
-  /** @return function<var, var> */
+  /** @return php.Closure */
   public function finisher() { return $this->finisher; }
 }

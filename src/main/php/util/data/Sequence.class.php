@@ -56,12 +56,12 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
-  public static function iterate($seed, callable $op) {
-    $it= $seed;
-    return new self(new Yielder(
-      $seed,
-      function() use(&$it, $op) { $it= $op($it); return $it; },
-      true
+  public static function iterate($seed, $op) {
+    $value= $seed;
+    $closure= Closure::of($op);
+    return new self(new Generator(
+      function() use($value) { return $value; },
+      function() use(&$value, $closure) { $value= $closure($value); return $value; }
     ));
   }
 
@@ -72,12 +72,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
-  public static function generate(callable $supplier) {
-    return new self(new Yielder(
-      $supplier,
-      $supplier,
-      true
-    ));
+  public static function generate($supplier) {
+    $closure= Closure::of($supplier);
+    return new self(new Generator($closure, $closure));
   }
 
   /**
@@ -186,9 +183,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self<T>
    */
   public function reduce($identity, $accumulator) {
+    $closure= Closure::of($accumulator);
     $return= $identity;
     foreach ($this->elements as $element) {
-      $return= $accumulator($return, $element);
+      $return= $closure($return, $element);
     }
     return $return;
   }
@@ -202,12 +200,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function collect(ICollector $collector) {
     $accumulator= $collector->accumulator();
     $finisher= $collector->finisher();
-    $supplier= $collector->supplier();
 
-    $return= $supplier();
-    $f= function($arg) use(&$return, $accumulator) { return $accumulator($return, $arg); };
+    $return= $collector->supplier()->__invoke();
     foreach ($this->elements as $element) {
-      $f($element);
+      $accumulator($return, $element);
     }
 
     return $finisher ? $finisher($return) : $return;
@@ -219,9 +215,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @param  function<T> $function
    * @return void
    */
-  public function each(callable $consumer) {
+  public function each($consumer) {
+    $inv= Closure::of($consumer);
     foreach ($this->elements as $element) {
-      $consumer($element);
+      $inv($element);
     }
   }
 
@@ -243,8 +240,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self<T>
    */
   #[@generic(return= 'self<T>')]
-  public function filter(callable $predicate) {
-    return new self(new \CallbackFilterIterator($this->getIterator(), $predicate));
+  public function filter($predicate) {
+    return new self(new \CallbackFilterIterator($this->getIterator(), Closure::of($predicate)));
   }
 
   /**
@@ -254,8 +251,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
-  public function map(callable $function) {
-    return new self(new Mapper($this->getIterator(), $function));
+  public function map($function) {
+    return new self(new Mapper($this->getIterator(), Closure::of($function)));
   }
 
   /**

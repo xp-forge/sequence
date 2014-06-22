@@ -25,8 +25,8 @@ abstract class AbstractSequenceTest extends \unittest\TestCase {
   }
 
   /**
-   * Returns valid arguments for the `of()` method: Arrays, iterables, and
-   * generators (the latter only if available in the underlying runtime).
+   * Returns valid arguments for the `of()` method: Arrays, iterables, 
+   * iterators and generators (the latter only if available).
    *
    * @return var[][]
    */
@@ -34,6 +34,7 @@ abstract class AbstractSequenceTest extends \unittest\TestCase {
     return array_merge(self::$generators, [
       [[1, 2, 3], 'array'],
       [new ArrayList(1, 2, 3), 'iterable'],
+      [new \ArrayIterator([1, 2, 3]), 'iterator'],
       [Sequence::of([1, 2, 3]), 'self'],
     ]);
   }

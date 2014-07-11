@@ -56,12 +56,11 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
-  public static function iterate($seed, $op) {
+  public static function iterate($seed, callable $op) {
     $value= $seed;
-    $closure= Closure::of($op);
     return new self(new Generator(
       function() use($value) { return $value; },
-      function() use(&$value, $closure) { $value= $closure($value); return $value; }
+      function() use(&$value, $op) { $value= $op($value); return $value; }
     ));
   }
 
@@ -72,9 +71,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
-  public static function generate($supplier) {
-    $closure= Closure::of($supplier);
-    return new self(new Generator($closure, $closure));
+  public static function generate(callable $supplier) {
+    return new self(new Generator($supplier, $supplier));
   }
 
   /**
@@ -182,11 +180,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @param  function<T, T: T> $function
    * @return self<T>
    */
-  public function reduce($identity, $accumulator) {
-    $closure= Closure::of($accumulator);
+  public function reduce($identity, callable $accumulator) {
     $return= $identity;
     foreach ($this->elements as $element) {
-      $return= $closure($return, $element);
+      $return= $accumulator($return, $element);
     }
     return $return;
   }
@@ -215,10 +212,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @param  function<T> $function
    * @return void
    */
-  public function each($consumer) {
-    $inv= Closure::of($consumer);
+  public function each(callable $consumer) {
     foreach ($this->elements as $element) {
-      $inv($element);
+      $consumer($element);
     }
   }
 
@@ -240,8 +236,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self<T>
    */
   #[@generic(return= 'self<T>')]
-  public function filter($predicate) {
-    return new self(new \CallbackFilterIterator($this->getIterator(), Closure::of($predicate)));
+  public function filter(callable $predicate) {
+    return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use($predicate) {
+      return $predicate($e);
+    }));
   }
 
   /**
@@ -252,7 +250,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   #[@generic(return= 'self<R>')]
   public function map($function) {
-    return new self(new Mapper($this->getIterator(), Closure::of($function)));
+    return new self(new Mapper($this->getIterator(), $function));
   }
 
   /**

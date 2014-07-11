@@ -4,6 +4,7 @@
  * A mapper reaches applies a given mapper function to each value an
  * iterator returns and returns its result.
  */
+#[@generic(self= 'T')]
 class Mapper extends \lang\Object implements \Iterator {
   protected $it;
   protected $func;
@@ -11,8 +12,8 @@ class Mapper extends \lang\Object implements \Iterator {
   /**
    * Creates a new Mapper instance
    *
-   * @param  php.Mapper $it
-   * @param  php.Closure $func
+   * @param  php.Iterator $it
+   * @param  function<T> $func
    */
   public function __construct(\Iterator $it, callable $func) {
     $this->it= $it;
@@ -24,7 +25,7 @@ class Mapper extends \lang\Object implements \Iterator {
     $this->it->rewind();
   }
 
-  /** @return var */
+  /** @return T */
   public function current() {
     $f= $this->func;
     return $f($this->it->current());

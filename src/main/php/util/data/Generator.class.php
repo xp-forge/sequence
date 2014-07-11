@@ -13,10 +13,10 @@ class Generator extends \lang\Object implements \Iterator {
   /**
    * Creates a new Generator instance
    *
-   * @param  php.Closure $seed
-   * @param  php.Closure $func
+   * @param  function<T> $seed
+   * @param  function<T> $func
    */
-  public function __construct(\Closure $seed, \Closure $func) {
+  public function __construct(callable $seed, callable $func) {
     $this->seed= $seed;
     $this->func= $func;
   }
@@ -24,7 +24,8 @@ class Generator extends \lang\Object implements \Iterator {
   /** @return void */
   public function rewind() {
     $this->inv= 0;
-    $this->result= $this->seed->__invoke();
+    $f= $this->seed;
+    $this->result= $f();
   }
 
   /** @return var */
@@ -39,7 +40,8 @@ class Generator extends \lang\Object implements \Iterator {
 
   /** @return void */
   public function next() {
-    $this->result= $this->func->__invoke();
+    $f= $this->func;
+    $this->result= $f();
   }
 
   /** @return bool */

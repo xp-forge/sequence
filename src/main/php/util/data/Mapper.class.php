@@ -14,7 +14,7 @@ class Mapper extends \lang\Object implements \Iterator {
    * @param  php.Mapper $it
    * @param  php.Closure $func
    */
-  public function __construct(\Iterator $it, \Closure $func) {
+  public function __construct(\Iterator $it, callable $func) {
     $this->it= $it;
     $this->func= $func;
   }
@@ -26,7 +26,8 @@ class Mapper extends \lang\Object implements \Iterator {
 
   /** @return var */
   public function current() {
-    return $this->func->__invoke($this->it->current());
+    $f= $this->func;
+    return $f($this->it->current());
   }
 
   /** @return var */

@@ -24,7 +24,7 @@ use lang\IllegalArgumentException;
 abstract class Closure extends \lang\Object {
 
   /**
-   * Returns a closure for a given static method
+   * Returns a closure for a given method
    *
    * @param  var $instance
    * @param  string $method

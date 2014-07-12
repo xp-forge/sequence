@@ -44,7 +44,7 @@ abstract class Closure extends \lang\Object {
             if ($m->isStatic()) return $m->getClosure(null);
           } else if (method_exists($class, '__callStatic')) {
             return function() use($class, $method) {
-              return call_user_func([$class, '__callStatic'], $method, func_get_args());
+              return $class::__callStatic($method, func_get_args());
             };
           }
         }
@@ -60,7 +60,7 @@ abstract class Closure extends \lang\Object {
             return (new \ReflectionMethod($instance, $method))->getClosure($instance);
           } else if (method_exists($instance, '__call')) {
             return function() use($instance, $method) {
-              return call_user_func([$instance, '__call'], $method, func_get_args());
+              return $instance->__call($method, func_get_args());
             };
           }
         } else if (is_string($arg[0])) {
@@ -70,7 +70,7 @@ abstract class Closure extends \lang\Object {
             if ($m->isStatic()) return $m->getClosure(null);
           } else if (method_exists($class, '__callStatic')) {
             return function() use($class, $method) {
-              return call_user_func([$class, '__callStatic'], $method, func_get_args());
+              return $class::__callStatic($method, func_get_args());
             };
           }
         }

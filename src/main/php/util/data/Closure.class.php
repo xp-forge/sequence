@@ -3,7 +3,9 @@
 use lang\IllegalArgumentException;
 
 /**
- * Invocation support for anything callable
+ * Invocation support: Wraps indirect references to callables - string
+ * and array references to functions and methods - in closures for better
+ * invocation performance.
  *
  * ```php
  * $f= Closure::of($func);
@@ -13,6 +15,7 @@ use lang\IllegalArgumentException;
  * $this->f->__invoke();
  * ```
  *
+ * @see   https://github.com/xp-forge/sequence/pull/1
  * @see   php://language.types.callable
  * @see   php://reflectionfunction.getclosure
  * @see   php://reflectionmethod.getclosure

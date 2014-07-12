@@ -241,7 +241,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   #[@generic(return= 'self<T>')]
   public function filter($predicate) {
-    return new self(new \CallbackFilterIterator($this->getIterator(), Closure::of($predicate)));
+    return new self(new Filterable($this->getIterator(), Closure::of($predicate)));
   }
 
   /**

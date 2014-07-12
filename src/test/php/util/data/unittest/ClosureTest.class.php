@@ -3,15 +3,17 @@
 use util\data\Closure;
 
 class ClosureTest extends \unittest\TestCase {
+  protected $member= 'Member';
+  protected static $static= 'Static';
 
   /** @return string */
   public static function staticFixture() {
-    return 'Static';
+    return self::$static;
   }
 
   /** @return string */
-  public static function memberFixture() {
-    return 'Member';
+  public function memberFixture() {
+    return $this->member;
   }
 
   #[@test]
@@ -67,6 +69,14 @@ class ClosureTest extends \unittest\TestCase {
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method .*::nonExistant/')]
   public function supports_array_with_instance_and_non_existant_method() {
     @Closure::of([$this, 'nonExistant'])->__invoke();
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #  [['util.data.unittest.ClosureTest', 'memberFixture']],
+  #  ['util.data.unittest.ClosureTest::memberFixture'],
+  #])]
+  public function raises_exception_when_non_static_method_given_with_class($arg) {
+    $this->assertEquals('Member', Closure::of($arg)->__invoke());
   }
 
   #[@test, @expect('lang.IllegalArgumentException'), @values([0.5, 1, true, null, [[]]])]

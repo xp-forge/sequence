@@ -24,6 +24,62 @@ use lang\IllegalArgumentException;
 abstract class Closure extends \lang\Object {
 
   /**
+   * Returns a closure for a given static method
+   *
+   * @param  var $instance
+   * @param  string $method
+   * @return php.Closure
+   * @throws lang.IllegalArgumentException
+   */
+  protected static function methodClosure($instance, $method) {
+    if (method_exists($instance, $method)) {
+      return (new \ReflectionMethod($instance, $method))->getClosure($instance);
+    } else if (method_exists($instance, '__call')) {
+      return function() use($instance, $method) {
+        return $instance->__call($method, func_get_args());
+      };
+    } else {
+      throw new IllegalArgumentException(sprintf(
+        'Neither found a method %s() nor a call handler in %s instance',
+        $method,
+        \xp::reflect(get_class($instance))
+      ));
+    }
+  }
+
+  /**
+   * Returns a closure for a given static method
+   *
+   * @param  string $class
+   * @param  string $method
+   * @return php.Closure
+   * @throws lang.IllegalArgumentException
+   */
+  protected static function staticMethodClosure($class, $method) {
+    $name= strtr($class, '.', '\\');
+    if (method_exists($name, $method)) {
+      $m= new \ReflectionMethod($name, $method);
+      if ($m->isStatic()) {
+        return $m->getClosure(null);
+      } else {
+        throw new IllegalArgumentException('Method '.$class.'::'.$method.'() does not reference a static method');
+      }
+    } else if (method_exists($name, '__callStatic')) {
+      return function() use($name, $method) {
+        return $name::__callStatic($method, func_get_args());
+      };
+    } else if (class_exists($name, false)) {
+      throw new IllegalArgumentException(sprintf(
+        'Neither found a method %s() nor a call handler in %s',
+        $method,
+        $class
+      ));
+    } else {
+      throw new IllegalArgumentException('No such class '.$class);
+    }
+  }
+
+  /**
    * Verifies a given argument is callable and returns a Closure
    *
    * @param  function<var..., var> $arg
@@ -31,52 +87,24 @@ abstract class Closure extends \lang\Object {
    * @throws lang.IllegalArgumentException
    */
   public static function of($arg) {
-    if ($arg instanceof \Closure) {
-      return $arg;
-    } else if (is_string($arg)) {
-      try {
+    try {
+      if ($arg instanceof \Closure) {
+        return $arg;
+      } else if (is_string($arg)) {
         if (1 === sscanf($arg, '%[^:]::%s', $class, $method)) {
           return (new \ReflectionFunction($arg))->getClosure();
         } else {
-          $class= strtr($class, '.', '\\');
-          if (method_exists($class, $method)) {
-            $m= new \ReflectionMethod($class, $method);
-            if ($m->isStatic()) return $m->getClosure(null);
-          } else if (method_exists($class, '__callStatic')) {
-            return function() use($class, $method) {
-              return $class::__callStatic($method, func_get_args());
-            };
-          }
+          return self::staticMethodClosure($class, $method);
         }
-      } catch (\Exception $e) {
-        throw new IllegalArgumentException($e->getMessage());
-      }
-    } else if (is_array($arg) && 2 === sizeof($arg) && is_string($arg[1])) {
-      try {
-        $method= $arg[1];
+      } else if (is_array($arg) && 2 === sizeof($arg) && is_string($arg[1])) {
         if (is_object($arg[0])) {
-          $instance= $arg[0];
-          if (method_exists($instance, $method)) {
-            return (new \ReflectionMethod($instance, $method))->getClosure($instance);
-          } else if (method_exists($instance, '__call')) {
-            return function() use($instance, $method) {
-              return $instance->__call($method, func_get_args());
-            };
-          }
+          return self::methodClosure($arg[0], $arg[1]);
         } else if (is_string($arg[0])) {
-          $class= strtr($arg[0], '.', '\\');
-          if (method_exists($class, $method)) {
-            $m= new \ReflectionMethod($class, $method);
-            if ($m->isStatic()) return $m->getClosure(null);
-          } else if (method_exists($class, '__callStatic')) {
-            return function() use($class, $method) {
-              return $class::__callStatic($method, func_get_args());
-            };
-          }
+          return self::staticMethodClosure($arg[0], $arg[1]);
         }
-      } catch (\Exception $e) {
-        throw new IllegalArgumentException($e->getMessage());
       }
+    } catch (\ReflectionException $e) {
+      throw new IllegalArgumentException($e->getMessage());
     }
 
     throw new IllegalArgumentException('Argument is not callable');

@@ -88,4 +88,14 @@ class ClosureTest extends \unittest\TestCase {
   public function raises_exception_when_second_element_in_array_is_not_a_string($value) {
     Closure::of([__CLASS__, $value]);
   }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function raises_exception_when_neither_method_nor_call_handler_exist() {
+    Closure::of([new \stdClass(), 'nonExistant']);
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function raises_exception_when_neither_method_nor_static_call_handler_exist() {
+    Closure::of(['stdClass', 'nonExistant']);
+  }
 }

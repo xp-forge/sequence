@@ -1,6 +1,7 @@
 <?php namespace util\data;
 
 use util\Objects;
+use util\Comparator;
 use lang\IllegalArgumentException;
 
 /**
@@ -305,5 +306,36 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
         return true;
       }
     }));
+  }
+
+  /**
+   * Returns a stream with sorted elements
+   *
+   * ```php
+   * $seq->sorted(new ExampleComparator());   // Using comparator
+   * $seq->sorted(function($a, $b) { ... });  // Using callable
+   * $seq->sorted(SORT_NUMERIC | SORT_DESC);  // Using sort flags
+   * $seq->sorted();                          // Default
+   * ```
+   *
+   * @see    php://array_multisort
+   * @see    php://uasort
+   * @see    php://asort
+   * @param  var $comparator either a Comparator instance, a callable or optional sort flags
+   * @return self<T>
+   */
+  #[@generic(return= 'self<T>')]
+  public function sorted($comparator= null) {
+    $sort= $this->toArray();
+    if ($comparator instanceof Comparator) {
+      uasort($sort, (new \ReflectionMethod($comparator, 'compare'))->getClosure($comparator));
+    } else if (is_int($comparator)) {
+      array_multisort($sort, $comparator);
+    } else if ($comparator) {
+      uasort($sort, Closure::of($comparator));
+    } else {
+      asort($sort);
+    }
+    return new self($sort);
   }
 }

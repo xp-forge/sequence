@@ -24,6 +24,24 @@ class FilterableTest extends \unittest\TestCase {
     $this->assertEquals([], $this->filter([], function($e) { return true; }));
   }
 
+  #[@test]
+  public function does_not_call_accept_for_empty_input() {
+    $this->assertEquals([], $this->filter([], function($e) {
+      throw new \lang\IllegalStateException('Should not have been invoked');
+    }));
+  }
+
+  #[@test]
+  public function accept_gets_called_once_for_every_input_element() {
+    $values= [1, 2, 3];
+    $called= [];
+    $this->filter($values, function($e) use(&$called) {
+      $called[]= $e;
+      return true;
+    });
+    $this->assertEquals($values, $called);
+  }
+
   #[@test, @values([
   #  [[1], 'only one element'],
   #  [[1, 2, 3], 'multiple']

@@ -25,7 +25,7 @@ class Filterable extends \lang\Object implements \Iterator {
   /** @return void */
   public function rewind() {
     $this->it->rewind();
-    while (!$this->accept->__invoke($this->it->current()) && $this->it->valid()) {
+    while ($this->it->valid() && !$this->accept->__invoke($this->it->current())) {
       $this->it->next();
     }
   }
@@ -44,7 +44,7 @@ class Filterable extends \lang\Object implements \Iterator {
   public function next() {
     do {
       $this->it->next();
-    } while (!$this->accept->__invoke($this->it->current()) && $this->it->valid());
+    } while ($this->it->valid() && !$this->accept->__invoke($this->it->current()));
   }
 
   /** @return bool */

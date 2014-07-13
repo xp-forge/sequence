@@ -26,9 +26,9 @@ class FilterableTest extends \unittest\TestCase {
 
   #[@test]
   public function does_not_call_accept_for_empty_input() {
-    $this->assertEquals([], $this->filter([], function($e) {
+    $this->filter([], function($e) {
       throw new \lang\IllegalStateException('Should not have been invoked');
-    }));
+    });
   }
 
   #[@test, @values([true, false])]

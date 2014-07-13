@@ -328,7 +328,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function sorted($comparator= null) {
     $sort= $this->toArray();
     if ($comparator instanceof Comparator) {
-      uasort($sort, (new \ReflectionMethod($comparator, 'compare'))->getClosure($comparator));
+      uasort($sort, Closure::of([$comparator, 'compare']));
     } else if (is_int($comparator)) {
       array_multisort($sort, $comparator);
     } else if ($comparator) {

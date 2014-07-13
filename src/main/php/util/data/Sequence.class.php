@@ -267,6 +267,22 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Returns a new stream which additionally calls the given function for 
+   * each element it consumes. Use this e.g. for debugging purposes.
+   *
+   * @param  function<T: R> $action
+   * @return self<R>
+   */
+  #[@generic(return= 'self<R>')]
+  public function peek($action) {
+    $f= Closure::of($action);
+    return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use($f) {
+      $f($e);
+      return true;
+    }));
+  }
+
+  /**
    * Returns a stream with distinct elements
    *
    * @return self<T>

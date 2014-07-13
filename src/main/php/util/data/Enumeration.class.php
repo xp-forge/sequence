@@ -16,6 +16,7 @@ use lang\IllegalArgumentException;
  * @see   php://language.oop5.iterations
  * @see   php://generators
  * @see   xp://util.XPIterator
+ * @test  xp://util.data.unittest.EnumerationTest
  */
 abstract class Enumeration extends \lang\Object {
   protected static $iterate;

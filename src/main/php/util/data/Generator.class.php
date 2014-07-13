@@ -3,6 +3,8 @@
 /**
  * A generator produces an infinite sequence of data, like for example
  * `/dev/urandom` on Unix-like operating systems.
+ *
+ * @test  xp://util.data.unittest.GeneratorTest
  */
 class Generator extends \lang\Object implements \Iterator {
   protected $seed;

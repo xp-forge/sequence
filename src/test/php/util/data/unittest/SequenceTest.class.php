@@ -175,7 +175,7 @@ class SequenceTest extends AbstractSequenceTest {
     $out= new MemoryOutputStream();
     Console::$out->setStream($out);
 
-    Sequence::of([1, 2, 3, 4])->each('util\cmd\Console::write');
+    Sequence::of([1, 2, 3, 4])->each('util.cmd.Console::write');
 
     Console::$out->setStream($orig);    
     $this->assertEquals('1234', $out->getBytes());

@@ -31,13 +31,13 @@ class FilterableTest extends \unittest\TestCase {
     }));
   }
 
-  #[@test]
-  public function accept_gets_called_once_for_every_input_element() {
+  #[@test, @values([true, false])]
+  public function accept_gets_called_once_for_every_input_element($filtering) {
     $values= [1, 2, 3];
     $called= [];
-    $this->filter($values, function($e) use(&$called) {
+    $this->filter($values, function($e) use(&$called, $filtering) {
       $called[]= $e;
-      return true;
+      return $filtering;
     });
     $this->assertEquals($values, $called);
   }

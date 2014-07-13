@@ -5,6 +5,12 @@ use util\collections\Vector;
 use util\collections\HashTable;
 use util\collections\HashSet;
 
+/**
+ * Collector factory
+ *
+ * @see   xp://util.data.ICollector
+ * @test  xp://util.data.unittest.CollectorsTest
+ */
 final class Collectors extends \lang\Object {
 
   /**

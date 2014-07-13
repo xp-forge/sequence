@@ -98,4 +98,15 @@ class ClosureTest extends \unittest\TestCase {
   public function raises_exception_when_neither_method_nor_static_call_handler_exist() {
     Closure::of(['stdClass', 'nonExistant']);
   }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #  [[]], [[1, 2]], [['', '']],
+  #  [true], [false],
+  #  [0], [-1], [0.5],
+  #  [''],
+  #  [null], [new \lang\Object()]
+  #])]
+  public function raises_exception_when_given_invalid($value) {
+    Closure::of($value);
+  }
 }

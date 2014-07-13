@@ -137,13 +137,18 @@ class SequenceTest extends AbstractSequenceTest {
   }
 
   #[@test]
-  public function first_returns_null_for_empty_input() {
-    $this->assertNull(Sequence::of([])->first());
+  public function first_returns_non_present_optional_for_empty_input() {
+    $this->assertFalse(Sequence::of([])->first()->present());
+  }
+
+  #[@test]
+  public function first_returns_present_optional_even_for_null() {
+    $this->assertTrue(Sequence::of([null])->first()->present());
   }
 
   #[@test]
   public function first_returns_first_array_element() {
-    $this->assertEquals(1, Sequence::of([1, 2, 3])->first());
+    $this->assertEquals(1, Sequence::of([1, 2, 3])->first()->get());
   }
 
   #[@test]

@@ -95,14 +95,14 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns the first element of this stream, or NULL
    *
-   * @return T
+   * @return util.data.Optional<T>
    */
   #[@generic(return= 'T')]
   public function first() {
     foreach ($this->elements as $element) {
-      return $element;
+      return Optional::of($element);
     }
-    return null;
+    return Optional::$EMPTY;
   }
 
   /**

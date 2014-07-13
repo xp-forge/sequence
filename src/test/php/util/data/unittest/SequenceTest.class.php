@@ -20,6 +20,11 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertEquals($expected, $sequence->toArray(), $message);
   }
 
+  #[@test]
+  public function empty_sequence() {
+    $this->assertSequence([], Sequence::$EMPTY);
+  }
+
   #[@test, @values('util.data.unittest.Enumerables::valid')]
   public function toArray_returns_elements_as_array($input, $name) {
     $this->assertSequence([1, 2, 3], Sequence::of($input), $name);

@@ -11,7 +11,13 @@ use lang\IllegalArgumentException;
  */
 #[@generic(self= 'T')]
 class Sequence extends \lang\Object implements \IteratorAggregate {
+  public static $EMPTY;
+
   protected $elements;
+
+  static function __static() {
+    self::$EMPTY= new self([]);
+  }
 
   protected function __construct($elements) {
     $this->elements= $elements;

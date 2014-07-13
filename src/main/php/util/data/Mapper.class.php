@@ -3,6 +3,8 @@
 /**
  * A mapper reaches applies a given mapper function to each value an
  * iterator returns and returns its result.
+ *
+ * @test  xp://util.data.unittest.MapperTest
  */
 class Mapper extends \lang\Object implements \Iterator {
   protected $it;

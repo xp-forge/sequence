@@ -6,57 +6,6 @@ use util\data\Sequence;
 use util\data\Collector;
 
 abstract class AbstractSequenceTest extends \unittest\TestCase {
-  private static $generators= [];
-
-  /**
-   * Defines generator fixtures. Since their definition involves new syntax
-   * unparseable with previous PHP versions, wrap in eval() statements.
-   *
-   * @see   php://generators
-   */
-  #[@beforeClass]
-  public static function defineGenerators() {
-    if (class_exists('Generator', false) && !self::$generators) {
-      self::$generators= [
-        [eval('return function() { yield 1; yield 2; yield 3; };'), 'closure'],
-        [eval('$f= function() { yield 1; yield 2; yield 3; }; return $f();'), 'generator']
-      ];
-    }
-  }
-
-  /**
-   * Returns valid arguments for the `of()` method: Arrays, iterables, 
-   * iterators and generators (the latter only if available).
-   *
-   * @return var[][]
-   */
-  protected function valid() {
-    return array_merge(self::$generators, [
-      [[1, 2, 3], 'array'],
-      [new ArrayList(1, 2, 3), 'iterable'],
-      [new \ArrayIterator([1, 2, 3]), 'iterator'],
-      [newinstance('util.XPIterator', [], [
-        'numbers' => [1, 2, 3],
-        'hasNext' => function() { return $this->numbers; },
-        'next'    => function() { return array_shift($this->numbers); }
-      ]), 'xp-iterator'],
-      [Sequence::of([1, 2, 3]), 'self'],
-    ]);
-  }
-
-  /**
-   * Returns invalid arguments for the `of()` method: Primitives, non-iterable
-   * objects, and a function which is not a generator.
-   *
-   * @return var[][]
-   */
-  protected function invalid() {
-    return [
-      [null], [''], ['...'], [-1], [0], [1], [0.5], [false], [true],
-      [new \lang\Object()], [new String('...')], [$this],
-      [function() { return 1; }]
-    ];
-  }
 
   /**
    * Returns valid arguments for the `iterate()` and `generate()` methods.

@@ -10,12 +10,12 @@ use util\data\Sequence;
  */
 class SequenceCreationTest extends AbstractSequenceTest {
 
-  #[@test, @values('valid')]
+  #[@test, @values('util.data.unittest.Enumerables::valid')]
   public function can_create_via_of($input, $name) {
     $this->assertInstanceOf('util.data.Sequence', Sequence::of($input), $name);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values('invalid')]
+  #[@test, @expect('lang.IllegalArgumentException'), @values('util.data.unittest.Enumerables::invalid')]
   public function invalid_type_for_of($input) {
     Sequence::of($input);
   }

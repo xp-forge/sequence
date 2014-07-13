@@ -20,7 +20,7 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertEquals($expected, $sequence->toArray(), $message);
   }
 
-  #[@test, @values('valid')]
+  #[@test, @values('util.data.unittest.Enumerables::valid')]
   public function toArray_returns_elements_as_array($input, $name) {
     $this->assertSequence([1, 2, 3], Sequence::of($input), $name);
   }

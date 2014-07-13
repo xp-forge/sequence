@@ -234,6 +234,17 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Returns a new stream with only the first `n` elements
+   *
+   * @param  int $n
+   * @return self<T>
+   */
+  #[@generic(return= 'self<T>')]
+  public function skip($n) {
+    return new self(new \LimitIterator($this->getIterator(), $n, -1));
+  }
+
+  /**
    * Returns a new stream with elements matching the given predicta
    *
    * @param  function<T: bool> $function

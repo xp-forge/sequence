@@ -213,6 +213,11 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertSequence([1, 2, 3, 4], Sequence::concat(Sequence::of([1, 2]), Sequence::of([3, 4])));
   }
 
+  #[@test]
+  public function skip_excludes_n_first_elements() {
+    $this->assertSequence([3, 4], Sequence::of([1, 2, 3, 4])->skip(2));
+  }
+
   #[@test, @values([
   #  [[1, 2, 3], [1, 2, 2, 3, 1, 3]],
   #  [[new String("a"), new String("b")], [new String("a"), new String("a"), new String("b")]]

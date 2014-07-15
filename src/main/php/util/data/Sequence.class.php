@@ -9,6 +9,7 @@ use lang\IllegalArgumentException;
  *
  * @test xp://util.data.unittest.SequenceTest
  * @test xp://util.data.unittest.SequenceCreationTest
+ * @test xp://util.data.unittest.SequenceSortingTest
  */
 #[@generic(self= 'T')]
 class Sequence extends \lang\Object implements \IteratorAggregate {

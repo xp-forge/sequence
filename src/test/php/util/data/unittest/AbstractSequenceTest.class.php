@@ -8,6 +8,18 @@ use util\data\Collector;
 abstract class AbstractSequenceTest extends \unittest\TestCase {
 
   /**
+   * Assertion helper
+   *
+   * @param  var[] $expected
+   * @param  util.data.Sequence $sequence
+   * @param  string $message
+   * @throws unittest.AssertionFailedError
+   */
+  protected function assertSequence($expected, $sequence, $message= '!=') {
+    $this->assertEquals($expected, $sequence->toArray(), $message);
+  }
+
+  /**
    * Returns valid arguments for the `iterate()` and `generate()` methods.
    *
    * @return var[][]

@@ -175,8 +175,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Returns the smallest element. Optimized for the case when the
-   * no comparator is given, using the `<` operator.
+   * Returns the smallest element. Optimized for the case when the no comparator
+   * is given, using the `<` operator.
    *
    * @param  var $comparator default NULL Either a Comparator or a closure to compare.
    * @return T
@@ -194,8 +194,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Returns the largest element. Optimized for the case when the
-   * no comparator is given, using the `>` operator.
+   * Returns the largest element. Optimized for the case when no comparator is 
+   * given, using the `>` operator.
    *
    * @param  var $comparator default NULL Either a Comparator or a closure to compare.
    * @return T

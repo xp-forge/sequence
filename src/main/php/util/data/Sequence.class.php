@@ -171,13 +171,25 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns the largest element
    *
+   * @param  var $comparator Either a Comparator, a closure to compare or NULL to use `>` operator
    * @return T
    */
   #[@generic(return= 'T')]
-  public function max() {
+  public function max($comparator= null) {
     $return= null;
-    foreach ($this->elements as $element) {
-      if (null === $return || $element > $return) $return= $element;
+    if (null === $comparator) {
+      foreach ($this->elements as $element) {
+        if (null === $return || $element > $return) $return= $element;
+      }
+    } else {
+      if ($comparator instanceof Comparator) {
+        $cmp= Closure::of([$comparator, 'compare']);
+      } else {
+        $cmp= Closure::of($comparator);
+      }
+      foreach ($this->elements as $element) {
+        if (null === $return || $cmp($element, $return) > 0) $return= $element;
+      }
     }
     return $return;
   }

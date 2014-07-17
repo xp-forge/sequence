@@ -155,55 +155,61 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Returns the smallest element
+   * Helper for min() and max()
    *
-   * @param  var $comparator Either a Comparator, a closure to compare or NULL to use `>` operator
+   * @param  var $comparator Either a Comparator or a closure to compare.
+   * @param  int $n direction, either -1 or +1
    * @return T
    */
-  #[@generic(return= 'T')]
-  public function min($comparator= null) {
+  protected function select($comparator, $n) {
     $return= null;
-    if (null === $comparator) {
-      foreach ($this->elements as $element) {
-        if (null === $return || $element < $return) $return= $element;
-      }
+    if ($comparator instanceof Comparator) {
+      $cmp= Closure::of([$comparator, 'compare']);
     } else {
-      if ($comparator instanceof Comparator) {
-        $cmp= Closure::of([$comparator, 'compare']);
-      } else {
-        $cmp= Closure::of($comparator);
-      }
-      foreach ($this->elements as $element) {
-        if (null === $return || $cmp($element, $return) < 0) $return= $element;
-      }
+      $cmp= Closure::of($comparator);
+    }
+    foreach ($this->elements as $element) {
+      if (null === $return || $cmp($element, $return) * $n > 0) $return= $element;
     }
     return $return;
   }
 
   /**
-   * Returns the largest element
+   * Returns the smallest element. Optimized for the case when the
+   * no comparator is given, using the `<` operator.
    *
-   * @param  var $comparator Either a Comparator, a closure to compare or NULL to use `>` operator
+   * @param  var $comparator default NULL Either a Comparator or a closure to compare.
+   * @return T
+   */
+  #[@generic(return= 'T')]
+  public function min($comparator= null) {
+    if (null === $comparator) {
+      $return= null;
+      foreach ($this->elements as $element) {
+        if (null === $return || $element < $return) $return= $element;
+      }
+      return $return;
+    }
+    return $this->select($comparator, -1);
+  }
+
+  /**
+   * Returns the largest element. Optimized for the case when the
+   * no comparator is given, using the `>` operator.
+   *
+   * @param  var $comparator default NULL Either a Comparator or a closure to compare.
    * @return T
    */
   #[@generic(return= 'T')]
   public function max($comparator= null) {
-    $return= null;
     if (null === $comparator) {
+      $return= null;
       foreach ($this->elements as $element) {
         if (null === $return || $element > $return) $return= $element;
       }
-    } else {
-      if ($comparator instanceof Comparator) {
-        $cmp= Closure::of([$comparator, 'compare']);
-      } else {
-        $cmp= Closure::of($comparator);
-      }
-      foreach ($this->elements as $element) {
-        if (null === $return || $cmp($element, $return) > 0) $return= $element;
-      }
+      return $return;
     }
-    return $return;
+    return $this->select($comparator, +1);
   }
 
   /**

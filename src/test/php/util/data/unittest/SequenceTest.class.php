@@ -194,6 +194,11 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertEquals([1, 2, 3, 4], $collect);
   }
 
+  #[@test, @values([[[1, 2, 3, 4]], [[]]])]
+  public function each_returns_number_of_processed_elements($input) {
+    $this->assertEquals(sizeof($input), Sequence::of($input)->each(function($e) { }));
+  }
+
   #[@test]
   public function each_writing_to_stream() {
     $out= new MemoryOutputStream();

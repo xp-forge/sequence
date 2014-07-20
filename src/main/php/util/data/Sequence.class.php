@@ -251,13 +251,16 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Invokes a given consumer on each element
    *
    * @param  function<T> $function
-   * @return void
+   * @return int The number of elements
    */
   public function each($consumer) {
     $inv= Closure::of($consumer);
+    $i= 0;
     foreach ($this->elements as $element) {
       $inv($element);
+      $i++;
     }
+    return $i;
   }
 
   /**

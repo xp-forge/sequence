@@ -324,6 +324,23 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Returns a new stream which counts the number of elements as iteration
+   * proceeeds. A short form of `peek()` with a function incrementing a local
+   * reference.
+   *
+   * @param  int $count Variable passed in by reference
+   * @return self<R>
+   */
+  #[@generic(return= 'self<R>')]
+  public function counting(&$count) {
+    return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use(&$count) {
+      $count++;
+      return true;
+    }));
+  }
+
+
+  /**
    * Returns a stream with distinct elements
    *
    * @return self<T>

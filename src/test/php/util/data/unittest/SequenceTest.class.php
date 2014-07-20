@@ -289,4 +289,11 @@ class SequenceTest extends AbstractSequenceTest {
     ;
     $this->assertEquals([1, 3], $debug);
   }
+
+  #[@test]
+  public function counting() {
+    $i= 0;
+    Sequence::of([1, 2, 3, 4])->counting($i)->toArray();
+    $this->assertEquals(4, $i);
+  }
 }

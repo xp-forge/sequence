@@ -290,10 +290,10 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertEquals([1, 3], $debug);
   }
 
-  #[@test]
-  public function counting() {
+   #[@test, @values([[['a', 'b', 'c', 'd']], [[]]])]
+   public function counting($input) {
     $i= 0;
-    Sequence::of([1, 2, 3, 4])->counting($i)->toArray();
-    $this->assertEquals(4, $i);
+    Sequence::of($input)->counting($i)->toArray();
+    $this->assertEquals(sizeof($input), $i);
   }
 }

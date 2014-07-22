@@ -253,6 +253,11 @@ class SequenceTest extends AbstractSequenceTest {
   }
 
   #[@test]
+  public function limit_stops_when_given_closure_returns_true() {
+    $this->assertSequence([1, 2], Sequence::of([1, 2, 3, 4])->limit(function($e) { return $e > 2; }));
+  }
+
+  #[@test]
   public function concat() {
     $this->assertSequence([1, 2, 3, 4], Sequence::concat(Sequence::of([1, 2]), Sequence::of([3, 4])));
   }
@@ -260,6 +265,11 @@ class SequenceTest extends AbstractSequenceTest {
   #[@test]
   public function skip_excludes_n_first_elements() {
     $this->assertSequence([3, 4], Sequence::of([1, 2, 3, 4])->skip(2));
+  }
+
+  #[@test]
+  public function skip_excludes_elements_when_given_closure_returns_true() {
+    $this->assertSequence([3, 4], Sequence::of([1, 2, 3, 4])->skip(function($e) { return $e < 3; }));
   }
 
   #[@test, @values([

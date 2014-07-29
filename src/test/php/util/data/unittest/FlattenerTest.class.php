@@ -43,4 +43,14 @@ class FlattenerTest extends \unittest\TestCase {
   public function flatten_with_only_null_input() {
     $this->assertEquals([], $this->flatten([null, null, null]));
   }
+
+  #[@test]
+  public function flatten_with_empty_sequence_at_end() {
+    $this->assertEquals([1, 2], $this->flatten([[1, 2], Sequence::$EMPTY]));
+  }
+
+  #[@test]
+  public function flatten_with_empty_sequence_at_beginning() {
+    $this->assertEquals([1, 2], $this->flatten([Sequence::$EMPTY, [1, 2]]));
+  }
 }

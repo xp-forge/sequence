@@ -32,18 +32,16 @@ class Flattener extends \lang\Object implements \Iterator {
   protected function sequence() {
     while ($this->it->valid()) {
       $value= $this->it->current();
-      if (null === $value) {
-        $this->it->next();
-        continue;
+      if (null !== $value) {
+        if ($value instanceof Sequence) {
+          $seq= $value->getIterator();
+        } else {
+          $seq= Sequence::of($value)->getIterator();
+        }
+        $seq->rewind();
+        if ($seq->valid()) return $seq;
       }
-
-      if ($value instanceof Sequence) {
-        $it= $value->getIterator();
-      } else {
-        $it= Sequence::of($value)->getIterator();
-      }
-      $it->rewind();
-      return $it;
+      $this->it->next();
     }
     return null;
   }

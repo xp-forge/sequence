@@ -278,6 +278,20 @@ class SequenceTest extends AbstractSequenceTest {
   }
 
   #[@test]
+  public function concat_with_empty() {
+    $this->assertSequence([3, 4], Sequence::concat(Sequence::$EMPTY, Sequence::of([3, 4])));
+  }
+
+  #[@test]
+  public function concat_iteratively() {
+    $seq= Sequence::$EMPTY;
+    foreach ([[1, 2], [3, 4], [5, 6]] as $array) {
+      $seq= Sequence::concat($seq, Sequence::of($array));
+    }
+    $this->assertSequence([1, 2, 3, 4, 5, 6], $seq);
+  }
+
+  #[@test]
   public function skip_excludes_n_first_elements() {
     $this->assertSequence([3, 4], Sequence::of([1, 2, 3, 4])->skip(2));
   }

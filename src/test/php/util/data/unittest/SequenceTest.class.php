@@ -49,6 +49,26 @@ class SequenceTest extends AbstractSequenceTest {
     Sequence::of([])->map($noncallable);
   }
 
+  #[@test]
+  public function flatten_without_mapper() {
+    $this->assertSequence(['a', 'b', 'c', 'd'], Sequence::of([['a', 'b'], ['c', 'd']])->flatten());
+  }
+
+  #[@test]
+  public function flatten_with_mapper() {
+    $this->assertSequence(['a', 'b', 'c', 'd'], Sequence::of(['a', 'c'])->flatten(function($e) {
+      return Sequence::iterate($e, function($n) { return ++$n; })->limit(2);
+    }));
+  }
+
+  #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
+  public function flatten_raises_exception_when_given($noncallable) {
+    if (null === $noncallable) {
+      throw new \lang\IllegalArgumentException('Valid use-case');
+    }
+    Sequence::of([])->flatten($noncallable);
+  }
+
   #[@test, @values([
   #  [0, []],
   #  [1, [1]],

@@ -286,7 +286,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Returns a new stream with elements matching the given predicta
+   * Returns a new stream with elements matching the given predicate
    *
    * @param  function<T: bool> $function
    * @return self<T>
@@ -305,6 +305,23 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   #[@generic(return= 'self<R>')]
   public function map($function) {
     return new self(new Mapper($this->getIterator(), Closure::of($function)));
+  }
+
+  /**
+   * Returns a new stream which flattens, mapping the given function to each
+   * element.
+   *
+   * @param  function<T: R> $function - if omitted, the identity function is used.
+   * @return self<R>
+   */
+  #[@generic(return= 'self<R>')]
+  public function flatten($function= null) {
+    if (null === $function) {
+      $it= $this->getIterator();
+    } else {
+      $it= new Mapper($this->getIterator(), Closure::of($function));
+    }
+    return new self(new Flattener($it));
   }
 
   /**

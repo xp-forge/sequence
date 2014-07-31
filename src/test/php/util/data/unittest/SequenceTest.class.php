@@ -3,6 +3,7 @@
 use lang\types\String;
 use util\cmd\Console;
 use util\data\Sequence;
+use util\data\Optional;
 use util\data\Collector;
 use util\Date;
 use io\streams\MemoryOutputStream;
@@ -59,6 +60,11 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertSequence(['a', 'b', 'c', 'd'], Sequence::of(['a', 'c'])->flatten(function($e) {
       return Sequence::iterate($e, function($n) { return ++$n; })->limit(2);
     }));
+  }
+
+  #[@test]
+  public function flatten_optionals() {
+    $this->assertSequence(['a', 'b'], Sequence::of([Optional::of('a'), Optional::$EMPTY, Optional::of('b')])->flatten());
   }
 
   #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]

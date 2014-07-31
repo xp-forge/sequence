@@ -8,7 +8,7 @@ use util\NoSuchElementException;
  * @test  xp://util.data.unittest.OptionalTest
  */
 #[@generic(self= 'T')]
-class Optional extends \lang\Object {
+class Optional extends \lang\Object implements \IteratorAggregate {
   public static $EMPTY;
 
   protected $value;
@@ -38,6 +38,11 @@ class Optional extends \lang\Object {
   #[@generic(params= 'T', return= 'self<T>')]
   public static function of($value) {
     return new self($value, true);
+  }
+
+  /** @return php.Iterator */
+  public function getIterator() {
+    return new \ArrayIterator($this->present ? [$this->value] : []);
   }
 
   /** @return bool */

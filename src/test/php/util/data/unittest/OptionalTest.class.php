@@ -33,4 +33,22 @@ class OptionalTest extends \unittest\TestCase {
   public function orElse_returns_default_when_no_value_is_present() {
     $this->assertEquals('Succeeded', Optional::$EMPTY->orElse('Succeeded'));
   }
+
+  #[@test]
+  public function can_be_used_in_foreach() {
+    $values= [];
+    foreach (Optional::of('Test') as $value) {
+      $values[]= $value;
+    }
+    $this->assertEquals(['Test'], $values);
+  }
+
+  #[@test]
+  public function empty_can_be_used_in_foreach() {
+    $values= [];
+    foreach (Optional::$EMPTY as $value) {
+      $values[]= $value;
+    }
+    $this->assertEquals([], $values);
+  }
 }

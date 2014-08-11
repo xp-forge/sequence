@@ -24,11 +24,11 @@ abstract class Enumeration extends \lang\Object {
   static function __static() {
     self::$iterate= newinstance('Iterator', [], '{
       private $i, $r;
-      public static function on($r) { $self= new self(); $self->r= $r; $self->i= 0; return $self; }
+      public static function on($r) { $self= new self(); $self->r= $r; $self->i= -1; return $self; }
       public function current() { return $this->r->next(); }
       public function key() { return $this->i; }
       public function next() { $this->i++; }
-      public function rewind() { /* NOOP */ }
+      public function rewind() { if ($this->i > -1) throw new \lang\IllegalStateException("Cannot rewind iterator"); $this->i= 0; }
       public function valid() { return $this->r->hasNext(); }
     }');
   }

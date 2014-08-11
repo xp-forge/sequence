@@ -3,6 +3,7 @@
 use util\Objects;
 use util\Comparator;
 use lang\IllegalArgumentException;
+use lang\IllegalStateException;
 
 /**
  * Sequences API for PHP
@@ -23,6 +24,26 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
 
   protected function __construct($elements) {
     $this->elements= $elements;
+  }
+
+  /**
+   * Invoke terminal operation
+   *
+   * @param  function<(): R> $operation
+   * @return R
+   */
+  protected function terminal($operation) {
+    static $message= 'Underlying value is streamed and cannot be processed more than once';
+
+    try {
+      return $operation();
+    } catch (\lang\IllegalStateException $e) {
+      throw new IllegalStateException($message, $e);
+    } catch (\lang\XPException $e) {
+      throw $e;
+    } catch (\Exception $e) {
+      throw new IllegalStateException($message.':'.$e->getMessage());
+    }
   }
 
   /**
@@ -101,57 +122,74 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Returns the first element of this stream, or NULL
+   * Returns the first element of this stream, or an empty optional
    *
    * @return util.data.Optional<T>
+   * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   #[@generic(return= 'T')]
   public function first() {
-    foreach ($this->elements as $element) {
-      return Optional::of($element);
-    }
-    return Optional::$EMPTY;
+    return $this->terminal(function() {
+      $gen= $this->elements instanceof \Generator;
+      if ($gen && isset($this->elements->closed)) {
+        throw new IllegalStateException('Generator closed');
+      }
+      foreach ($this->elements as $element) {
+        $gen && $this->elements->closed= true;
+        return Optional::of($element);
+      }
+      return Optional::$EMPTY;
+    });
   }
 
   /**
    * Collects all elements in an array
    *
    * @return T[]
+   * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   #[@generic(return= 'T[]')]
   public function toArray() {
-    $return= [];
-    foreach ($this->elements as $element) {
-      $return[]= $element;
-    }
-    return $return;
+    return $this->terminal(function() {
+      $return= [];
+      foreach ($this->elements as $element) {
+        $return[]= $element;
+      }
+      return $return;
+    });
   }
 
   /**
    * Counts all elements
    *
    * @return int
+   * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function count() {
-    $return= 0;
-    foreach ($this->elements as $element) {
-      $return++;
-    }
-    return $return;
+    return $this->terminal(function() {
+      $return= 0;
+      foreach ($this->elements as $element) {
+        $return++;
+      }
+      return $return;
+    });
   }
 
   /**
    * Returns the sum of all elements
    *
    * @return T
+   * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   #[@generic(return= 'T')]
   public function sum() {
-    $return= 0;
-    foreach ($this->elements as $element) {
-      $return+= $element;
-    }
-    return $return;
+    return $this->terminal(function() {
+      $return= 0;
+      foreach ($this->elements as $element) {
+        $return+= $element;
+      }
+      return $return;
+    });
   }
 
   /**
@@ -180,17 +218,20 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  var $comparator default NULL Either a Comparator or a closure to compare.
    * @return T
+   * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   #[@generic(return= 'T')]
   public function min($comparator= null) {
-    if (null === $comparator) {
-      $return= null;
-      foreach ($this->elements as $element) {
-        if (null === $return || $element < $return) $return= $element;
+    return $this->terminal(function() use($comparator) {
+      if (null === $comparator) {
+        $return= null;
+        foreach ($this->elements as $element) {
+          if (null === $return || $element < $return) $return= $element;
+        }
+        return $return;
       }
-      return $return;
-    }
-    return $this->select($comparator, -1);
+      return $this->select($comparator, -1);
+    });
   }
 
   /**
@@ -199,34 +240,40 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  var $comparator default NULL Either a Comparator or a closure to compare.
    * @return T
+   * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   #[@generic(return= 'T')]
   public function max($comparator= null) {
-    if (null === $comparator) {
-      $return= null;
-      foreach ($this->elements as $element) {
-        if (null === $return || $element > $return) $return= $element;
+    return $this->terminal(function() use($comparator) {
+      if (null === $comparator) {
+        $return= null;
+        foreach ($this->elements as $element) {
+          if (null === $return || $element > $return) $return= $element;
+        }
+        return $return;
       }
-      return $return;
-    }
-    return $this->select($comparator, +1);
+      return $this->select($comparator, +1);
+    });
   }
 
   /**
    * Performs a reduction on the elements of this stream, using the provided identity
    * value and an associative accumulation function, and returns the reduced value.
    *
-   * @param  T $identity
-   * @param  function<T, T: T> $function
-   * @return self<T>
+   * @param  R $identity
+   * @param  function<(R, R): R> $function
+   * @return R
+   * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function reduce($identity, $accumulator) {
-    $closure= Closure::of($accumulator);
-    $return= $identity;
-    foreach ($this->elements as $element) {
-      $return= $closure($return, $element);
-    }
-    return $return;
+    return $this->terminal(function() use($identity, $accumulator) {
+      $closure= Closure::of($accumulator);
+      $return= $identity;
+      foreach ($this->elements as $element) {
+        $return= $closure($return, $element);
+      }
+      return $return;
+    });
   }
 
   /**
@@ -234,17 +281,20 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  util.data.ICollector
    * @return R
+   * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function collect(ICollector $collector) {
-    $accumulator= $collector->accumulator();
-    $finisher= $collector->finisher();
+    return $this->terminal(function() use($collector) {
+      $accumulator= $collector->accumulator();
+      $finisher= $collector->finisher();
 
-    $return= $collector->supplier()->__invoke();
-    foreach ($this->elements as $element) {
-      $accumulator($return, $element);
-    }
+      $return= $collector->supplier()->__invoke();
+      foreach ($this->elements as $element) {
+        $accumulator($return, $element);
+      }
 
-    return $finisher ? $finisher($return) : $return;
+      return $finisher ? $finisher($return) : $return;
+    });
   }
 
   /**
@@ -252,15 +302,18 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  function<T> $function
    * @return int The number of elements
+   * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function each($consumer) {
-    $inv= Closure::of($consumer);
-    $i= 0;
-    foreach ($this->elements as $element) {
-      $inv($element);
-      $i++;
-    }
-    return $i;
+    return $this->terminal(function() use($consumer) {
+      $inv= Closure::of($consumer);
+      $i= 0;
+      foreach ($this->elements as $element) {
+        $inv($element);
+        $i++;
+      }
+      return $i;
+    });
   }
 
   /**

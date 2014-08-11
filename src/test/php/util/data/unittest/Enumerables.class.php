@@ -50,6 +50,46 @@ abstract class Enumerables extends Object {
   }
 
   /**
+   * Returns fixed enumerables, that is, those that can be rewound.
+   *
+   * @return var[][]
+   */
+  public static function fixed() {
+    return [
+      [[1, 2, 3], 'array'],
+      [new ArrayList(1, 2, 3), 'fixed-iterable'],
+      [new \ArrayIterator([1, 2, 3]), 'rewindable-iterator'],
+      [Sequence::of([1, 2, 3]), 'self-of-fixed-enumerable'],
+    ];
+  }
+
+  /**
+   * Returns streamed enumerables, that is, those that cannot be rewound.
+   *
+   * @return var[][]
+   */
+  public static function streamed() {
+    return array_merge(
+      self::$generators ? [
+        [eval('return function() { yield 1; yield 2; yield 3; };'), 'closure'],
+        [eval('$f= function() { yield 1; yield 2; yield 3; }; return $f();'), 'generator']
+      ] : [],
+      [
+        [newinstance('util.XPIterator', [], '{
+          protected $numbers= [1, 2, 3];
+          public function hasNext() { return $this->numbers; }
+          public function next() { return array_shift($this->numbers); }
+        }'), 'xp-iterator'],
+        [Sequence::of(newinstance('util.XPIterator', [], '{
+          protected $numbers= [1, 2, 3];
+          public function hasNext() { return $this->numbers; }
+          public function next() { return array_shift($this->numbers); }
+        }')), 'self-of-xp-iterator']
+      ]
+    );
+  }
+
+  /**
    * Returns invalid arguments for the `of()` method: Primitives, non-iterable
    * objects, and a function which is not a generator.
    *

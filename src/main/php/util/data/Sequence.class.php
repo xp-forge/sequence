@@ -2,6 +2,7 @@
 
 use util\Objects;
 use util\Comparator;
+use util\Filter;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 
@@ -341,12 +342,17 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a new stream with elements matching the given predicate
    *
-   * @param  function<T: bool> $function
+   * @param  var $predicate either a util.Filter instance or a function
    * @return self<T>
    */
   #[@generic(return= 'self<T>')]
   public function filter($predicate) {
-    return new self(new Filterable($this->getIterator(), Closure::of($predicate)));
+    if (is('util.Filter<?>', $predicate) || $predicate instanceof Filter) {
+      $f= Closure::of([$predicate, 'accept']);
+    } else {
+      $f= Closure::of($predicate);
+    }
+    return new self(new Filterable($this->getIterator(), $f));
   }
 
   /**

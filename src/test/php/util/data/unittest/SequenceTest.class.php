@@ -30,6 +30,20 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertSequence(['Hello', 'World'], Sequence::of(['Hello', 1337, 'World'])->filter('is_string'));
   }
 
+  #[@test]
+  public function filter_with_generic_filter_instance() {
+    $this->assertSequence(['Hello', 'World'], Sequence::of(['Hello', '', 'World'])->filter(newinstance('util.Filter<string>', [], [
+      'accept' => function($e) { return strlen($e) > 0; }
+    ])));
+  }
+
+  #[@test]
+  public function filter_with_filter_instance() {
+    $this->assertSequence(['Hello', 'World'], Sequence::of(['Hello', '', 'World'])->filter(newinstance('util.Filter', [], [
+      'accept' => function($e) { return strlen($e) > 0; }
+    ])));
+  }
+
   #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
   public function filter_raises_exception_when_given($noncallable) {
     Sequence::of([])->filter($noncallable);

@@ -8,7 +8,7 @@ class MapperTest extends \unittest\TestCase {
    * Maps values with a given apply function using the CUT.
    *
    * @param  var[] $values
-   * @param  function<var: var> $apply
+   * @param  function(var): var $apply
    * @return var[]
    */
   protected function map($values, $apply) {

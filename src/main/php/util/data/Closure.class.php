@@ -82,7 +82,7 @@ abstract class Closure extends \lang\Object {
   /**
    * Verifies a given argument is callable and returns a Closure
    *
-   * @param  function<var..., var> $arg
+   * @param  function(var...): var $arg
    * @return php.Closure
    * @throws lang.IllegalArgumentException
    */

@@ -53,8 +53,8 @@ final class Collectors extends \lang\Object {
   /**
    * Creates a new collector gathering the elements in a map.
    *
-   * @param  function<var, var> $key
-   * @param  function<var, var> $value
+   * @param  function(var): var $key
+   * @param  function(var): var $value
    * @return util.data.ICollector
    */
   public static function toMap($key, $value) {
@@ -67,7 +67,7 @@ final class Collectors extends \lang\Object {
   /**
    * Creates a new collector gathering the elements in a map.
    *
-   * @param  function<var, var> $classifier
+   * @param  function(var): var $classifier
    * @param  util.data.ICollector $collector
    * @return util.data.ICollector
    */
@@ -124,7 +124,7 @@ final class Collectors extends \lang\Object {
   /**
    * Creates a new collector gathering the elements in a map.
    *
-   * @param  function<var, var> $predicate
+   * @param  function(var): var $predicate
    * @return util.data.ICollector
    */
   public static function partitioningBy($predicate, ICollector $collector= null) {
@@ -149,7 +149,7 @@ final class Collectors extends \lang\Object {
    * Adapts a collector in a way that each element gets passed to a given mapper
    * prior to accumulation by the collector.
    *
-   * @param  function<var, var> $mapper
+   * @param  function(var): var $mapper
    * @param  util.data.ICollector $collector
    * @return util.data.ICollector
    */
@@ -168,7 +168,7 @@ final class Collectors extends \lang\Object {
   /**
    * Creates a new collector to sum up elements
    *
-   * @param  function<var, var> $num
+   * @param  function(var): var $num
    * @return util.data.ICollector
    */
   public static function summing($num) {
@@ -181,7 +181,7 @@ final class Collectors extends \lang\Object {
   /**
    * Creates a new collector to calculate an average for all the given elements
    *
-   * @param  function<var, var> $num
+   * @param  function(var): var $num
    * @return util.data.ICollector
    */
   public static function averaging($num) {

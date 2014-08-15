@@ -7,8 +7,8 @@ class GeneratorTest extends \unittest\TestCase {
   /**
    * Generates values with a given limit using the CUT.
    *
-   * @param  function<var> $seed
-   * @param  function<var> $func
+   * @param  function(): var $seed
+   * @param  function(): var $func
    * @param  int $limit
    * @return var[]
    */

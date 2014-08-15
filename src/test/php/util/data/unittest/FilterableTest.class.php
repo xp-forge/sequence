@@ -8,7 +8,7 @@ class FilterableTest extends \unittest\TestCase {
    * Filters values with a given accept function using the CUT.
    *
    * @param  var[] $values
-   * @param  function<var: bool> $accept
+   * @param  function(var): bool $accept
    * @return var[]
    */
   protected function filter($values, $accept) {

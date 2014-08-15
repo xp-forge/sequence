@@ -30,7 +30,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Invoke terminal operation
    *
-   * @param  function<(): R> $operation
+   * @param  function(): R $operation
    * @return R
    */
   protected function terminal($operation) {
@@ -82,7 +82,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * with a given seed, and continuing with op(seed), op(op(seed)), etc.
    *
    * @param  R $seed
-   * @param  function<R: R> $op
+   * @param  function(R): R $op
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
@@ -98,7 +98,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Creates a new stream which uses a given supplier to provide the values
    *
-   * @param  function<(): R> $supplier
+   * @param  function(): R $supplier
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
@@ -262,7 +262,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * value and an associative accumulation function, and returns the reduced value.
    *
    * @param  R $identity
-   * @param  function<(R, R): R> $function
+   * @param  function(R, R): R $function
    * @return R
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
@@ -301,7 +301,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Invokes a given consumer on each element
    *
-   * @param  function<T> $function
+   * @param  functionT $function
    * @return int The number of elements
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
@@ -358,7 +358,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a new stream which maps the given function to each element
    *
-   * @param  function<T: R> $function
+   * @param  functionT: R $function
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
@@ -370,7 +370,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns a new stream which flattens, mapping the given function to each
    * element.
    *
-   * @param  function<T: R> $function - if omitted, the identity function is used.
+   * @param  functionT: R $function - if omitted, the identity function is used.
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
@@ -387,7 +387,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns a new stream which additionally calls the given function for 
    * each element it consumes. Use this e.g. for debugging purposes.
    *
-   * @param  function<T: R> $action
+   * @param  functionT: R $action
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]

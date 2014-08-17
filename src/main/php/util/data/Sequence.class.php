@@ -5,6 +5,7 @@ use util\Comparator;
 use util\Filter;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
+use lang\FunctionType;
 
 /**
  * Sequences API for PHP
@@ -87,8 +88,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   #[@generic(return= 'self<R>')]
   public static function iterate($seed, $op) {
+    $R= typeof($seed);
     $value= $seed;
-    $closure= Closure::of($op);
+    $closure= Closure::of($op, new FunctionType([$R], $R));
     return new self(new Generator(
       function() use($value) { return $value; },
       function() use(&$value, $closure) { $value= $closure($value); return $value; }
@@ -103,7 +105,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   #[@generic(return= 'self<R>')]
   public static function generate($supplier) {
-    $closure= Closure::of($supplier);
+    $closure= Closure::of($supplier, Functions::$SUPPLIER);
     return new self(new Generator($closure, $closure));
   }
 
@@ -205,7 +207,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     if ($comparator instanceof Comparator) {
       $cmp= Closure::of([$comparator, 'compare']);
     } else {
-      $cmp= Closure::of($comparator);
+      $cmp= Closure::of($comparator, Functions::$COMPARATOR);
     }
     foreach ($this->elements as $element) {
       if (null === $return || $cmp($element, $return) * $n > 0) $return= $element;
@@ -267,8 +269,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function reduce($identity, $accumulator) {
-    return $this->terminal(function() use($identity, $accumulator) {
-      $closure= Closure::of($accumulator);
+    $R= typeof($identity);
+    return $this->terminal(function() use($R, $identity, $accumulator) {
+      $closure= Closure::of($accumulator, new FunctionType([$R, $R], $R));
       $return= $identity;
       foreach ($this->elements as $element) {
         $return= $closure($return, $element);
@@ -328,7 +331,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     if (is_numeric($arg)) {
       return new self(new \LimitIterator($this->getIterator(), 0, (int)$arg));
     } else {
-      return new self(new Window($this->getIterator(), function() { return false; }, Closure::of($arg)));
+      return new self(new Window($this->getIterator(), function() { return false; }, Closure::of($arg, Functions::$PREDICATE)));
     }
   }
 
@@ -343,7 +346,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     if (is_numeric($arg)) {
       return new self(new \LimitIterator($this->getIterator(), (int)$arg, -1));
     } else {
-      return new self(new Window($this->getIterator(), Closure::of($arg), function() { return false; }));
+      return new self(new Window($this->getIterator(), Closure::of($arg, Functions::$PREDICATE), function() { return false; }));
     }
   }
 
@@ -358,7 +361,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     if (is('util.Filter<?>', $predicate) || $predicate instanceof Filter) {
       $f= Closure::of([$predicate, 'accept']);
     } else {
-      $f= Closure::of($predicate);
+      $f= Closure::of($predicate, Functions::$PREDICATE);
     }
     return new self(new Filterable($this->getIterator(), $f));
   }
@@ -366,19 +369,19 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a new stream which maps the given function to each element
    *
-   * @param  functionT: R $function
+   * @param  function(T): R $function
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
   public function map($function) {
-    return new self(new Mapper($this->getIterator(), Closure::of($function)));
+    return new self(new Mapper($this->getIterator(), Closure::of($function, Functions::$MAPPER)));
   }
 
   /**
    * Returns a new stream which flattens, mapping the given function to each
    * element.
    *
-   * @param  functionT: R $function - if omitted, the identity function is used.
+   * @param  function(T): R $function - if omitted, the identity function is used.
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
@@ -386,7 +389,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     if (null === $function) {
       $it= $this->getIterator();
     } else {
-      $it= new Mapper($this->getIterator(), Closure::of($function));
+      $it= new Mapper($this->getIterator(), Closure::of($function, Functions::$MAPPER));
     }
     return new self(new Flattener($it));
   }
@@ -395,12 +398,12 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns a new stream which additionally calls the given function for 
    * each element it consumes. Use this e.g. for debugging purposes.
    *
-   * @param  functionT: R $action
+   * @param  function(T): void $action
    * @return self<R>
    */
   #[@generic(return= 'self<R>')]
   public function peek($action) {
-    $f= Closure::of($action);
+    $f= Closure::of($action, Functions::$CONSUMER);
     return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use($f) {
       $f($e);
       return true;
@@ -467,7 +470,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     } else if (is_int($comparator)) {
       array_multisort($sort, $comparator);
     } else if ($comparator) {
-      uasort($sort, Closure::of($comparator));
+      uasort($sort, Closure::of($comparator, Functions::$COMPARATOR));
     } else {
       asort($sort);
     }

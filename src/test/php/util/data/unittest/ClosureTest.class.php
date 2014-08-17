@@ -27,18 +27,8 @@ class ClosureTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function supports_string_reference_to_static_method() {
-    $this->assertEquals('Static', Closure::of(__CLASS__.'::staticFixture')->__invoke());
-  }
-
-  #[@test]
   public function supports_string_reference_to_static_method_with_fqcn() {
     $this->assertEquals('Static', Closure::of('util.data.unittest.ClosureTest::staticFixture')->__invoke());
-  }
-
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method .*::nonExistant/')]
-  public function supports_string_reference_to_static_existant_static_method() {
-    @Closure::of(__CLASS__.'::nonExistant')->__invoke();
   }
 
   #[@test]
@@ -51,11 +41,6 @@ class ClosureTest extends \unittest\TestCase {
     $this->assertEquals('Static', Closure::of([$this->getClassName(), 'staticFixture'])->__invoke());
   }
 
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method .*::nonExistant/')]
-  public function supports_array_with_class_and_non_existant_static_method() {
-    @Closure::of([__CLASS__, 'nonExistant'])->__invoke();
-  }
-
   #[@test, @expect('lang.IllegalArgumentException')]
   public function raises_exception_when_class_in_array_does_not_exist() {
     Closure::of(['NonExistantClass', 'irrelevant']);
@@ -64,11 +49,6 @@ class ClosureTest extends \unittest\TestCase {
   #[@test]
   public function supports_array_with_instance_and_method() {
     $this->assertEquals('Member', Closure::of([$this, 'memberFixture'])->__invoke());
-  }
-
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method .*::nonExistant/')]
-  public function supports_array_with_instance_and_non_existant_method() {
-    @Closure::of([$this, 'nonExistant'])->__invoke();
   }
 
   #[@test, @expect('lang.IllegalArgumentException'), @values([

@@ -323,23 +323,31 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a new stream with only the first `n` elements
    *
-   * @param  int $n
+   * @param  var $arg either an integer or a closure
    * @return self<T>
    */
   #[@generic(return= 'self<T>')]
-  public function limit($n) {
-    return new self(new \LimitIterator($this->getIterator(), 0, $n));
+  public function limit($arg) {
+    if (is_numeric($arg)) {
+      return new self(new \LimitIterator($this->getIterator(), 0, (int)$arg));
+    } else {
+      return new self(new Window($this->getIterator(), function() { return false; }, Closure::of($arg)));
+    }
   }
 
   /**
    * Returns a new stream with only the first `n` elements
    *
-   * @param  int $n
+   * @param  var $arg either an integer or a closure
    * @return self<T>
    */
   #[@generic(return= 'self<T>')]
-  public function skip($n) {
-    return new self(new \LimitIterator($this->getIterator(), $n, -1));
+  public function skip($arg) {
+    if (is_numeric($arg)) {
+      return new self(new \LimitIterator($this->getIterator(), (int)$arg, -1));
+    } else {
+      return new self(new Window($this->getIterator(), Closure::of($arg), function() { return false; }));
+    }
   }
 
   /**

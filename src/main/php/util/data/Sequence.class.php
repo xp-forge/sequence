@@ -331,7 +331,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     if (is_numeric($arg)) {
       return new self(new \LimitIterator($this->getIterator(), 0, (int)$arg));
     } else {
-      return new self(new Window($this->getIterator(), function() { return false; }, Closure::of($arg)));
+      return new self(new Window($this->getIterator(), function() { return false; }, Closure::of($arg, Functions::$PREDICATE)));
     }
   }
 
@@ -346,7 +346,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     if (is_numeric($arg)) {
       return new self(new \LimitIterator($this->getIterator(), (int)$arg, -1));
     } else {
-      return new self(new Window($this->getIterator(), Closure::of($arg), function() { return false; }));
+      return new self(new Window($this->getIterator(), Closure::of($arg, Functions::$PREDICATE), function() { return false; }));
     }
   }
 

@@ -26,8 +26,8 @@ before_deploy:
 deploy:
   provider: releases
   file:
-    - xp-$MODULE-$REL.xar
-    - xp-$MODULE-test-$REL.xar
+    - xp-$MOD-$REL.xar
+    - xp-$MOD-test-$REL.xar
     - glue.json
   skip_cleanup: true
   on:

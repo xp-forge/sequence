@@ -10,6 +10,6 @@
     "php" : ">=5.4.0"
   },
   "autoload" : {
-    "files" : ["src/main/php/__xp.php"]
+    "files" : ["src/main/php/autoload.php"]
   }
 }

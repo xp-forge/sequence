@@ -6,7 +6,7 @@
   "description" : "Data sequences",
   "keywords": ["module", "xp"],
   "require" : {
-    "xp-framework/core": "6.0.0alpha7",
+    "xp-framework/core": "dev-master",
     "php" : ">=5.4.0"
   },
   "autoload" : {

@@ -1,0 +1,15 @@
+{
+  "name" : "xp-forge/sequence",
+  "type" : "library",
+  "homepage" : "http://xp-framework.net/",
+  "license" : "BSD-3-Clause",
+  "description" : "Data sequences",
+  "keywords": ["module", "xp"],
+  "require" : {
+    "xp-framework/core": "6.0.0alpha7",
+    "php" : ">=5.4.0"
+  },
+  "autoload" : {
+    "files" : ["src/main/php/__xp.php"]
+  }
+}

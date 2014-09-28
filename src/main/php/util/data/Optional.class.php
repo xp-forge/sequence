@@ -5,9 +5,8 @@ use util\NoSuchElementException;
 /**
  * An optional
  *
- * @test  xp://util.data.unittest.OptionalTest
+ * @test  xp://util.data.unittest.Optionalvarest
  */
-#[@generic(self= 'T')]
 class Optional extends \lang\Object implements \IteratorAggregate {
   public static $EMPTY;
 
@@ -21,7 +20,7 @@ class Optional extends \lang\Object implements \IteratorAggregate {
   /**
    * Create a given Optional instance
    *
-   * @param  T $value
+   * @param  var $value
    * @param  bool $present
    */
   protected function __construct($value, $present) {
@@ -32,10 +31,9 @@ class Optional extends \lang\Object implements \IteratorAggregate {
   /**
    * Creates a new Optional
    *
-   * @param  T $value
-   * @param  self<T>
+   * @param  var $value
+   * @param  self
    */
-  #[@generic(params= 'T', return= 'self<T>')]
   public static function of($value) {
     return new self($value, true);
   }
@@ -53,10 +51,9 @@ class Optional extends \lang\Object implements \IteratorAggregate {
   /**
    * Gets this optional's value
    *
-   * @return T
+   * @return var
    * @throws util.NoSuchElementException if no value is present.
    */
-  #[@generic(return= 'T')]
   public function get() {
     if ($this->present) return $this->value;
 
@@ -66,10 +63,9 @@ class Optional extends \lang\Object implements \IteratorAggregate {
   /**
    * Gets this optional's value, or a given default value, if no value is present.
    *
-   * @param  T $default
-   * @return T
+   * @param  var $default
+   * @return var
    */
-  #[@generic(params= 'T', return= 'T')]
   public function orElse($default) {
     return $this->present ? $this->value : $default;
   }

@@ -15,6 +15,11 @@ class SequenceCreationTest extends AbstractSequenceTest {
     $this->assertInstanceOf('util.data.Sequence', Sequence::of($input), $name);
   }
 
+  #[@test, @values('util.data.unittest.Enumerables::valid')]
+  public function can_create_via_generic_of($input, $name) {
+    $this->assertInstanceOf('util.data.Sequence<int>', Sequence::{'of<int>'}($input), $name);
+  }
+
   #[@test, @expect('lang.IllegalArgumentException'), @values('util.data.unittest.Enumerables::invalid')]
   public function invalid_type_for_of($input) {
     Sequence::of($input);

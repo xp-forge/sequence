@@ -13,7 +13,6 @@ use lang\IllegalStateException;
  * @test xp://util.data.unittest.SequenceCreationTest
  * @test xp://util.data.unittest.SequenceSortingTest
  */
-#[@generic(self= 'T')]
 class Sequence extends \lang\Object implements \IteratorAggregate {
   public static $EMPTY;
 
@@ -30,8 +29,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Invoke terminal operation
    *
-   * @param  function(): R $operation
-   * @return R
+   * @param  function(): var $operation
+   * @return var
    */
   protected function terminal($operation) {
     static $message= 'Underlying value is streamed and cannot be processed more than once';
@@ -69,10 +68,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @see    xp://util.data.Enumeration
    * @param  var $elements an iterator, iterable, generator or array
-   * @return self<R>
+   * @return self
    * @throws lang.IllegalArgumentException if type of elements argument is incorrect
    */
-  #[@generic(return= 'self<R>')]
   public static function of($elements) {
     return new self(Enumeration::of($elements));
   }
@@ -81,11 +79,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Creates a new stream iteratively calling the given operation, starting
    * with a given seed, and continuing with op(seed), op(op(seed)), etc.
    *
-   * @param  R $seed
-   * @param  function(R): R $op
-   * @return self<R>
+   * @param  var $seed
+   * @param  function(var): var $op
+   * @return self
    */
-  #[@generic(return= 'self<R>')]
   public static function iterate($seed, $op) {
     $value= $seed;
     $closure= Closure::of($op);
@@ -98,10 +95,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Creates a new stream which uses a given supplier to provide the values
    *
-   * @param  function(): R $supplier
-   * @return self<R>
+   * @param  function(): var $supplier
+   * @return self
    */
-  #[@generic(return= 'self<R>')]
   public static function generate($supplier) {
     $closure= Closure::of($supplier);
     return new self(new Generator($closure, $closure));
@@ -110,11 +106,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Concatenates two streams
    *
-   * @param  self<R> $a
-   * @param  self<R> $b
-   * @return self<R>
+   * @param  self $a
+   * @param  self $b
+   * @return self
    */
-  #[@generic(params= 'self<R>, self<R>', return= 'self<R>')]
   public static function concat(self $a, self $b) {
     $it= new \AppendIterator();
     $it->append($a->getIterator());
@@ -125,10 +120,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns the first element of this stream, or an empty optional
    *
-   * @return util.data.Optional<T>
+   * @return util.data.Optional
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  #[@generic(return= 'T')]
   public function first() {
     return $this->terminal(function() {
       $gen= $this->elements instanceof \Generator;
@@ -146,10 +140,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Collects all elements in an array
    *
-   * @return T[]
+   * @return var[]
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  #[@generic(return= 'T[]')]
   public function toArray() {
     return $this->terminal(function() {
       $return= [];
@@ -182,7 +175,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return T
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  #[@generic(return= 'T')]
   public function sum() {
     return $this->terminal(function() {
       $return= 0;
@@ -198,7 +190,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  var $comparator Either a Comparator or a closure to compare.
    * @param  int $n direction, either -1 or +1
-   * @return T
+   * @return var
    */
   protected function select($comparator, $n) {
     $return= null;
@@ -218,10 +210,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * is given, using the `<` operator.
    *
    * @param  var $comparator default NULL Either a Comparator or a closure to compare.
-   * @return T
+   * @return var
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  #[@generic(return= 'T')]
   public function min($comparator= null) {
     return $this->terminal(function() use($comparator) {
       if (null === $comparator) {
@@ -240,10 +231,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * given, using the `>` operator.
    *
    * @param  var $comparator default NULL Either a Comparator or a closure to compare.
-   * @return T
+   * @return var
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  #[@generic(return= 'T')]
   public function max($comparator= null) {
     return $this->terminal(function() use($comparator) {
       if (null === $comparator) {
@@ -261,9 +251,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Performs a reduction on the elements of this stream, using the provided identity
    * value and an associative accumulation function, and returns the reduced value.
    *
-   * @param  R $identity
-   * @param  function(R, R): R $function
-   * @return R
+   * @param  var $identity
+   * @param  function(var, var): var $function
+   * @return var
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function reduce($identity, $accumulator) {
@@ -281,7 +271,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Performs a mutable reduction operation on the elements of this stream.
    *
    * @param  util.data.ICollector
-   * @return R
+   * @return var
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function collect(ICollector $collector) {
@@ -301,7 +291,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Invokes a given consumer on each element
    *
-   * @param  functionT $function
+   * @param  function(var): void $function
    * @return int The number of elements
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
@@ -321,9 +311,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns a new stream with only the first `n` elements
    *
    * @param  var $arg either an integer or a closure
-   * @return self<T>
+   * @return self
    */
-  #[@generic(return= 'self<T>')]
   public function limit($arg) {
     if (is_numeric($arg)) {
       return new self(new \LimitIterator($this->getIterator(), 0, (int)$arg));
@@ -336,9 +325,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns a new stream with only the first `n` elements
    *
    * @param  var $arg either an integer or a closure
-   * @return self<T>
+   * @return self
    */
-  #[@generic(return= 'self<T>')]
   public function skip($arg) {
     if (is_numeric($arg)) {
       return new self(new \LimitIterator($this->getIterator(), (int)$arg, -1));
@@ -351,9 +339,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns a new stream with elements matching the given predicate
    *
    * @param  var $predicate either a util.Filter instance or a function
-   * @return self<T>
+   * @return self
    */
-  #[@generic(return= 'self<T>')]
   public function filter($predicate) {
     if (is('util.Filter<?>', $predicate) || $predicate instanceof Filter) {
       $f= Closure::of([$predicate, 'accept']);
@@ -366,10 +353,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a new stream which maps the given function to each element
    *
-   * @param  functionT: R $function
-   * @return self<R>
+   * @param  functionT: var $function
+   * @return self
    */
-  #[@generic(return= 'self<R>')]
+  #[@generic(return= 'self')]
   public function map($function) {
     return new self(new Mapper($this->getIterator(), Closure::of($function)));
   }
@@ -378,10 +365,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns a new stream which flattens, mapping the given function to each
    * element.
    *
-   * @param  functionT: R $function - if omitted, the identity function is used.
-   * @return self<R>
+   * @param  functionT: var $function - if omitted, the identity function is used.
+   * @return self
    */
-  #[@generic(return= 'self<R>')]
+  #[@generic(return= 'self')]
   public function flatten($function= null) {
     if (null === $function) {
       $it= $this->getIterator();
@@ -395,10 +382,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns a new stream which additionally calls the given function for 
    * each element it consumes. Use this e.g. for debugging purposes.
    *
-   * @param  functionT: R $action
-   * @return self<R>
+   * @param  functionT: var $action
+   * @return self
    */
-  #[@generic(return= 'self<R>')]
+  #[@generic(return= 'self')]
   public function peek($action) {
     $f= Closure::of($action);
     return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use($f) {
@@ -413,9 +400,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * reference.
    *
    * @param  int $count Variable passed in by reference
-   * @return self<R>
+   * @return self
    */
-  #[@generic(return= 'self<R>')]
+  #[@generic(return= 'self')]
   public function counting(&$count) {
     return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use(&$count) {
       $count++;
@@ -427,9 +414,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a stream with distinct elements
    *
-   * @return self<T>
+   * @return self
    */
-  #[@generic(return= 'self<T>')]
   public function distinct() {
     $set= [];
     return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use(&$set) {
@@ -457,9 +443,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @see    php://uasort
    * @see    php://asort
    * @param  var $comparator either a Comparator instance, a callable or optional sort flags
-   * @return self<T>
+   * @return self
    */
-  #[@generic(return= 'self<T>')]
   public function sorted($comparator= null) {
     $sort= $this->toArray();
     if ($comparator instanceof Comparator) {

@@ -356,7 +356,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @param  function(var): var $function
    * @return self
    */
-  #[@generic(return= 'self')]
   public function map($function) {
     return new self(new Mapper($this->getIterator(), Closure::of($function)));
   }
@@ -368,7 +367,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @param  function(var): var $function - if omitted, the identity function is used.
    * @return self
    */
-  #[@generic(return= 'self')]
   public function flatten($function= null) {
     if (null === $function) {
       $it= $this->getIterator();
@@ -385,7 +383,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @param  function(var): void $action
    * @return self
    */
-  #[@generic(return= 'self')]
   public function peek($action) {
     $f= Closure::of($action);
     return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use($f) {
@@ -402,7 +399,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @param  int $count Variable passed in by reference
    * @return self
    */
-  #[@generic(return= 'self')]
   public function counting(&$count) {
     return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use(&$count) {
       $count++;

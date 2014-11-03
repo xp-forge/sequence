@@ -353,7 +353,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a new stream which maps the given function to each element
    *
-   * @param  functionT: var $function
+   * @param  function(var): var $function
    * @return self
    */
   #[@generic(return= 'self')]
@@ -365,7 +365,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns a new stream which flattens, mapping the given function to each
    * element.
    *
-   * @param  functionT: var $function - if omitted, the identity function is used.
+   * @param  function(var): var $function - if omitted, the identity function is used.
    * @return self
    */
   #[@generic(return= 'self')]
@@ -382,7 +382,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns a new stream which additionally calls the given function for 
    * each element it consumes. Use this e.g. for debugging purposes.
    *
-   * @param  functionT: var $action
+   * @param  function(var): void $action
    * @return self
    */
   #[@generic(return= 'self')]

@@ -3,8 +3,10 @@ Data sequences change log
 
 ## 1.0.0 / 2014-11-03
 
-* Added support to omit value function in `Collectors::toMap()`. The collector
-  then used the element itself as a value - @thekid
+* Chose to make this 1.0.0 since it's been in productive use and thus
+  well proven to work - @thekid
+* Added support to omit value function in `Collectors::toMap()`. The
+  collector then used the element itself as a value - @thekid
 
 ## 0.7.4 / 2014-09-27
 

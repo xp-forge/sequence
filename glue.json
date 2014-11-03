@@ -1,6 +1,6 @@
 {
   "name"    : "xp-forge/sequence",
-  "version" : "0.7.5-dev",
+  "version" : "1.0.1-dev",
   "require" : {
     "xp-framework/core" : "~6.0"
   }

@@ -5,7 +5,7 @@ use util\NoSuchElementException;
 /**
  * An optional
  *
- * @test  xp://util.data.unittest.Optionalvarest
+ * @test  xp://util.data.unittest.OptionalTest
  */
 class Optional extends \lang\Object implements \IteratorAggregate {
   public static $EMPTY;

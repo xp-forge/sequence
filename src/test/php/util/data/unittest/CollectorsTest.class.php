@@ -81,6 +81,18 @@ class CollectorsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function toMap_uses_complete_value_if_value_function_omitted() {
+    $map= new HashTable();
+    $map['Timm']= $this->people[1549];
+    $map['Alex']= $this->people[1552];
+    $map['Dude']= $this->people[6100];
+
+    $this->assertEquals($map, Sequence::of($this->people)->collect(Collectors::toMap(
+      function($e) { return $e->name(); }
+    )));
+  }
+
+  #[@test]
   public function summing_years() {
     $this->assertEquals(33, Sequence::of($this->people)
       ->collect(Collectors::summing(function($e) { return $e->years(); }))

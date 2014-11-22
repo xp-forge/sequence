@@ -1,6 +1,7 @@
 <?php namespace util\data\unittest;
 
 use util\data\Sequence;
+use util\data\Collector;
 
 class SequenceCollectionTest extends AbstractSequenceTest {
 

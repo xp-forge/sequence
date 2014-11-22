@@ -26,8 +26,20 @@ abstract class AbstractWindow extends \lang\Object implements \Iterator {
     $this->stop= $stop;
   }
 
+  /**
+   * Checks whether to skip the current element. Implementations access
+   * the `it` member variable directly.
+   *
+   * @return bool
+   */
   public abstract function skip();
 
+  /**
+   * Checks whether to stop at the current element. Implementations access
+   * the `it` member variable directly.
+   *
+   * @return bool
+   */
   public abstract function stop();
 
   /** @return void */

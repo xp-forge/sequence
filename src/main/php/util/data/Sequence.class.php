@@ -371,6 +371,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  function(var): var $function
    * @return self
+   * @throws lang.IllegalArgumentException
    */
   public function map($function) {
     if (Closure::$APPLY->isInstance($function)) {
@@ -389,12 +390,17 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  function(var): var $function - if omitted, the identity function is used.
    * @return self
+   * @throws lang.IllegalArgumentException
    */
   public function flatten($function= null) {
     if (null === $function) {
       $it= $this->getIterator();
+    } else if (Closure::$APPLY->isInstance($function)) {
+      $it= new Mapper($this->getIterator(), Closure::$APPLY->cast($function));
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
+      $it= new MapperWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($function));
     } else {
-      $it= new Mapper($this->getIterator(), Closure::of($function));
+      throw new IllegalArgumentException('Expecting a function(var): var or a function(var, var): var, have '.typeof($function));
     }
     return new self(new Flattener($it));
   }

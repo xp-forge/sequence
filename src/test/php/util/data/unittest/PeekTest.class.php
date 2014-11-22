@@ -22,7 +22,7 @@ class PeekTest extends AbstractSequenceTest {
     $this->assertEquals([1, 3], $debug);
   }
 
-  #[@test, @ignore('Causes segmentation fault on Travis-CI')]
+  #[@test]
   public function keys() {
     $debug= [];
     Sequence::of([1, 2, 3, 4])

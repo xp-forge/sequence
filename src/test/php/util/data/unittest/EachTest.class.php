@@ -15,6 +15,15 @@ class EachTest extends AbstractSequenceTest {
     $this->assertEquals([1, 2, 3, 4], $collect);
   }
 
+  #[@test]
+  public function each_with_key() {
+    $collect= [];
+    Sequence::of([1, 2, 3, 4])->each(function($e, $key) use(&$collect) {
+      $collect[]= $key;
+    });
+    $this->assertEquals([0, 1, 2, 3], $collect);
+  }
+
   #[@test, @values([[[1, 2, 3, 4]], [[]]])]
   public function each_returns_number_of_processed_elements($input) {
     $this->assertEquals(sizeof($input), Sequence::of($input)->each(function($e) { }));
@@ -45,7 +54,7 @@ class EachTest extends AbstractSequenceTest {
   public function each_with_var_export() {
     ob_start();
 
-    Sequence::of([1, 2, 3, 4])->each('var_export');
+    Sequence::of([1, 2, 3, 4])->each('var_export', $args= [false]);
 
     $bytes= ob_get_contents();
     ob_end_clean();   

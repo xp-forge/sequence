@@ -292,19 +292,42 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Invokes a given consumer on each element
    *
    * @param  function(var): void $function
+   * @param  var $args Additional args to pass to function
    * @return int The number of elements
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  public function each($consumer) {
-    return $this->terminal(function() use($consumer) {
-      $inv= Closure::of($consumer);
-      $i= 0;
-      foreach ($this->elements as $element) {
-        $inv($element);
-        $i++;
-      }
-      return $i;
-    });
+  public function each($consumer, $args= null) {
+    if ($args) {
+      return $this->terminal(function() use($consumer, $args) {
+        $inv= Closure::$APPLY->newInstance($consumer);
+        $i= 0;
+        foreach ($this->elements as $element) {
+          call_user_func_array($inv, array_merge([$element], $args));
+          $i++;
+        }
+        return $i;
+      });
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($consumer)) {
+      return $this->terminal(function() use($consumer) {
+        $inv= Closure::$APPLY_WITH_KEY->cast($consumer);
+        $i= 0;
+        foreach ($this->elements as $key => $element) {
+          $inv($element, $key);
+          $i++;
+        }
+        return $i;
+      });
+    } else {
+      return $this->terminal(function() use($consumer) {
+        $inv= Closure::$APPLY->newInstance($consumer);
+        $i= 0;
+        foreach ($this->elements as $element) {
+          $inv($element);
+          $i++;
+        }
+        return $i;
+      });
+    }
   }
 
   /**

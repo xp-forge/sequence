@@ -417,10 +417,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function peek($action) {
     if (Closure::$APPLY_WITH_KEY->isInstance($action)) {
       $f= Closure::$APPLY_WITH_KEY->cast($action);
-      return new self(new \CallbackFilterIterator($this->getIterator(), function($e, $key, $it) use($f) { $f($e, $key); return true; }));
+      return new self(new MapperWithKey($this->getIterator(), function($e, $key) use($f) { $f($e, $key); return $e; }));
     } else {
       $f= Closure::$ANY->newInstance($action);
-      return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use($f) { $f($e); return true; }));
+      return new self(new Mapper($this->getIterator(), function($e) use($f) { $f($e); return $e; }));
     }
   }
 

@@ -12,11 +12,7 @@ class FilterableTest extends \unittest\TestCase {
    * @return var[]
    */
   protected function filter($values, $accept) {
-    $result= [];
-    foreach (new Filterable(new \ArrayIterator($values), $accept) as $val) {
-      $result[]= $val;
-    }
-    return $result;
+    return iterator_to_array(new Filterable(new \ArrayIterator($values), $accept), false);
   }
 
   #[@test]

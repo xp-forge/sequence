@@ -12,11 +12,7 @@ class FlattenerTest extends \unittest\TestCase {
    * @return var[]
    */
   protected function flatten($values) {
-    $result= [];
-    foreach (new Flattener(new \ArrayIterator($values)) as $val) {
-      $result[]= $val;
-    }
-    return $result;
+    return iterator_to_array(new Flattener(new \ArrayIterator($values)), false);
   }
 
   #[@test]

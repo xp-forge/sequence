@@ -1,6 +1,7 @@
 <?php namespace util\data\unittest;
 
 use util\data\Mapper;
+use lang\IllegalStateException;
 
 class MapperTest extends \unittest\TestCase {
 
@@ -12,11 +13,7 @@ class MapperTest extends \unittest\TestCase {
    * @return var[]
    */
   protected function map($values, $apply) {
-    $result= [];
-    foreach (new Mapper(new \ArrayIterator($values), $apply) as $val) {
-      $result[]= $val;
-    }
-    return $result;
+    return iterator_to_array(new Mapper(new \ArrayIterator($values), $apply), false);
   }
 
   #[@test]
@@ -27,7 +24,7 @@ class MapperTest extends \unittest\TestCase {
   #[@test]
   public function does_not_call_apply_for_empty_input() {
     $this->map([], function($e) {
-      throw new \lang\IllegalStateException('Should not have been invoked');
+      throw new IllegalStateException('Should not have been invoked');
     });
   }
 

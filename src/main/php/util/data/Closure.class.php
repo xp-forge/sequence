@@ -1,6 +1,9 @@
 <?php namespace util\data;
 
 use lang\IllegalArgumentException;
+use lang\FunctionType;
+use lang\Type;
+use lang\Primitive;
 
 /**
  * Invocation support: Wraps indirect references to callables - string
@@ -22,6 +25,12 @@ use lang\IllegalArgumentException;
  * @test  xp://util.data.unittest.ClosureTest
  */
 abstract class Closure extends \lang\Object {
+  public static $FILTER, $FILTER_WITH_KEY;
+
+  static function __static() {
+    self::$FILTER= new FunctionType([Type::$VAR], Primitive::$BOOL);
+    self::$FILTER_WITH_KEY= new FunctionType([Type::$VAR, Type::$VAR], Primitive::$BOOL);
+  }
 
   /**
    * Returns a closure for a given method

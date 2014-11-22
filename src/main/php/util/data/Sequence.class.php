@@ -340,14 +340,19 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  var $predicate either a util.Filter instance or a function
    * @return self
+   * @throws lang.IllegalArgumentException
    */
   public function filter($predicate) {
-    if (is('util.Filter<?>', $predicate) || $predicate instanceof Filter) {
-      $f= Closure::of([$predicate, 'accept']);
+    if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
+      $f= new Filterable($this->getIterator(), Closure::$FILTER->cast([$predicate, 'accept']));
+    } else if (Closure::$FILTER->isInstance($predicate)) {
+      $f= new Filterable($this->getIterator(), Closure::$FILTER->cast($predicate));
+    } else if (Closure::$FILTER_WITH_KEY->isInstance($predicate)) {
+      $f= new FilterableWithKey($this->getIterator(), Closure::$FILTER_WITH_KEY->cast($predicate));
     } else {
-      $f= Closure::of($predicate);
+      throw new IllegalArgumentException('Expecting either a function or a util.Filter instance, have '.typeof($predicate));
     }
-    return new self(new Filterable($this->getIterator(), $f));
+    return new self($f);
   }
 
   /**

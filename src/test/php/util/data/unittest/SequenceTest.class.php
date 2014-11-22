@@ -20,31 +20,6 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertSequence([1, 2, 3], Sequence::of($input), $name);
   }
 
-  #[@test]
-  public function flatten_without_mapper() {
-    $this->assertSequence(['a', 'b', 'c', 'd'], Sequence::of([['a', 'b'], ['c', 'd']])->flatten());
-  }
-
-  #[@test]
-  public function flatten_with_mapper() {
-    $this->assertSequence(['a', 'b', 'c', 'd'], Sequence::of(['a', 'c'])->flatten(function($e) {
-      return Sequence::iterate($e, function($n) { return ++$n; })->limit(2);
-    }));
-  }
-
-  #[@test]
-  public function flatten_optionals() {
-    $this->assertSequence(['a', 'b'], Sequence::of([Optional::of('a'), Optional::$EMPTY, Optional::of('b')])->flatten());
-  }
-
-  #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
-  public function flatten_raises_exception_when_given($noncallable) {
-    if (null === $noncallable) {
-      throw new \lang\IllegalArgumentException('Valid use-case');
-    }
-    Sequence::of([])->flatten($noncallable);
-  }
-
   #[@test, @values([
   #  [0, []],
   #  [1, [1]],
@@ -137,27 +112,6 @@ class SequenceTest extends AbstractSequenceTest {
   }
 
   #[@test]
-  public function limit_stops_at_nth_array_element() {
-    $this->assertSequence([1, 2], Sequence::of([1, 2, 3])->limit(2));
-  }
-
-  #[@test]
-  public function limit_stops_at_nth_iterator_element() {
-    $this->assertSequence([1, 2], Sequence::iterate(1, function($i) { return ++$i; })->limit(2));
-  }
-
-  #[@test]
-  public function limit_stops_at_nth_generator_element() {
-    $i= 1;
-    $this->assertSequence([1, 2], Sequence::generate(function() use(&$i) { return $i++; })->limit(2));
-  }
-
-  #[@test]
-  public function limit_stops_when_given_closure_returns_true() {
-    $this->assertSequence([1, 2], Sequence::of([1, 2, 3, 4])->limit(function($e) { return $e > 2; }));
-  }
-
-  #[@test]
   public function concat() {
     $this->assertSequence([1, 2, 3, 4], Sequence::concat(Sequence::of([1, 2]), Sequence::of([3, 4])));
   }
@@ -174,16 +128,6 @@ class SequenceTest extends AbstractSequenceTest {
       $seq= Sequence::concat($seq, Sequence::of($array));
     }
     $this->assertSequence([1, 2, 3, 4, 5, 6], $seq);
-  }
-
-  #[@test]
-  public function skip_excludes_n_first_elements() {
-    $this->assertSequence([3, 4], Sequence::of([1, 2, 3, 4])->skip(2));
-  }
-
-  #[@test]
-  public function skip_excludes_elements_when_given_closure_returns_true() {
-    $this->assertSequence([3, 4], Sequence::of([1, 2, 3, 4])->skip(function($e) { return $e < 3; }));
   }
 
   #[@test, @values([

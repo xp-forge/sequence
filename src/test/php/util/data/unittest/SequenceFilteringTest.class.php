@@ -29,7 +29,7 @@ class SequenceFilteringTest extends AbstractSequenceTest {
   }
 
   #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
-  public function filter_raises_exception_when_given($noncallable) {
+  public function raises_exception_when_given($noncallable) {
     Sequence::of([])->filter($noncallable);
   }
 }

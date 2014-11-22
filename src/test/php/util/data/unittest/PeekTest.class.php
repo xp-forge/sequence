@@ -6,7 +6,7 @@ use util\cmd\Console;
 
 class PeekTest extends AbstractSequenceTest {
 
-  #[@test, @ignore('Causes segmentation fault on Travis-CI'), @expect('lang.IllegalArgumentException'), @values(['@non-existant-func@'])]
+  #[@test, @expect('lang.IllegalArgumentException'), @values(['@non-existant-func@'])]
   public function invalid($arg) {
     Sequence::$EMPTY->peek($arg);
   }
@@ -22,7 +22,7 @@ class PeekTest extends AbstractSequenceTest {
     $this->assertEquals([1, 3], $debug);
   }
 
-  #[@test]
+  #[@test, @ignore('Causes segmentation fault on Travis-CI')]
   public function keys() {
     $debug= [];
     Sequence::of([1, 2, 3, 4])

@@ -350,7 +350,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     } else if (Closure::$APPLY_WITH_KEY->isInstance($predicate)) {
       $f= new FilterableWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($predicate));
     } else {
-      throw new IllegalArgumentException('Expecting either a function or a util.Filter instance, have '.typeof($predicate));
+      throw new IllegalArgumentException('Expecting a function(var): var or a function(var, var): var, or a util.Filter instance, have '.typeof($predicate));
     }
     return new self($f);
   }
@@ -367,7 +367,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     } else if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
       $m= new MapperWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($function));
     } else {
-      throw new IllegalArgumentException('Expecting either a function, have '.typeof($function));
+      throw new IllegalArgumentException('Expecting a function(var): var or a function(var, var): var, have '.typeof($function));
     }
     return new self($m);
   }

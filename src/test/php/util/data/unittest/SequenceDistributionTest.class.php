@@ -2,7 +2,7 @@
 
 use util\data\Sequence;
 
-class DistributionTest extends AbstractSequenceTest {
+class SequenceDistributionTest extends AbstractSequenceTest {
 
   #[@test]
   public function one() {

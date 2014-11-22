@@ -431,7 +431,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function peek($action, $args= null) {
     if (null !== $args) {
-      $f= Closure::$APPLY_WITH_KEY->cast($action);
+      $f= Closure::$APPLY->newInstance($action);
       $p= new MapperWithKey($this->getIterator(), function($e) use($f, $args) {
         call_user_func_array($f, array_merge([$e], $args));
         return $e;

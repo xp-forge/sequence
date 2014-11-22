@@ -44,4 +44,20 @@ class PeekTest extends AbstractSequenceTest {
     Console::$out->setStream($orig);    
     $this->assertEquals('1234', $out->getBytes());
   }
+
+  #[@test]
+  public function with_var_export() {
+    ob_start();
+
+    Sequence::of([1, 2, 3, 4])->peek('var_export', $args= [false])->toArray();
+
+    $bytes= ob_get_contents();
+    ob_end_clean();
+    $this->assertEquals('1234', $bytes);
+  }
+
+  #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
+  public function raises_exception_when_given($noncallable) {
+    Sequence::of([])->peek($noncallable);
+  }
 }

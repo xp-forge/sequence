@@ -297,8 +297,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function each($consumer, $args= null) {
-    if ($args) {
-      return $this->terminal(function() use($consumer, $args) {
+    if (null !== $args) {
+      $t= function() use($consumer, $args) {
         $inv= Closure::$APPLY->newInstance($consumer);
         $i= 0;
         foreach ($this->elements as $element) {
@@ -306,9 +306,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
           $i++;
         }
         return $i;
-      });
+      };
     } else if (Closure::$APPLY_WITH_KEY->isInstance($consumer)) {
-      return $this->terminal(function() use($consumer) {
+      $t= function() use($consumer) {
         $inv= Closure::$APPLY_WITH_KEY->cast($consumer);
         $i= 0;
         foreach ($this->elements as $key => $element) {
@@ -316,9 +316,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
           $i++;
         }
         return $i;
-      });
+      };
     } else {
-      return $this->terminal(function() use($consumer) {
+      $t= function() use($consumer) {
         $inv= Closure::$APPLY->newInstance($consumer);
         $i= 0;
         foreach ($this->elements as $element) {
@@ -326,8 +326,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
           $i++;
         }
         return $i;
-      });
+      };
     }
+    return $this->terminal($t);
   }
 
   /**
@@ -424,17 +425,25 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * each element it consumes. Use this e.g. for debugging purposes.
    *
    * @param  function(var): void $action
+   * @param  var $args Additional args to pass to function
    * @return self
    * @throws lang.IllegalArgumentException
    */
-  public function peek($action) {
-    if (Closure::$APPLY_WITH_KEY->isInstance($action)) {
+  public function peek($action, $args= null) {
+    if (null !== $args) {
       $f= Closure::$APPLY_WITH_KEY->cast($action);
-      return new self(new MapperWithKey($this->getIterator(), function($e, $key) use($f) { $f($e, $key); return $e; }));
+      $p= new MapperWithKey($this->getIterator(), function($e) use($f, $args) {
+        call_user_func_array($f, array_merge([$e], $args));
+        return $e;
+      });
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($action)) {
+      $f= Closure::$APPLY_WITH_KEY->cast($action);
+      $p= new MapperWithKey($this->getIterator(), function($e, $key) use($f) { $f($e, $key); return $e; });
     } else {
       $f= Closure::$APPLY->newInstance($action);
-      return new self(new Mapper($this->getIterator(), function($e) use($f) { $f($e); return $e; }));
+      $p= new Mapper($this->getIterator(), function($e) use($f) { $f($e); return $e; });
     }
+    return new self($p);
   }
 
   /**

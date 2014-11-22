@@ -344,11 +344,11 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function filter($predicate) {
     if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
-      $f= new Filterable($this->getIterator(), Closure::$FILTER->cast([$predicate, 'accept']));
-    } else if (Closure::$FILTER->isInstance($predicate)) {
-      $f= new Filterable($this->getIterator(), Closure::$FILTER->cast($predicate));
-    } else if (Closure::$FILTER_WITH_KEY->isInstance($predicate)) {
-      $f= new FilterableWithKey($this->getIterator(), Closure::$FILTER_WITH_KEY->cast($predicate));
+      $f= new Filterable($this->getIterator(), Closure::$APPLY->cast([$predicate, 'accept']));
+    } else if (Closure::$APPLY->isInstance($predicate)) {
+      $f= new Filterable($this->getIterator(), Closure::$APPLY->cast($predicate));
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($predicate)) {
+      $f= new FilterableWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($predicate));
     } else {
       throw new IllegalArgumentException('Expecting either a function or a util.Filter instance, have '.typeof($predicate));
     }
@@ -362,10 +362,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self
    */
   public function map($function) {
-    if (Closure::$MAPPER->isInstance($function)) {
-      $m= new Mapper($this->getIterator(), Closure::$MAPPER->cast($function));
-    } else if (Closure::$MAPPER_WITH_KEY->isInstance($function)) {
-      $m= new MapperWithKey($this->getIterator(), Closure::$MAPPER_WITH_KEY->cast($function));
+    if (Closure::$APPLY->isInstance($function)) {
+      $m= new Mapper($this->getIterator(), Closure::$APPLY->cast($function));
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
+      $m= new MapperWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($function));
     } else {
       throw new IllegalArgumentException('Expecting either a function, have '.typeof($function));
     }

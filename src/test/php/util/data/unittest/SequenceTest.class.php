@@ -87,17 +87,6 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertEquals([1, 2, 3], $values);
   }
 
-  #[@test]
-  public function peeking() {
-    $debug= [];
-    Sequence::of([1, 2, 3, 4])
-      ->filter(function($e) { return $e % 2 > 0; })
-      ->peek(function($e) use(&$debug) { $debug[]= $e; })
-      ->toArray()   // or any other terminal action
-    ;
-    $this->assertEquals([1, 3], $debug);
-  }
-
   #[@test, @values([[['a', 'b', 'c', 'd']], [[]]])]
   public function counting($input) {
     $i= 0;

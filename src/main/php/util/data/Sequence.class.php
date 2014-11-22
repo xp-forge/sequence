@@ -412,13 +412,16 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  function(var): void $action
    * @return self
+   * @throws lang.IllegalArgumentException
    */
   public function peek($action) {
-    $f= Closure::of($action);
-    return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use($f) {
-      $f($e);
-      return true;
-    }));
+    if (Closure::$APPLY_WITH_KEY->isInstance($action)) {
+      $f= Closure::$APPLY_WITH_KEY->cast($action);
+      return new self(new \CallbackFilterIterator($this->getIterator(), function($e, $key) use($f) { $f($e, $key); return true; }));
+    } else {
+      $f= Closure::$ANY->newInstance($action);
+      return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use($f) { $f($e); return true; }));
+    }
   }
 
   /**

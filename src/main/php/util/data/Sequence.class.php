@@ -332,6 +332,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  var $arg either an integer or a closure
    * @return self
+   * @throws lang.IllegalArgumentException
    */
   public function skip($arg) {
     if (is_numeric($arg)) {

@@ -25,11 +25,10 @@ use lang\Primitive;
  * @test  xp://util.data.unittest.ClosureTest
  */
 abstract class Closure extends \lang\Object {
-  public static $ANY, $APPLY, $APPLY_WITH_KEY;
+  public static $APPLY, $APPLY_WITH_KEY;
 
   static function __static() {
-    self::$ANY= new FunctionType(null, Type::$VAR);
-    self::$APPLY= new FunctionType([Type::$VAR], Type::$VAR);
+    self::$APPLY= new FunctionType(null, Type::$VAR);
     self::$APPLY_WITH_KEY= new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR);
   }
 

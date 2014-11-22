@@ -317,12 +317,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function limit($arg) {
     if (is_numeric($arg)) {
       $w= new \LimitIterator($this->getIterator(), 0, (int)$arg);
-    } else if (Closure::$APPLY->isInstance($arg)) {
-      $w= new Window($this->getIterator(), function() { return false; }, Closure::$APPLY->cast($arg));
     } else if (Closure::$APPLY_WITH_KEY->isInstance($arg)) {
       $w= new WindowWithKey($this->getIterator(), function() { return false; }, Closure::$APPLY_WITH_KEY->cast($arg));
     } else {
-      throw new IllegalArgumentException('Expecting an int, a function(var): var or a function(var, var): var, have '.typeof($function));
+      $w= new Window($this->getIterator(), function() { return false; }, Closure::$APPLY->newInstance($arg));
     }
     return new self($w);
   }
@@ -337,12 +335,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function skip($arg) {
     if (is_numeric($arg)) {
       $w= new \LimitIterator($this->getIterator(), (int)$arg, -1);
-    } else if (Closure::$APPLY->isInstance($arg)) {
-      $w= new Window($this->getIterator(), Closure::$APPLY->cast($arg), function() { return false; });
     } else if (Closure::$APPLY_WITH_KEY->isInstance($arg)) {
       $w= new WindowWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($arg), function() { return false; });
     } else {
-      throw new IllegalArgumentException('Expecting an int, a function(var): var or a function(var, var): var, have '.typeof($function));
+      $w= new Window($this->getIterator(), Closure::$APPLY->newInstance($arg), function() { return false; });
     }
     return new self($w);
   }
@@ -357,12 +353,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function filter($predicate) {
     if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
       $f= new Filterable($this->getIterator(), Closure::$APPLY->cast([$predicate, 'accept']));
-    } else if (Closure::$APPLY->isInstance($predicate)) {
-      $f= new Filterable($this->getIterator(), Closure::$APPLY->cast($predicate));
     } else if (Closure::$APPLY_WITH_KEY->isInstance($predicate)) {
       $f= new FilterableWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($predicate));
     } else {
-      throw new IllegalArgumentException('Expecting a function(var): var or a function(var, var): var, or a util.Filter instance, have '.typeof($predicate));
+      $f= new Filterable($this->getIterator(), Closure::$APPLY->newInstance($predicate));
     }
     return new self($f);
   }
@@ -375,12 +369,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function map($function) {
-    if (Closure::$APPLY->isInstance($function)) {
-      $m= new Mapper($this->getIterator(), Closure::$APPLY->cast($function));
-    } else if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
+    if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
       $m= new MapperWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($function));
     } else {
-      throw new IllegalArgumentException('Expecting a function(var): var or a function(var, var): var, have '.typeof($function));
+      $m= new Mapper($this->getIterator(), Closure::$APPLY->newInstance($function));
     }
     return new self($m);
   }
@@ -396,12 +388,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function flatten($function= null) {
     if (null === $function) {
       $it= $this->getIterator();
-    } else if (Closure::$APPLY->isInstance($function)) {
-      $it= new Mapper($this->getIterator(), Closure::$APPLY->cast($function));
     } else if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
       $it= new MapperWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($function));
     } else {
-      throw new IllegalArgumentException('Expecting a function(var): var or a function(var, var): var, have '.typeof($function));
+      $it= new Mapper($this->getIterator(), Closure::$APPLY->newInstance($function));
     }
     return new self(new Flattener($it));
   }
@@ -419,7 +409,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
       $f= Closure::$APPLY_WITH_KEY->cast($action);
       return new self(new MapperWithKey($this->getIterator(), function($e, $key) use($f) { $f($e, $key); return $e; }));
     } else {
-      $f= Closure::$ANY->newInstance($action);
+      $f= Closure::$APPLY->newInstance($action);
       return new self(new Mapper($this->getIterator(), function($e) use($f) { $f($e); return $e; }));
     }
   }

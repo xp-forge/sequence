@@ -362,7 +362,14 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self
    */
   public function map($function) {
-    return new self(new Mapper($this->getIterator(), Closure::of($function)));
+    if (Closure::$MAPPER->isInstance($function)) {
+      $m= new Mapper($this->getIterator(), Closure::$MAPPER->cast($function));
+    } else if (Closure::$MAPPER_WITH_KEY->isInstance($function)) {
+      $m= new MapperWithKey($this->getIterator(), Closure::$MAPPER_WITH_KEY->cast($function));
+    } else {
+      throw new IllegalArgumentException('Expecting either a function, have '.typeof($function));
+    }
+    return new self($m);
   }
 
   /**

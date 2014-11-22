@@ -25,11 +25,13 @@ use lang\Primitive;
  * @test  xp://util.data.unittest.ClosureTest
  */
 abstract class Closure extends \lang\Object {
-  public static $FILTER, $FILTER_WITH_KEY;
+  public static $FILTER, $FILTER_WITH_KEY, $MAPPER, $MAPPER_WITH_KEY;
 
   static function __static() {
     self::$FILTER= new FunctionType([Type::$VAR], Primitive::$BOOL);
     self::$FILTER_WITH_KEY= new FunctionType([Type::$VAR, Type::$VAR], Primitive::$BOOL);
+    self::$MAPPER= new FunctionType([Type::$VAR], Type::$VAR);
+    self::$MAPPER_WITH_KEY= new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR);
   }
 
   /**

@@ -33,7 +33,7 @@ class PeekTest extends AbstractSequenceTest {
     $this->assertEquals([0, 2], $debug);
   }
 
-  #[@test]
+  #[@test, @ignore('Causes segmentation fault on Travis-CI')]
   public function writing_to_console_out() {
     $orig= Console::$out->getStream();
     $out= new MemoryOutputStream();

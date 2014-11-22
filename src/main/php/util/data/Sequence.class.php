@@ -312,13 +312,19 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  var $arg either an integer or a closure
    * @return self
+   * @throws lang.IllegalArgumentException
    */
   public function limit($arg) {
     if (is_numeric($arg)) {
-      return new self(new \LimitIterator($this->getIterator(), 0, (int)$arg));
+      $w= new \LimitIterator($this->getIterator(), 0, (int)$arg);
+    } else if (Closure::$APPLY->isInstance($arg)) {
+      $w= new Window($this->getIterator(), function() { return false; }, Closure::$APPLY->cast($arg));
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($arg)) {
+      $w= new WindowWithKey($this->getIterator(), function() { return false; }, Closure::$APPLY_WITH_KEY->cast($arg));
     } else {
-      return new self(new Window($this->getIterator(), function() { return false; }, Closure::of($arg)));
+      throw new IllegalArgumentException('Expecting an int, a function(var): var or a function(var, var): var, have '.typeof($function));
     }
+    return new self($w);
   }
 
   /**
@@ -329,10 +335,15 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function skip($arg) {
     if (is_numeric($arg)) {
-      return new self(new \LimitIterator($this->getIterator(), (int)$arg, -1));
+      $w= new \LimitIterator($this->getIterator(), (int)$arg, -1);
+    } else if (Closure::$APPLY->isInstance($arg)) {
+      $w= new Window($this->getIterator(), Closure::$APPLY->cast($arg), function() { return false; });
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($arg)) {
+      $w= new WindowWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($arg), function() { return false; });
     } else {
-      return new self(new Window($this->getIterator(), Closure::of($arg), function() { return false; }));
+      throw new IllegalArgumentException('Expecting an int, a function(var): var or a function(var, var): var, have '.typeof($function));
     }
+    return new self($w);
   }
 
   /**

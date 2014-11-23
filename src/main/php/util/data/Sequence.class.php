@@ -394,10 +394,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a new stream which maps the given function to each element
    *
-   * @param  var[] $workers
+   * @param  util.data.Workers $workers
    * @return self
    */
-  public function distribute(array $workers) {
+  public function distribute(Workers $workers) {
     return new self(new Distribution($this->getIterator(), $workers));
   }
 

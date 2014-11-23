@@ -6,42 +6,44 @@
 class Distribution extends \lang\Object implements \Iterator {
   protected $it;
   protected $workers;
-  protected $worker;
+  protected $inv;
 
   /**
    * Creates a new Generator instance
    *
    * @param  php.Iterator $it
-   * @param  var[] $workers
+   * @param  util.data.Workers $workers
    */
-  public function __construct(\Iterator $it, array $workers) {
+  public function __construct(\Iterator $it, Workers $workers) {
     $this->it= $it;
     $this->workers= $workers;
+    $this->inv= 0;
   }
 
   /** @return void */
   public function rewind() {
-    $this->worker= 0;
     $this->it->rewind();
+    if ($this->valid()) {
+      $this->workers->enqueue($this->it->current());
+    }
   }
 
   /** @return var */
   public function current() {
-    return $this->workers[$this->worker]->__invoke($this->it->current());
+    return $this->workers->dequeue();
   }
 
   /** @return int */
   public function key() {
-    return $this->it->key();
+    return $this->inv++;
   }
 
   /** @return void */
   public function next() {
-    if (++$this->worker >= sizeof($this->workers)) {
-      $this->worker= 0;
-    }
-
     $this->it->next();
+    if ($this->valid()) {
+      $this->workers->enqueue($this->it->current());
+    }
   }
 
   /** @return bool */

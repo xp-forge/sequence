@@ -54,6 +54,8 @@ class SequenceDistributionTest extends AbstractSequenceTest {
       $worker->shutdown();
     }
 
-    $this->assertEquals([3, 20, 9, 40, 15, 60, 21, 80], $results);
+    // The order in which results are returned cannot be guaranteed!
+    sort($results);
+    $this->assertEquals([3, 9, 15, 20, 21, 40, 60, 80], $results);
   }
 }

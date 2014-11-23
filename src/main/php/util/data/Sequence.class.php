@@ -416,7 +416,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     }));
   }
 
-
   /**
    * Returns a stream with distinct elements
    *

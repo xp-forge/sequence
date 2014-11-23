@@ -29,11 +29,16 @@ class Worker extends \lang\Object {
       public function handleError($socket, $e) { }
 
       public function handleData($socket) {
+        file_put_contents("server.log", "HANDLE(".$socket->getHandle().")\n", FILE_APPEND);
         $in= $socket->readLine();
+        file_put_contents("server.log", "LINE `$in`\n", FILE_APPEND);
+
         if ("SHUTDOWN" === $in) {
           $this->server->terminate= true;
         } else if ($in) {
           $socket->write(serialize(unserialize($in) * $this->factor)."\n");
+        } else {
+          $socket->write("-ERR\n");
         }
       }  
     }'));

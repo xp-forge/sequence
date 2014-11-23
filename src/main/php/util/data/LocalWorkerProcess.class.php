@@ -4,15 +4,37 @@ use peer\Socket;
 use lang\Runtime;
 use lang\IllegalStateException;
 use io\IOException;
+use util\collections\Queue;
 
 /**
- * 
+ * A worker process that runs on this machine.
+ *
+ * @test  xyp://util.data.unittest.LocalWorkerProcessTest
  */
 class LocalWorkerProcess extends \lang\Object {
+  protected $queue, $pending, $cmd, $proc, $comm;
 
+  /**
+   * Creates a new locally running worker process
+   *
+   * @param  string $class
+   * @param  string[] $args
+   */
   public function __construct($class, $args= []) {
+    $this->queue= new Queue();
+    $this->pending= false;
     $this->cmd= $class.' ['.implode(', ', $args).']';
     $this->proc= Runtime::getInstance()->newInstance(null, 'class', $class, $args);
+    $this->connect();
+  }
+
+  /**
+   * Initiates communication with worker
+   *
+   * @return void
+   * @throws lang.IllegalStateException
+   */
+  protected function connect() {
     $line= $this->proc->out->readLine();
     if ('+' === $line{0}) {
       sscanf($line, '+ %s:%d', $host, $port);
@@ -24,18 +46,49 @@ class LocalWorkerProcess extends \lang\Object {
     }
   }
 
+  public function handle() { return $this->comm->getHandle(); }
+
+  public function pending() { return $this->pending; }
+
+  /**
+   * Pass in an element for processing
+   *
+   * @param  var $element
+   */
   public function pass($element) {
-    $this->comm->write(serialize($element)."\n");
+    if ($this->pending) {
+      $this->queue->put($element);
+    } else {
+      $this->comm->write(serialize($element)."\n");
+      $this->pending= true;
+    }
   }
 
+  /**
+   * Returns a processing result
+   *
+   * @return var
+   * @throws lang.IllegalStateException
+   */
   public function result() {
-    return unserialize($this->comm->readLine());
+    if (!$this->pending) {
+      if ($this->queue->isEmpty()) {
+        throw new IllegalStateException('No pending results');
+      }
+
+      $this->comm->write(serialize($this->queue->get())."\n");
+    }
+
+    $element= unserialize($this->comm->readLine());
+    $this->pending= false;
+    return $element;
   }
 
-  public function handle() {
-    return $this->comm->getHandle();
-  }
-
+  /**
+   * Shuts down this worker process
+   *
+   * @return int
+   */
   public function shutdown() {
     if (-1 === $this->proc->exitValue()) {
       try {

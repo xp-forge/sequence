@@ -11,6 +11,7 @@ use io\IOException;
 class LocalWorkerProcess extends \lang\Object {
 
   public function __construct($class, $args= []) {
+    $this->cmd= $class.' ['.implode(', ', $args).']';
     $this->proc= Runtime::getInstance()->newInstance(null, 'class', $class, $args);
     $line= $this->proc->out->readLine();
     if ('+' === $line{0}) {
@@ -49,5 +50,9 @@ class LocalWorkerProcess extends \lang\Object {
 
   public function __destruct() {
     $this->shutdown();
+  }
+
+  public function toString() {
+    return $this->getClassName().'(pid= '.$this->proc->getProcessId().', cmd= '.$this->cmd.')';
   }
 }

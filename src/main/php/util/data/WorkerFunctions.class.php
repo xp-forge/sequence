@@ -21,6 +21,11 @@ class WorkerFunctions extends \lang\Object implements Workers {
     if (++$this->offset >= sizeof($this->functions)) {
       $this->offset= 0;
     }
+    return false;
+  }
+
+  public function pending() {
+    return false;
   }
 
   public function dequeue() {

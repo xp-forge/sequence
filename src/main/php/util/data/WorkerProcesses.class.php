@@ -18,6 +18,7 @@ class WorkerProcesses extends \lang\Object implements Workers {
     $this->processes= $processes;
     $this->timeout= $timeout;
     $this->offset= 0;
+    $this->pending= [];
     $this->waitHandles= [];
     foreach ($this->processes as $i => $process) {
       $this->waitHandles[$i]= $process->handle();
@@ -26,9 +27,17 @@ class WorkerProcesses extends \lang\Object implements Workers {
 
   public function enqueue($element) {
     $this->processes[$this->offset]->pass($element);
+    $this->pending[$this->offset]= true;
+
     if (++$this->offset >= sizeof($this->processes)) {
       $this->offset= 0;
+      return false;
     }
+    return true;
+  }
+
+  public function pending() {
+    return !empty($this->pending);
   }
 
   /**
@@ -47,11 +56,13 @@ class WorkerProcesses extends \lang\Object implements Workers {
     }
 
     $w= $e= null;
-    if (false === stream_select($r, $w, $e, $tv_sec, $tv_usec) || !$r) {
+    if (false === stream_select($r, $w, $e, $tv_sec, $tv_usec) || empty($r)) {
       throw new IOException('No results present'.($this->timeout ? ' after '.$this->timeout.' seconds' : ''));
     }
 
-    return $this->processes[key($r)];
+    $offset= key($r);
+    unset($this->pending[$offset]);
+    return $this->processes[$offset];
   }
 
   public function dequeue() {

@@ -20,12 +20,16 @@ class Distribution extends \lang\Object implements \Iterator {
     $this->inv= 0;
   }
 
+  protected function enqueue() {
+    while ($this->valid() && $this->workers->enqueue($this->it->current())) {
+      $this->it->next();
+    }
+  }
+
   /** @return void */
   public function rewind() {
     $this->it->rewind();
-    if ($this->valid()) {
-      $this->workers->enqueue($this->it->current());
-    }
+    $this->enqueue();
   }
 
   /** @return var */
@@ -40,9 +44,11 @@ class Distribution extends \lang\Object implements \Iterator {
 
   /** @return void */
   public function next() {
-    $this->it->next();
-    if ($this->valid()) {
-      $this->workers->enqueue($this->it->current());
+    if ($this->workers->pending()) {
+      // Nothing
+    } else {
+      $this->it->next();
+      $this->enqueue();
     }
   }
 

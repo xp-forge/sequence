@@ -21,12 +21,13 @@ class LocalWorkerProcess extends \lang\Object {
    * @param  string[] $args
    */
   public function __construct($class, $args= []) {
+
+    var_dump(Runtime::getInstance()->getExecutable()->getArguments());
+
     $this->queue= new Queue();
     $this->pending= false;
     $this->cmd= $class.' ['.implode(', ', $args).']';
-
-    $rt= Runtime::getInstance();
-    $this->proc= $rt->newInstance($rt->startupOptions(), 'class', $class, $args);
+    $this->proc= Runtime::getInstance()->newInstance(null, 'class', $class, $args);
     $this->connect();
   }
 

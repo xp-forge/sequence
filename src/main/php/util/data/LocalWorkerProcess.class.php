@@ -24,7 +24,9 @@ class LocalWorkerProcess extends \lang\Object {
     $this->queue= new Queue();
     $this->pending= false;
     $this->cmd= $class.' ['.implode(', ', $args).']';
-    $this->proc= Runtime::getInstance()->newInstance(null, 'class', $class, $args);
+
+    $rt= Runtime::getInstance();
+    $this->proc= $rt->newInstance($rt->startupOptions(), 'class', $class, $args);
     $this->connect();
   }
 

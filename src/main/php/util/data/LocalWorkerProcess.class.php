@@ -21,9 +21,6 @@ class LocalWorkerProcess extends \lang\Object {
    * @param  string[] $args
    */
   public function __construct($class, $args= []) {
-
-    var_dump(Runtime::getInstance()->getExecutable()->getArguments());
-
     $this->queue= new Queue();
     $this->pending= false;
     $this->cmd= $class.' ['.implode(', ', $args).']';

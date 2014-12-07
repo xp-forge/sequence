@@ -97,7 +97,7 @@ abstract class Enumerables extends Object {
    */
   public static function invalid() {
     return [
-      [null], [''], ['...'], [-1], [0], [1], [0.5], [false], [true],
+      [''], ['...'], [-1], [0], [1], [0.5], [false], [true],
       [new Object()], [new String('...')],
       [function() { return 1; }]
     ];

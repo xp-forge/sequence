@@ -72,7 +72,11 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if type of elements argument is incorrect
    */
   public static function of($elements) {
-    return new self(Enumeration::of($elements));
+    if (null === $elements) {
+      return self::$EMPTY;
+    } else {
+      return new self(Enumeration::of($elements));
+    }
   }
 
   /**

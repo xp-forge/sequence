@@ -17,4 +17,9 @@ class EnumerationTest extends \unittest\TestCase {
   public function raises_exception_when_given($value) {
     Enumeration::of($value);
   }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function raises_exception_when_given_null() {
+    Enumeration::of(null);
+  }
 }

@@ -1,8 +1,9 @@
 Data sequences change log
 =========================
 
-## 1.1.0 / 2014-12-22
+## 2.0.0 / 2014-12-22
 
+* Made `Sequence::of(null)` return an empty sequence - @thekid
 * Merged PR #5: Keys - @thekid
 
 ## 1.0.0 / 2014-11-03

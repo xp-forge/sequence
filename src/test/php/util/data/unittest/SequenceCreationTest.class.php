@@ -39,4 +39,9 @@ class SequenceCreationTest extends AbstractSequenceTest {
   public function invalid_type_for_generate($input) {
     Sequence::generate($input);
   }
+
+  #[@test]
+  public function passing_null_to_of_yields_an_empty_sequence() {
+    $this->assertEquals(Sequence::$EMPTY, Sequence::of(null));
+  }
 }

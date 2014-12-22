@@ -292,19 +292,43 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Invokes a given consumer on each element
    *
    * @param  function(var): void $function
+   * @param  var $args Additional args to pass to function
    * @return int The number of elements
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  public function each($consumer) {
-    return $this->terminal(function() use($consumer) {
-      $inv= Closure::of($consumer);
-      $i= 0;
-      foreach ($this->elements as $element) {
-        $inv($element);
-        $i++;
-      }
-      return $i;
-    });
+  public function each($consumer, $args= null) {
+    if (null !== $args) {
+      $t= function() use($consumer, $args) {
+        $inv= Closure::$APPLY->newInstance($consumer);
+        $i= 0;
+        foreach ($this->elements as $element) {
+          call_user_func_array($inv, array_merge([$element], $args));
+          $i++;
+        }
+        return $i;
+      };
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($consumer)) {
+      $t= function() use($consumer) {
+        $inv= Closure::$APPLY_WITH_KEY->cast($consumer);
+        $i= 0;
+        foreach ($this->elements as $key => $element) {
+          $inv($element, $key);
+          $i++;
+        }
+        return $i;
+      };
+    } else {
+      $t= function() use($consumer) {
+        $inv= Closure::$APPLY->newInstance($consumer);
+        $i= 0;
+        foreach ($this->elements as $element) {
+          $inv($element);
+          $i++;
+        }
+        return $i;
+      };
+    }
+    return $this->terminal($t);
   }
 
   /**
@@ -312,13 +336,17 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  var $arg either an integer or a closure
    * @return self
+   * @throws lang.IllegalArgumentException
    */
   public function limit($arg) {
     if (is_numeric($arg)) {
-      return new self(new \LimitIterator($this->getIterator(), 0, (int)$arg));
+      $w= new \LimitIterator($this->getIterator(), 0, (int)$arg);
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($arg)) {
+      $w= new WindowWithKey($this->getIterator(), function() { return false; }, Closure::$APPLY_WITH_KEY->cast($arg));
     } else {
-      return new self(new Window($this->getIterator(), function() { return false; }, Closure::of($arg)));
+      $w= new Window($this->getIterator(), function() { return false; }, Closure::$APPLY->newInstance($arg));
     }
+    return new self($w);
   }
 
   /**
@@ -326,13 +354,17 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  var $arg either an integer or a closure
    * @return self
+   * @throws lang.IllegalArgumentException
    */
   public function skip($arg) {
     if (is_numeric($arg)) {
-      return new self(new \LimitIterator($this->getIterator(), (int)$arg, -1));
+      $w= new \LimitIterator($this->getIterator(), (int)$arg, -1);
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($arg)) {
+      $w= new WindowWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($arg), function() { return false; });
     } else {
-      return new self(new Window($this->getIterator(), Closure::of($arg), function() { return false; }));
+      $w= new Window($this->getIterator(), Closure::$APPLY->newInstance($arg), function() { return false; });
     }
+    return new self($w);
   }
 
   /**
@@ -340,14 +372,17 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  var $predicate either a util.Filter instance or a function
    * @return self
+   * @throws lang.IllegalArgumentException
    */
   public function filter($predicate) {
-    if (is('util.Filter<?>', $predicate) || $predicate instanceof Filter) {
-      $f= Closure::of([$predicate, 'accept']);
+    if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
+      $f= new Filterable($this->getIterator(), Closure::$APPLY->cast([$predicate, 'accept']));
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($predicate)) {
+      $f= new FilterableWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($predicate));
     } else {
-      $f= Closure::of($predicate);
+      $f= new Filterable($this->getIterator(), Closure::$APPLY->newInstance($predicate));
     }
-    return new self(new Filterable($this->getIterator(), $f));
+    return new self($f);
   }
 
   /**
@@ -355,9 +390,15 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  function(var): var $function
    * @return self
+   * @throws lang.IllegalArgumentException
    */
   public function map($function) {
-    return new self(new Mapper($this->getIterator(), Closure::of($function)));
+    if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
+      $m= new MapperWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($function));
+    } else {
+      $m= new Mapper($this->getIterator(), Closure::$APPLY->newInstance($function));
+    }
+    return new self($m);
   }
 
   /**
@@ -366,12 +407,15 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  function(var): var $function - if omitted, the identity function is used.
    * @return self
+   * @throws lang.IllegalArgumentException
    */
   public function flatten($function= null) {
     if (null === $function) {
       $it= $this->getIterator();
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
+      $it= new MapperWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($function));
     } else {
-      $it= new Mapper($this->getIterator(), Closure::of($function));
+      $it= new Mapper($this->getIterator(), Closure::$APPLY->newInstance($function));
     }
     return new self(new Flattener($it));
   }
@@ -381,14 +425,25 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * each element it consumes. Use this e.g. for debugging purposes.
    *
    * @param  function(var): void $action
+   * @param  var $args Additional args to pass to function
    * @return self
+   * @throws lang.IllegalArgumentException
    */
-  public function peek($action) {
-    $f= Closure::of($action);
-    return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use($f) {
-      $f($e);
-      return true;
-    }));
+  public function peek($action, $args= null) {
+    if (null !== $args) {
+      $f= Closure::$APPLY->newInstance($action);
+      $p= new MapperWithKey($this->getIterator(), function($e) use($f, $args) {
+        call_user_func_array($f, array_merge([$e], $args));
+        return $e;
+      });
+    } else if (Closure::$APPLY_WITH_KEY->isInstance($action)) {
+      $f= Closure::$APPLY_WITH_KEY->cast($action);
+      $p= new MapperWithKey($this->getIterator(), function($e, $key) use($f) { $f($e, $key); return $e; });
+    } else {
+      $f= Closure::$APPLY->newInstance($action);
+      $p= new Mapper($this->getIterator(), function($e) use($f) { $f($e); return $e; });
+    }
+    return new self($p);
   }
 
   /**

@@ -15,13 +15,22 @@ class EachTest extends AbstractSequenceTest {
     $this->assertEquals([1, 2, 3, 4], $collect);
   }
 
+  #[@test]
+  public function with_key() {
+    $collect= [];
+    Sequence::of([1, 2, 3, 4])->each(function($e, $key) use(&$collect) {
+      $collect[]= $key;
+    });
+    $this->assertEquals([0, 1, 2, 3], $collect);
+  }
+
   #[@test, @values([[[1, 2, 3, 4]], [[]]])]
-  public function each_returns_number_of_processed_elements($input) {
+  public function returns_number_of_processed_elements($input) {
     $this->assertEquals(sizeof($input), Sequence::of($input)->each(function($e) { }));
   }
 
   #[@test]
-  public function each_writing_to_stream() {
+  public function writing_to_stream() {
     $out= new MemoryOutputStream();
 
     Sequence::of([1, 2, 3, 4])->each([$out, 'write']);
@@ -30,7 +39,7 @@ class EachTest extends AbstractSequenceTest {
   }
 
   #[@test]
-  public function each_writing_to_console_out() {
+  public function writing_to_console_out() {
     $orig= Console::$out->getStream();
     $out= new MemoryOutputStream();
     Console::$out->setStream($out);
@@ -42,18 +51,18 @@ class EachTest extends AbstractSequenceTest {
   }
 
   #[@test]
-  public function each_with_var_export() {
+  public function with_var_export() {
     ob_start();
 
-    Sequence::of([1, 2, 3, 4])->each('var_export');
+    Sequence::of([1, 2, 3, 4])->each('var_export', $args= [false]);
 
     $bytes= ob_get_contents();
-    ob_end_clean();   
+    ob_end_clean();
     $this->assertEquals('1234', $bytes);
   }
 
   #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
-  public function each_raises_exception_when_given($noncallable) {
+  public function raises_exception_when_given($noncallable) {
     Sequence::of([])->each($noncallable);
   }
 }

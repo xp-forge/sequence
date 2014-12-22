@@ -1,6 +1,10 @@
 Data sequences change log
 =========================
 
+## 1.1.0 / 2014-12-22
+
+* Merged PR #5: Keys - @thekid
+
 ## 1.0.0 / 2014-11-03
 
 * Chose to make this 1.0.0 since it's been in productive use and thus

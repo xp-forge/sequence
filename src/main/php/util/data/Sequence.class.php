@@ -300,37 +300,35 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return int The number of elements
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  public function each($consumer, $args= null) {
+  public function each($consumer= null, $args= null) {
     if (null !== $args) {
       $t= function() use($consumer, $args) {
         $inv= Closure::$APPLY->newInstance($consumer);
         $i= 0;
-        foreach ($this->elements as $element) {
-          call_user_func_array($inv, array_merge([$element], $args));
-          $i++;
-        }
+        foreach ($this->elements as $element) { call_user_func_array($inv, array_merge([$element], $args)); $i++; }
         return $i;
       };
     } else if (Closure::$APPLY_WITH_KEY->isInstance($consumer)) {
       $t= function() use($consumer) {
         $inv= Closure::$APPLY_WITH_KEY->cast($consumer);
         $i= 0;
-        foreach ($this->elements as $key => $element) {
-          $inv($element, $key);
-          $i++;
-        }
+        foreach ($this->elements as $key => $element) { $inv($element, $key); $i++; }
         return $i;
       };
-    } else {
+    } else if (null !== $consumer) {
       $t= function() use($consumer) {
         $inv= Closure::$APPLY->newInstance($consumer);
         $i= 0;
-        foreach ($this->elements as $element) {
-          $inv($element);
-          $i++;
-        }
+        foreach ($this->elements as $element) { $inv($element); $i++; }
         return $i;
       };
+    } else {
+      $t= function() {
+        $i= 0;
+        foreach ($this->elements as $element) { $i++; }
+        return $i;
+      };
+
     }
     return $this->terminal($t);
   }

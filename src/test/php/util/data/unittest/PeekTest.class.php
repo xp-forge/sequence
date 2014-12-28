@@ -17,7 +17,7 @@ class PeekTest extends AbstractSequenceTest {
     Sequence::of([1, 2, 3, 4])
       ->filter(function($e) { return $e % 2 > 0; })
       ->peek(function($e) use(&$debug) { $debug[]= $e; })
-      ->toArray()   // or any other terminal action
+      ->each()
     ;
     $this->assertEquals([1, 3], $debug);
   }
@@ -28,7 +28,7 @@ class PeekTest extends AbstractSequenceTest {
     Sequence::of([1, 2, 3, 4])
       ->filter(function($e) { return $e % 2 > 0; })
       ->peek(function($e, $key) use(&$debug) { $debug[]= $key; })
-      ->toArray()   // or any other terminal action
+      ->each()
     ;
     $this->assertEquals([0, 2], $debug);
   }
@@ -39,7 +39,7 @@ class PeekTest extends AbstractSequenceTest {
     $out= new MemoryOutputStream();
     Console::$out->setStream($out);
 
-    Sequence::of([1, 2, 3, 4])->peek('util.cmd.Console::write')->toArray();
+    Sequence::of([1, 2, 3, 4])->peek('util.cmd.Console::write')->each();
 
     Console::$out->setStream($orig);    
     $this->assertEquals('1234', $out->getBytes());
@@ -49,7 +49,7 @@ class PeekTest extends AbstractSequenceTest {
   public function with_var_export() {
     ob_start();
 
-    Sequence::of([1, 2, 3, 4])->peek('var_export', $args= [false])->toArray();
+    Sequence::of([1, 2, 3, 4])->peek('var_export', $args= [false])->each();
 
     $bytes= ob_get_contents();
     ob_end_clean();

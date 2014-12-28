@@ -425,6 +425,18 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Returns a new stream which consists of groups by a given size. The last group
+   * may be smaller than the given size!
+   *
+   * @param  int $size
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
+  public function grouped($size) {
+    return new self(new Grouping($this->getIterator(), $size));
+  }
+
+  /**
    * Returns a new stream which additionally calls the given function for 
    * each element it consumes. Use this e.g. for debugging purposes.
    *

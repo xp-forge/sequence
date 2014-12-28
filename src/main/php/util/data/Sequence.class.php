@@ -418,6 +418,19 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     return new self(new Flattener($it));
   }
 
+  /*
+   * Returns a new stream which consists of slides by a given size. The first
+   * (and only) group will be smaller only if the sequence contains less than
+   * the given size elements.
+   * 
+   * @param  int $size 
+   * @return self 
+   * @throws lang.IllegalArgumentException 
+   */ 
+  public function sliding($size) { 
+    return new self(new Sliding($this->getIterator(), $size)); 
+  } 
+
   /**
    * Returns a new stream which additionally calls the given function for 
    * each element it consumes. Use this e.g. for debugging purposes.

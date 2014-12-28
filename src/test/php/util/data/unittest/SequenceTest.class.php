@@ -51,25 +51,6 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertEquals(1, Sequence::of([1, 2, 3])->first()->get());
   }
 
-  #[@test]
-  public function concat() {
-    $this->assertSequence([1, 2, 3, 4], Sequence::concat(Sequence::of([1, 2]), Sequence::of([3, 4])));
-  }
-
-  #[@test]
-  public function concat_with_empty() {
-    $this->assertSequence([3, 4], Sequence::concat(Sequence::$EMPTY, Sequence::of([3, 4])));
-  }
-
-  #[@test]
-  public function concat_iteratively() {
-    $seq= Sequence::$EMPTY;
-    foreach ([[1, 2], [3, 4], [5, 6]] as $array) {
-      $seq= Sequence::concat($seq, Sequence::of($array));
-    }
-    $this->assertSequence([1, 2, 3, 4, 5, 6], $seq);
-  }
-
   #[@test, @values([
   #  [[1, 2, 3], [1, 2, 2, 3, 1, 3]],
   #  [[new String('a'), new String('b')], [new String('a'), new String('a'), new String('b')]]

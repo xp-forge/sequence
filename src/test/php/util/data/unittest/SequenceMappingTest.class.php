@@ -22,14 +22,14 @@ class SequenceMappingTest extends AbstractSequenceTest {
   #[@test]
   public function array_index_is_passed_to_function() {
     $keys= [];
-    Sequence::of([1, 2, 3])->map(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->toArray();
+    Sequence::of([1, 2, 3])->map(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->each();
     $this->assertEquals([0, 1, 2], $keys);
   }
 
   #[@test]
   public function map_key_is_passed_to_function() {
     $keys= [];
-    Sequence::of(['one' => 1, 'two' => 2, 'three' => 3])->map(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->toArray();
+    Sequence::of(['one' => 1, 'two' => 2, 'three' => 3])->map(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->each();
     $this->assertEquals(['one', 'two', 'three'], $keys);
   }
 }

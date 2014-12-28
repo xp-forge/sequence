@@ -3,8 +3,14 @@
 use util\data\Sequence;
 use io\streams\MemoryOutputStream;
 use util\cmd\Console;
+use lang\IllegalArgumentException;
 
 class EachTest extends AbstractSequenceTest {
+
+  /** @return var[][] */
+  protected function invalidArguments() {
+    return array_filter($this->noncallables(), function($args) { return null !== $args[0]; });
+  }
 
   #[@test]
   public function each() {
@@ -25,8 +31,13 @@ class EachTest extends AbstractSequenceTest {
   }
 
   #[@test, @values([[[1, 2, 3, 4]], [[]]])]
-  public function returns_number_of_processed_elements($input) {
+  public function returns_number_of_processed_elements_with_func($input) {
     $this->assertEquals(sizeof($input), Sequence::of($input)->each(function($e) { }));
+  }
+
+  #[@test, @values([[[1, 2, 3, 4]], [[]]])]
+  public function returns_number_of_processed_elements_with_null($input) {
+    $this->assertEquals(sizeof($input), Sequence::of($input)->each());
   }
 
   #[@test]
@@ -61,8 +72,13 @@ class EachTest extends AbstractSequenceTest {
     $this->assertEquals('1234', $bytes);
   }
 
-  #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
+  #[@test, @values('invalidArguments'), @expect('lang.IllegalArgumentException')]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->each($noncallable);
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function raises_exception_when_given_null_and_args() {
+    Sequence::of([])->each(null, []);
   }
 }

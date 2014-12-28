@@ -90,15 +90,15 @@ class SequenceTest extends AbstractSequenceTest {
   #[@test, @values([[['a', 'b', 'c', 'd']], [[]]])]
   public function counting($input) {
     $i= 0;
-    Sequence::of($input)->counting($i)->toArray();
+    Sequence::of($input)->counting($i)->each();
     $this->assertEquals(sizeof($input), $i);
   }
 
   #[@test, @values('util.data.unittest.Enumerables::fixed')]
   public function may_use_sequence_based_on_a_fixed_enumerable_more_than_once($input) {
     $seq= Sequence::of($input);
-    $seq->toArray();
-    $seq->toArray();
+    $seq->each();
+    $seq->each();
   }
 
   protected function assertNotTwice($seq, $func) {
@@ -118,7 +118,7 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test, @values('util.data.unittest.Enumerables::streamed')]
   public function cannot_use_each_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
-    $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->each('typeof'); });
+    $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->each(); });
   }
 
   #[@test, @values('util.data.unittest.Enumerables::streamed')]

@@ -1,6 +1,13 @@
 Data sequences change log
 =========================
 
+## ?.?.? / ????-??-??
+
+* Implemented variant of `Sequence::each()` which iterates elements
+  without callback and is thus more memory-efficient than calling
+  e.g. toArray() and discarding the results. See pull request #12.
+  @thekid
+
 ## 2.0.0 / 2014-12-22
 
 * Made `Sequence::of(null)` return an empty sequence - @thekid

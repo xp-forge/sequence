@@ -3,10 +3,14 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Added the ability to pass a variable number of arguments to
+  `Sequence::concat()`. At the same time, the method is changed to
+  be more liberal in what it accepts. See pull request #13.
+  (@thekid)
 * Implemented variant of `Sequence::each()` which iterates elements
   without callback and is thus more memory-efficient than calling
   e.g. toArray() and discarding the results. See pull request #12.
-  @thekid
+  (@thekid)
 
 ## 2.0.0 / 2014-12-22
 

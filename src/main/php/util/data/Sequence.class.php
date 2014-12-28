@@ -158,6 +158,22 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Collects all elements in a map
+   *
+   * @return [:var]
+   * @throws lang.IllegalArgumentException if streamed and invoked more than once
+   */
+  public function toMap() {
+    return $this->terminal(function() {
+      $return= [];
+      foreach ($this->elements as $key => $element) {
+        $return[$key]= $element;
+      }
+      return $return;
+    });
+  }
+
+  /**
    * Counts all elements
    *
    * @return int

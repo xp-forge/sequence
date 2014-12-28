@@ -108,17 +108,13 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Concatenates two streams
+   * Concatenates all given iteration sources
    *
-   * @param  self $a
-   * @param  self $b
+   * @param  var... $args An iterator, iterable or an array
    * @return self
    */
-  public static function concat(self $a, self $b) {
-    $it= new \AppendIterator();
-    $it->append($a->getIterator());
-    $it->append($b->getIterator());
-    return new self($it);
+  public static function concat() {
+    return new self(new Iterators(func_get_args()));
   }
 
   /**

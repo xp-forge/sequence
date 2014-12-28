@@ -19,24 +19,26 @@ $return= Sequence::of([1, 2, 3, 4])
   ->filter(function($e) { return 0 === $e % 2; })
   ->toArray()
 ;
-// [2, 4]
+// $return= [2, 4]
 
 $return= Sequence::of([1, 2, 3, 4])
   ->map(function($e) { return $e * 2; })
   ->toArray()
 ;
-// [2, 4, 6, 8]
+// $return= [2, 4, 6, 8]
 
+$i= 0;
 $return= Sequence::of([1, 2, 3, 4])
+  ->counting($i)
   ->reduce(0, function($a, $b) { return $a + $b; }))
 ;
-// 10
+// $i= 4, $return= 10
 
 $names= Sequence::of($this->people)
   ->map(function($e) { return $e->name(); })
   ->collect(Collectors::joining(', '))
 ;
-// "Timm, Alex, Dude"
+// $return= "Timm, Alex, Dude"
 
 $experience= Sequence::of($this->employees)
   ->collect(Collectors::groupingBy(
@@ -44,7 +46,7 @@ $experience= Sequence::of($this->employees)
     Collectors::averaging(function($e) { return $e->years(); })
   ))
 ;
-// HashTable[2] {
+// $return= HashTable[2] {
 //   Department("A") => 12.8
 //   Department("B") => 3.5
 // }

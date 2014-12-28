@@ -27,6 +27,11 @@ $return= Sequence::of([1, 2, 3, 4])
 ;
 // [2, 4, 6, 8]
 
+$return= Sequence::of([1, 2, 3, 4])
+  ->reduce(0, function($a, $b) { return $a + $b; }))
+;
+// 10
+
 $names= Sequence::of($this->people)
   ->map(function($e) { return $e->name(); })
   ->collect(Collectors::joining(', '))

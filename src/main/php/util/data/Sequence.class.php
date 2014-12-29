@@ -131,16 +131,22 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
         throw new IllegalStateException('Generator closed');
       }
 
-      if ($matching) {
-        $match= Closure::of($matching);
-        foreach ($this->elements as $element) {
-          $gen && $this->elements->closed= true;
-          if ($match($element)) return Optional::of($element);
-        }
-      } else {
+      if (null === $matching) {
         foreach ($this->elements as $element) {
           $gen && $this->elements->closed= true;
           return Optional::of($element);
+        }
+      } else if (Closure::$APPLY_WITH_KEY->isInstance($matching)) {
+        $match= Closure::$APPLY_WITH_KEY->cast($matching);
+        foreach ($this->elements as $key => $element) {
+          $gen && $this->elements->closed= true;
+          if ($match($element, $key)) return Optional::of($element);
+        }
+      } else {
+        $match= Closure::$APPLY->newInstance($matching);
+        foreach ($this->elements as $element) {
+          $gen && $this->elements->closed= true;
+          if ($match($element)) return Optional::of($element);
         }
       }
       return Optional::$EMPTY;

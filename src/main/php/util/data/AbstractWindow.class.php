@@ -56,7 +56,6 @@ abstract class AbstractWindow extends \lang\Object implements \Iterator {
       }
       break;
     }
-    return true;
   }
 
   /** @return var */

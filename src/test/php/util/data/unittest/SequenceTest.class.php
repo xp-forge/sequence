@@ -51,6 +51,11 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertEquals(1, Sequence::of([1, 2, 3])->first()->get());
   }
 
+  #[@test]
+  public function first_with_filter() {
+    $this->assertEquals(2, Sequence::of([1, 2, 3])->first(function($e) { return $e % 2 === 0; })->get());
+  }
+
   #[@test, @values([
   #  [[1, 2, 3], [1, 2, 2, 3, 1, 3]],
   #  [[new String('a'), new String('b')], [new String('a'), new String('a'), new String('b')]]

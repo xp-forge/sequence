@@ -120,18 +120,28 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns the first element of this stream, or an empty optional
    *
+   * @param  function(var): bool $matching
    * @return util.data.Optional
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  public function first() {
-    return $this->terminal(function() {
+  public function first($matching= null) {
+    return $this->terminal(function() use($matching) {
       $gen= $this->elements instanceof \Generator;
       if ($gen && isset($this->elements->closed)) {
         throw new IllegalStateException('Generator closed');
       }
-      foreach ($this->elements as $element) {
-        $gen && $this->elements->closed= true;
-        return Optional::of($element);
+
+      if ($matching) {
+        $match= Closure::of($matching);
+        foreach ($this->elements as $element) {
+          $gen && $this->elements->closed= true;
+          if ($match($element)) return Optional::of($element);
+        }
+      } else {
+        foreach ($this->elements as $element) {
+          $gen && $this->elements->closed= true;
+          return Optional::of($element);
+        }
       }
       return Optional::$EMPTY;
     });

@@ -3,6 +3,7 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Added `Sequence::iterator()` - see PR #16 - @thekid
 * Added the ability to pass a variable number of arguments to
   `Sequence::concat()`. At the same time, the method is changed to
   be more liberal in what it accepts. See pull request #13.

@@ -46,6 +46,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     }
   }
 
+  /** @return util.XPIterator */
+  public function iterator() { return new SequenceIterator($this); }
+
   /**
    * Gets an iterator on this stream. Optimizes the case that the underlying
    * elements already is an Iterator, and handles both wrappers implementing

@@ -13,6 +13,15 @@ use lang\Throwable;
  * @test xp://util.data.unittest.SequenceTest
  * @test xp://util.data.unittest.SequenceCreationTest
  * @test xp://util.data.unittest.SequenceSortingTest
+ * @test xp://util.data.unittest.SequenceCollectionTest
+ * @test xp://util.data.unittest.SequenceConcatTest
+ * @test xp://util.data.unittest.SequenceFilteringTest
+ * @test xp://util.data.unittest.SequenceFlatteningTest
+ * @test xp://util.data.unittest.SequenceIteratorTest
+ * @test xp://util.data.unittest.SequenceMappingTest
+ * @test xp://util.data.unittest.SequenceReductionTest
+ * @test xp://util.data.unittest.SequenceResultSetTest
+ * @test xp://util.data.unittest.SequenceSkipTest
  */
 class Sequence extends \lang\Object implements \IteratorAggregate {
   public static $EMPTY;
@@ -23,6 +32,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     self::$EMPTY= new self([]);
   }
 
+  /** @param var $elements */
   protected function __construct($elements) {
     $this->elements= $elements;
   }

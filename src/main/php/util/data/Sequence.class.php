@@ -5,6 +5,7 @@ use util\Comparator;
 use util\Filter;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
+use lang\Throwable;
 
 /**
  * Sequences API for PHP
@@ -12,6 +13,15 @@ use lang\IllegalStateException;
  * @test xp://util.data.unittest.SequenceTest
  * @test xp://util.data.unittest.SequenceCreationTest
  * @test xp://util.data.unittest.SequenceSortingTest
+ * @test xp://util.data.unittest.SequenceCollectionTest
+ * @test xp://util.data.unittest.SequenceConcatTest
+ * @test xp://util.data.unittest.SequenceFilteringTest
+ * @test xp://util.data.unittest.SequenceFlatteningTest
+ * @test xp://util.data.unittest.SequenceIteratorTest
+ * @test xp://util.data.unittest.SequenceMappingTest
+ * @test xp://util.data.unittest.SequenceReductionTest
+ * @test xp://util.data.unittest.SequenceResultSetTest
+ * @test xp://util.data.unittest.SequenceSkipTest
  */
 class Sequence extends \lang\Object implements \IteratorAggregate {
   public static $EMPTY;
@@ -22,6 +32,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     self::$EMPTY= new self([]);
   }
 
+  /** @param var $elements */
   protected function __construct($elements) {
     $this->elements= $elements;
   }
@@ -37,14 +48,17 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
 
     try {
       return $operation();
-    } catch (\lang\IllegalStateException $e) {
+    } catch (IllegalStateException $e) {
       throw new IllegalStateException($message, $e);
-    } catch (\lang\XPException $e) {
+    } catch (Throwable $e) {
       throw $e;
     } catch (\Exception $e) {
       throw new IllegalStateException($message.':'.$e->getMessage());
     }
   }
+
+  /** @return util.XPIterator */
+  public function iterator() { return $this->terminal(function() { return new SequenceIterator($this); }); }
 
   /**
    * Gets an iterator on this stream. Optimizes the case that the underlying

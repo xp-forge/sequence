@@ -2,7 +2,7 @@
 
 use util\data\Sequence;
 
-class SkipTest extends AbstractSequenceTest {
+class SequenceSkipTest extends AbstractSequenceTest {
 
   #[@test]
   public function excludes_n_first_elements() {

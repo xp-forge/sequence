@@ -459,6 +459,36 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Runs a function for the first element
+   *
+   * @param  function(var): void $function
+   * @return self
+   */
+  public function initially($function) {
+    if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
+      $e= new EnclosureWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($function), null);
+    } else {
+      $e= new Enclosure($this->getIterator(), Closure::$APPLY->newInstance($function), null);
+    }
+    return new self($e);
+  }
+
+  /**
+   * Runs a function for the last element
+   *
+   * @param  function(var): void $function
+   * @return self
+   */
+  public function ultimately($function) {
+    if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
+      $e= new EnclosureWithKey($this->getIterator(), null, Closure::$APPLY_WITH_KEY->cast($function));
+    } else {
+      $e= new Enclosure($this->getIterator(), null, Closure::$APPLY->newInstance($function));
+    }
+    return new self($e);
+  }
+
+  /**
    * Returns a new stream which counts the number of elements as iteration
    * proceeeds. A short form of `peek()` with a function incrementing a local
    * reference.

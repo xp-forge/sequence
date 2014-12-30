@@ -36,7 +36,7 @@ class Iterators extends \lang\Object implements \Iterator {
     } else if ($src instanceof \Traversable) {
       $it= new \IteratorIterator($src);
     } else if ($src instanceof XPIterator) {
-      return Enumeration::of($src);
+      $it= new XPIteratorAdapter($src);
     } else if (is_array($src)) {
       $it= new \ArrayIterator($src);
     } else if (null === $src) {

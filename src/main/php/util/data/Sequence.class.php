@@ -5,6 +5,7 @@ use util\Comparator;
 use util\Filter;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
+use lang\Throwable;
 
 /**
  * Sequences API for PHP
@@ -37,9 +38,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
 
     try {
       return $operation();
-    } catch (\lang\IllegalStateException $e) {
+    } catch (IllegalStateException $e) {
       throw new IllegalStateException($message, $e);
-    } catch (\lang\XPException $e) {
+    } catch (Throwable $e) {
       throw $e;
     } catch (\Exception $e) {
       throw new IllegalStateException($message.':'.$e->getMessage());

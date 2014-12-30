@@ -63,4 +63,9 @@ class SequenceIteratorTest extends AbstractSequenceTest {
       // OK
     }
   }
+
+  #[@test, @values('util.data.unittest.Enumerables::valid')]
+  public function sequence_of_iterator($input) {
+    $this->assertSequence([1, 2, 3], Sequence::of(Sequence::of($input)->iterator()));
+  }
 }

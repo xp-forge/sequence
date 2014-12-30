@@ -9,7 +9,7 @@ use lang\IllegalStateException;
  * @see  xp://util.data.Sequence#iterator
  * @test xp://util.data.unittest.SequenceIteratorTest
  */
-class SequenceIterator extends \lang\Object implements \util\XPIterator {
+class SequenceIterator extends \lang\Object implements \util\XPIterator, \IteratorAggregate {
   private $it;
 
   /**
@@ -25,6 +25,15 @@ class SequenceIterator extends \lang\Object implements \util\XPIterator {
     } catch (\Exception $e) {
       throw new IllegalStateException($e->getMessage());
     }
+  }
+
+  /**
+   * Optimizes case when this iterator is wrapped in a PHP iterator.
+   *
+   * @return  php.Iterator
+   */
+  public function getIterator() {
+    return new ContinuationOf($this->it);
   }
 
   /**

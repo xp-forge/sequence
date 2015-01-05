@@ -459,6 +459,16 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Returns a new stream which maps the given function to each element
+   *
+   * @param  util.data.Workers $workers
+   * @return self
+   */
+  public function distribute(Workers $workers) {
+    return new self(new Distribution($this->getIterator(), $workers));
+  }
+
+  /**
    * Returns a new stream which counts the number of elements as iteration
    * proceeeds. A short form of `peek()` with a function incrementing a local
    * reference.
@@ -472,7 +482,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
       return true;
     }));
   }
-
 
   /**
    * Returns a stream with distinct elements

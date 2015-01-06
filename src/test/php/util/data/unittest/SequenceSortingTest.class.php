@@ -31,6 +31,14 @@ class SequenceSortingTest extends AbstractSequenceTest {
   }
 
   #[@test]
+  public function sorted_by_compareTo() {
+    $this->assertSequence(
+      [new Date('1979-12-29'), new Date('1977-12-14')],
+      Sequence::of([new Date('1977-12-14'), new Date('1979-12-29')])->sorted('util.Date::compareTo')
+    );
+  }
+
+  #[@test]
   public function sorted_by_natural_order_string_comparison() {
     $this->assertSequence(
       ['rfc1.txt', 'rfc822.txt', 'rfc2086.txt'],

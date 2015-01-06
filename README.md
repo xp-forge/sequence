@@ -35,7 +35,7 @@ $return= Sequence::of([1, 2, 3, 4])
 // $i= 4, $return= 10
 
 $names= Sequence::of($this->people)
-  ->map(function($e) { return $e->name(); })
+  ->map('com.example.Person::name')
   ->collect(Collectors::joining(', '))
 ;
 // $return= "Timm, Alex, Dude"

@@ -19,8 +19,10 @@ class SequenceReductionTest extends AbstractSequenceTest {
   }
 
   #[@test]
-  public function used_for_max_with_native_max_function() {
-    $this->assertEquals(10, Sequence::of([7, 1, 10, 3])->reduce(0, 'max'));
+  public function used_for_max() {
+    $this->assertEquals(10, Sequence::of([7, 1, 10, 3])->reduce(0, function($a, $b) {
+      return $a < $b ? $b : $a;
+    }));
   }
 
   #[@test]

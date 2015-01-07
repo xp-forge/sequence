@@ -3,7 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
-* Added `Sequence::iterator()` - see PR #16 - @thekid
+* Added support for referring to instance methods via string. Depends
+  on xp-framework/core#44,m see pull request #17 - @thekid
+* Added `Sequence::toMap()` - see pull request #10 - @thekid
+* Added `Sequence::iterator()` - see pull request #16 - @thekid
 * Added the ability to pass a variable number of arguments to
   `Sequence::concat()`. At the same time, the method is changed to
   be more liberal in what it accepts. See pull request #13.

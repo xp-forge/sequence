@@ -4,22 +4,22 @@ use util\data\Sequence;
 
 class SequenceConcatTest extends AbstractSequenceTest {
 
-  #[@test, @values('util.data.unittest.Enumerables::valid')]
+  #[@test, @values('util.data.unittest.Enumerables::validArrays')]
   public function concat_sequence_with($value) {
     $this->assertSequence([5, 6, 1, 2, 3], Sequence::concat(Sequence::of([5, 6]), $value));
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::valid')]
+  #[@test, @values('util.data.unittest.Enumerables::validArrays')]
   public function concat_array_with($value) {
     $this->assertSequence([5, 6, 1, 2, 3], Sequence::concat([5, 6], $value));
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::valid')]
+  #[@test, @values('util.data.unittest.Enumerables::validArrays')]
   public function concat_empty_with($value) {
     $this->assertSequence([1, 2, 3], Sequence::concat(Sequence::$EMPTY, $value));
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::valid')]
+  #[@test, @values('util.data.unittest.Enumerables::validArrays')]
   public function concat_one_arg($value) {
     $this->assertSequence([1, 2, 3], Sequence::concat($value));
   }

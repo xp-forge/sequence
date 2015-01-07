@@ -40,19 +40,19 @@ class SequenceIteratorTest extends AbstractSequenceTest {
     Sequence::$EMPTY->iterator()->next();
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::valid')]
+  #[@test, @values('util.data.unittest.Enumerables::validArrays')]
   public function iterator($input) {
     $this->assertEquals([1, 2, 3], $this->iterated(Sequence::of($input)->iterator()));
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::fixed')]
+  #[@test, @values('util.data.unittest.Enumerables::fixedArrays')]
   public function may_iterate_sequence_based_on_a_fixed_enumerable_more_than_once($input) {
     $seq= Sequence::of($input);
     $this->iterated($seq->iterator());
     $this->iterated($seq->iterator());
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::streamed')]
+  #[@test, @values('util.data.unittest.Enumerables::streamedArrays')]
   public function cannot_iterate_sequence_based_on_a_streamed_enumerable_more_than_once($input) {
     $seq= Sequence::of($input);
     $this->iterated($seq->iterator());
@@ -64,7 +64,7 @@ class SequenceIteratorTest extends AbstractSequenceTest {
     }
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::valid')]
+  #[@test, @values('util.data.unittest.Enumerables::validArrays')]
   public function sequence_of_iterator($input) {
     $this->assertSequence([1, 2, 3], Sequence::of(Sequence::of($input)->iterator()));
   }

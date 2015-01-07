@@ -32,4 +32,13 @@ class SequenceMappingTest extends AbstractSequenceTest {
     Sequence::of(['one' => 1, 'two' => 2, 'three' => 3])->map(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->each();
     $this->assertEquals(['one', 'two', 'three'], $keys);
   }
+
+  #[@test]
+  public function with_instance_method() {
+    $people= [new Person(1549, 'Timm'), new Person(6100, 'Test')];
+    $this->assertSequence(
+      ['Timm', 'Test'],
+      Sequence::of($people)->map('util.data.unittest.Person::name')
+    );
+  }
 }

@@ -103,7 +103,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public static function iterate($seed, $op) {
     $value= $seed;
-    $closure= Closure::of($op);
+    $closure= Functions::$UNARYOP->newInstance($op);
     return new self(new Generator(
       function() use($value) { return $value; },
       function() use(&$value, $closure) { $value= $closure($value); return $value; }
@@ -117,7 +117,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self
    */
   public static function generate($supplier) {
-    $closure= Closure::of($supplier);
+    $closure= Functions::$SUPPLY->newInstance($supplier);
     return new self(new Generator($closure, $closure));
   }
 
@@ -209,9 +209,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   protected function select($comparator, $n) {
     $return= null;
     if ($comparator instanceof Comparator) {
-      $cmp= Closure::of([$comparator, 'compare']);
+      $cmp= Functions::$COMPARATOR->newInstance([$comparator, 'compare']);
     } else {
-      $cmp= Closure::of($comparator);
+      $cmp= Functions::$COMPARATOR->newInstance($comparator);
     }
     foreach ($this->elements as $element) {
       if (null === $return || $cmp($element, $return) * $n > 0) $return= $element;
@@ -272,7 +272,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function reduce($identity, $accumulator) {
     return $this->terminal(function() use($identity, $accumulator) {
-      $closure= Closure::of($accumulator);
+      $closure= Functions::$BINARYOP->newInstance($accumulator);
       $return= $identity;
       foreach ($this->elements as $element) {
         $return= $closure($return, $element);
@@ -313,21 +313,21 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function each($consumer= null, $args= null) {
     if (null !== $args) {
       $t= function() use($consumer, $args) {
-        $inv= Closure::$APPLY->newInstance($consumer);
+        $inv= Functions::$APPLY->newInstance($consumer);
         $i= 0;
         foreach ($this->elements as $element) { call_user_func_array($inv, array_merge([$element], $args)); $i++; }
         return $i;
       };
-    } else if (Closure::$APPLY_WITH_KEY->isInstance($consumer)) {
+    } else if (Functions::$APPLY_WITH_KEY->isInstance($consumer)) {
       $t= function() use($consumer) {
-        $inv= Closure::$APPLY_WITH_KEY->cast($consumer);
+        $inv= Functions::$APPLY_WITH_KEY->cast($consumer);
         $i= 0;
         foreach ($this->elements as $key => $element) { $inv($element, $key); $i++; }
         return $i;
       };
     } else if (null !== $consumer) {
       $t= function() use($consumer) {
-        $inv= Closure::$APPLY->newInstance($consumer);
+        $inv= Functions::$APPLY->newInstance($consumer);
         $i= 0;
         foreach ($this->elements as $element) { $inv($element); $i++; }
         return $i;
@@ -353,10 +353,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function limit($arg) {
     if (is_numeric($arg)) {
       $w= new \LimitIterator($this->getIterator(), 0, (int)$arg);
-    } else if (Closure::$APPLY_WITH_KEY->isInstance($arg)) {
-      $w= new WindowWithKey($this->getIterator(), function() { return false; }, Closure::$APPLY_WITH_KEY->cast($arg));
+    } else if (Functions::$APPLY_WITH_KEY->isInstance($arg)) {
+      $w= new WindowWithKey($this->getIterator(), function() { return false; }, Functions::$APPLY_WITH_KEY->cast($arg));
     } else {
-      $w= new Window($this->getIterator(), function() { return false; }, Closure::$APPLY->newInstance($arg));
+      $w= new Window($this->getIterator(), function() { return false; }, Functions::$APPLY->newInstance($arg));
     }
     return new self($w);
   }
@@ -371,10 +371,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function skip($arg) {
     if (is_numeric($arg)) {
       $w= new \LimitIterator($this->getIterator(), (int)$arg, -1);
-    } else if (Closure::$APPLY_WITH_KEY->isInstance($arg)) {
-      $w= new WindowWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($arg), function() { return false; });
+    } else if (Functions::$APPLY_WITH_KEY->isInstance($arg)) {
+      $w= new WindowWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($arg), function() { return false; });
     } else {
-      $w= new Window($this->getIterator(), Closure::$APPLY->newInstance($arg), function() { return false; });
+      $w= new Window($this->getIterator(), Functions::$APPLY->newInstance($arg), function() { return false; });
     }
     return new self($w);
   }
@@ -388,11 +388,11 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function filter($predicate) {
     if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
-      $f= new Filterable($this->getIterator(), Closure::$APPLY->cast([$predicate, 'accept']));
-    } else if (Closure::$APPLY_WITH_KEY->isInstance($predicate)) {
-      $f= new FilterableWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($predicate));
+      $f= new Filterable($this->getIterator(), Functions::$APPLY->cast([$predicate, 'accept']));
+    } else if (Functions::$APPLY_WITH_KEY->isInstance($predicate)) {
+      $f= new FilterableWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($predicate));
     } else {
-      $f= new Filterable($this->getIterator(), Closure::$APPLY->newInstance($predicate));
+      $f= new Filterable($this->getIterator(), Functions::$APPLY->newInstance($predicate));
     }
     return new self($f);
   }
@@ -405,10 +405,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function map($function) {
-    if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
-      $m= new MapperWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($function));
+    if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
+      $m= new MapperWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($function));
     } else {
-      $m= new Mapper($this->getIterator(), Closure::$APPLY->newInstance($function));
+      $m= new Mapper($this->getIterator(), Functions::$APPLY->newInstance($function));
     }
     return new self($m);
   }
@@ -424,10 +424,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function flatten($function= null) {
     if (null === $function) {
       $it= $this->getIterator();
-    } else if (Closure::$APPLY_WITH_KEY->isInstance($function)) {
-      $it= new MapperWithKey($this->getIterator(), Closure::$APPLY_WITH_KEY->cast($function));
+    } else if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
+      $it= new MapperWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($function));
     } else {
-      $it= new Mapper($this->getIterator(), Closure::$APPLY->newInstance($function));
+      $it= new Mapper($this->getIterator(), Functions::$APPLY->newInstance($function));
     }
     return new self(new Flattener($it));
   }
@@ -443,16 +443,16 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function peek($action, $args= null) {
     if (null !== $args) {
-      $f= Closure::$APPLY->newInstance($action);
+      $f= Functions::$APPLY->newInstance($action);
       $p= new MapperWithKey($this->getIterator(), function($e) use($f, $args) {
         call_user_func_array($f, array_merge([$e], $args));
         return $e;
       });
-    } else if (Closure::$APPLY_WITH_KEY->isInstance($action)) {
-      $f= Closure::$APPLY_WITH_KEY->cast($action);
+    } else if (Functions::$APPLY_WITH_KEY->isInstance($action)) {
+      $f= Functions::$APPLY_WITH_KEY->cast($action);
       $p= new MapperWithKey($this->getIterator(), function($e, $key) use($f) { $f($e, $key); return $e; });
     } else {
-      $f= Closure::$APPLY->newInstance($action);
+      $f= Functions::$APPLY->newInstance($action);
       $p= new Mapper($this->getIterator(), function($e) use($f) { $f($e); return $e; });
     }
     return new self($p);
@@ -472,7 +472,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
       return true;
     }));
   }
-
 
   /**
    * Returns a stream with distinct elements
@@ -511,11 +510,11 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function sorted($comparator= null) {
     $sort= $this->toArray();
     if ($comparator instanceof Comparator) {
-      uasort($sort, Closure::of([$comparator, 'compare']));
+      uasort($sort, Functions::$COMPARATOR->newInstance([$comparator, 'compare']));
     } else if (is_int($comparator)) {
       array_multisort($sort, $comparator);
     } else if ($comparator) {
-      uasort($sort, Closure::of($comparator));
+      uasort($sort, Functions::$COMPARATOR->newInstance($comparator));
     } else {
       asort($sort);
     }

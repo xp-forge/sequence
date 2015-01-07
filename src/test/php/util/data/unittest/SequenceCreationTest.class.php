@@ -20,7 +20,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
     Sequence::of($input);
   }
 
-  #[@test, @values('callables')]
+  #[@test, @values('unaryops')]
   public function can_create_via_iterate($input, $name) {
     $this->assertInstanceOf('util.data.Sequence', Sequence::iterate(0, $input), $name);
   }
@@ -30,7 +30,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
     Sequence::iterate(0, $input);
   }
 
-  #[@test, @values('callables')]
+  #[@test, @values('suppliers')]
   public function can_create_via_generate($input) {
     $this->assertInstanceOf('util.data.Sequence', Sequence::generate($input));
   }

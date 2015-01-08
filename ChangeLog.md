@@ -3,6 +3,14 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Heads up: Removed `sum()` operation, it can easily be rewritten to
+  either `$sum= $seq->reduce(0, function($a, $b) { return $a + $b; })`
+  or `$sum= $seq->collect(Collectors::summing())` which are more flexible.
+  (@thekid)
+* Made functions to `Collectors::summing` and `Collectors::averaging`
+  optional. If omitted, the elements themselves will be used for the
+  numbers.
+  (@thekid)
 * Added support for referring to instance methods via string. Depends
   on xp-framework/core#44,m see pull request #17 - @thekid
 * Added `Sequence::toMap()` - see pull request #10 - @thekid

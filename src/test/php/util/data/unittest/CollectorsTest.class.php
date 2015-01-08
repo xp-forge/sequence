@@ -100,9 +100,25 @@ class CollectorsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function summing_elements() {
+    $this->assertEquals(33, Sequence::of($this->people)
+      ->map(function($e) { return $e->years(); })
+      ->collect(Collectors::summing())
+    );
+  }
+
+  #[@test]
   public function averaging_years() {
     $this->assertEquals(11, Sequence::of($this->people)
       ->collect(Collectors::averaging(function($e) { return $e->years(); }))
+    );
+  }
+
+  #[@test]
+  public function averaging_elements() {
+    $this->assertEquals(11, Sequence::of($this->people)
+      ->map(function($e) { return $e->years(); })
+      ->collect(Collectors::averaging())
     );
   }
 

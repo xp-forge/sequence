@@ -200,22 +200,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Returns the sum of all elements
-   *
-   * @return T
-   * @throws lang.IllegalArgumentException if streamed and invoked more than once
-   */
-  public function sum() {
-    return $this->terminal(function() {
-      $return= 0;
-      foreach ($this->elements as $element) {
-        $return+= $element;
-      }
-      return $return;
-    });
-  }
-
-  /**
    * Helper for min() and max()
    *
    * @param  var $comparator Either a Comparator or a closure to compare.

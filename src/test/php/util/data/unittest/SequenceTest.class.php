@@ -61,15 +61,6 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertEquals($length, Sequence::of($values)->count());
   }
 
-  #[@test, @values([
-  #  [0, []],
-  #  [1, [1]],
-  #  [10, [1, 2, 3, 4]]
-  #])]
-  public function sum($result, $values) {
-    $this->assertEquals($result, Sequence::of($values)->sum());
-  }
-
   #[@test]
   public function first_returns_non_present_optional_for_empty_input() {
     $this->assertFalse(Sequence::of([])->first()->present());
@@ -134,11 +125,6 @@ class SequenceTest extends AbstractSequenceTest {
   #[@test, @values('util.data.unittest.Enumerables::streamedArrays')]
   public function cannot_use_count_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
     $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->count(); });
-  }
-
-  #[@test, @values('util.data.unittest.Enumerables::streamedArrays')]
-  public function cannot_use_sum_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
-    $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->sum(); });
   }
 
   #[@test, @values('util.data.unittest.Enumerables::streamedArrays')]

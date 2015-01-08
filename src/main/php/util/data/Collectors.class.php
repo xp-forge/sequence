@@ -173,28 +173,43 @@ final class Collectors extends \lang\Object {
   }
 
   /**
-   * Creates a new collector to sum up elements
+   * Creates a new collector to sum up elements. Uses the given function to produce a 
+   * number for each element. If omitted, uses the elements themselves.
    *
    * @param  function(var): var $num
    * @return util.data.ICollector
    */
-  public static function summing($num) {
+  public static function summing($num= null) {
+    if (null === $num) {
+      $accumulator= function(&$result, $arg) use($num) { $result+= $arg; };
+    } else {
+      $accumulator= function(&$result, $arg) use($num) { $result+= $num($arg); }; 
+    }
+
     return new Collector(
       function() { return 0; },
-      function(&$result, $arg) use($num) { $result+= $num($arg); }
+      $accumulator
     );
   }
 
   /**
-   * Creates a new collector to calculate an average for all the given elements
+   * Creates a new collector to calculate an average for all the given elements. Uses
+   * the given function to produce a number for each element. If omitted, uses the
+   * elements themselves.
    *
    * @param  function(var): var $num
    * @return util.data.ICollector
    */
-  public static function averaging($num) {
+  public static function averaging($num= null) {
+    if (null === $num) {
+      $accumulator= function(&$result, $arg) use($num) { $result[0]+= $arg; $result[1]++;  };
+    } else {
+      $accumulator= function(&$result, $arg) use($num) { $result[0]+= $num($arg); $result[1]++;  }; 
+    }
+
     return new Collector(
       function() { return [0, 0]; },
-      function(&$result, $arg) use($num) { $result[0]+= $num($arg); $result[1]++; },
+      $accumulator,
       function($result) { return $result[0] / $result[1]; }
     );
   }

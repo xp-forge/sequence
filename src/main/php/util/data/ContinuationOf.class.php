@@ -7,6 +7,7 @@
  * @test  xp://util.data.unittest.ContinuationOfTest
  */
 class ContinuationOf extends \lang\Object implements \Iterator {
+  private $it;
 
   /** @param php.Iterator $it */
   public function __construct($it) { $this->it= $it; }

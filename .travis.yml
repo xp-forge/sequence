@@ -13,7 +13,7 @@ matrix:
     - php: hhvm
 
 before_script:
-  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.0.0/setup' -O - | php
+  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.2.0/setup' -O - | php
   - wget 'https://github.com/xp-framework/core/archive/master.zip' -O depend.zip ; unzip -d depend depend.zip
   - find depend -type d -name php > depend.pth
   - echo "[runtime]" >> xp.ini

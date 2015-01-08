@@ -24,7 +24,8 @@ class XPIteratorAdapter extends \lang\Object implements \Iterator {
 
   /** @return void */
   public function next() {
-    if ($this->valid= $this->it->hasNext()) {
+    $this->valid= $this->it->hasNext();
+    if ($this->valid) {
       $this->current= $this->it->next();
       $this->key++;
     }

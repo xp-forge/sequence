@@ -16,11 +16,9 @@ before_script:
   - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.2.0/setup' -O - | php
   - composer install
   - echo "vendor/autoload.php" > composer.pth
-  - echo "use=vendor/xp-framework/core" >> xp.ini
+  - echo "use=vendor/xp-framework/core" > xp.ini
   - echo "[runtime]" >> xp.ini
   - echo "date.timezone=Europe/Berlin" >> xp.ini
-  - cat xp.ini
-  - find vendor
 
 script:
   - ./unittest src/test/php

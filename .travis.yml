@@ -19,6 +19,8 @@ before_script:
   - echo "use=vendor/xp-framework/core" >> xp.ini
   - echo "[runtime]" >> xp.ini
   - echo "date.timezone=Europe/Berlin" >> xp.ini
+  - cat xp.ini
+  - find vendor
 
 script:
   - ./unittest src/test/php

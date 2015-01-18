@@ -14,7 +14,7 @@ Data sequences change log
   numbers.
   (@thekid)
 * Added support for referring to instance methods via string. Depends
-  on xp-framework/core#44,m see pull request #17 - @thekid
+  on xp-framework/core#44, see pull request #17 - @thekid
 * Added `Sequence::toMap()` - see pull request #10 - @thekid
 * Added `Sequence::iterator()` - see pull request #16 - @thekid
 * Added the ability to pass a variable number of arguments to

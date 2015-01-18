@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 2.1.0 / 2015-01-18
+
 * Heads up: Removed `sum()` operation, it can easily be rewritten to
   either `$sum= $seq->reduce(0, function($a, $b) { return $a + $b; })`
   or `$sum= $seq->collect(Collectors::summing())` which are more flexible.

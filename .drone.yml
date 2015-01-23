@@ -1,6 +1,7 @@
 image: naneau/php:5.5
 
 script:
+  - apt-get install wget
   - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.2.0/setup' -O - | php
   - composer install --prefer-dist
   - echo "vendor/autoload.php" > composer.pth

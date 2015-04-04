@@ -3,6 +3,11 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Don't keep index association when sorting, this yields arrays like 
+  `[1 => 'second', 0 => 'first']`. These arrays are not zero-based and
+  considered maps e.g. by typeof()
+  (@thekid)
+
 ## 2.1.0 / 2015-01-18
 
 * Heads up: Removed `sum()` operation, it can easily be rewritten to

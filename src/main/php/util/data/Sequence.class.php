@@ -510,13 +510,13 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public function sorted($comparator= null) {
     $sort= $this->toArray();
     if ($comparator instanceof Comparator) {
-      uasort($sort, Functions::$COMPARATOR->newInstance([$comparator, 'compare']));
+      usort($sort, Functions::$COMPARATOR->newInstance([$comparator, 'compare']));
     } else if (is_int($comparator)) {
       array_multisort($sort, $comparator);
     } else if ($comparator) {
-      uasort($sort, Functions::$COMPARATOR->newInstance($comparator));
+      usort($sort, Functions::$COMPARATOR->newInstance($comparator));
     } else {
-      asort($sort);
+      sort($sort);
     }
     return new self($sort);
   }

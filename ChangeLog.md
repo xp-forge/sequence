@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 2.1.1 / 2015-04-04
+
 * Don't keep index association when sorting, this yields arrays like 
   `[1 => 'second', 0 => 'first']`. These arrays are not zero-based and
   considered maps e.g. by typeof()

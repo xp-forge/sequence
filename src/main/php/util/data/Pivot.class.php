@@ -23,6 +23,8 @@ use lang\IllegalArgumentException;
  * `-----------------------------------------------------------------------------´
  * ```
  *
+ * Accessing a single row can be done via `row()`.
+ *
  * Accessing by category
  * ---------------------
  * Use the `sum()`, `average()` and `percentage()` methods to access the values.
@@ -49,8 +51,8 @@ use lang\IllegalArgumentException;
  * @test  xp://util.data.unittest.PivotTest
  */
 class Pivot extends \lang\Object {
-  const TOTAL = 0;
-  const COUNT = 1;
+  const COUNT = 0;
+  const TOTAL = 1;
   const ROWS  = 2;
   const COLS  = 3;
 
@@ -95,7 +97,7 @@ class Pivot extends \lang\Object {
         }
         $ptr[self::COUNT]++;
       } else {
-        $ptr= [self::TOTAL => $sums, self::COUNT => 1, self::ROWS => [], self::COLS => []];
+        $ptr= [self::COUNT => 1, self::TOTAL => $sums, self::ROWS => [], self::COLS => []];
       }
 
       if ($this->spreadOn) {
@@ -135,6 +137,16 @@ class Pivot extends \lang\Object {
    */
   public function rows() {
     return array_keys($this->fact(func_get_args())[self::ROWS]);
+  }
+
+  /**
+   * Returns a single row
+   *
+   * @param  string* $path
+   * @return var[]
+   */
+  public function row($path) {
+    return $this->fact(func_get_args());
   }
 
   /**

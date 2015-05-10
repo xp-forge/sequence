@@ -2,6 +2,7 @@
 
 use util\data\Sequence;
 use util\data\Collectors;
+use util\data\Pivot;
 use lang\IllegalArgumentException;
 
 class PivotTest extends AbstractSequenceTest {
@@ -27,6 +28,56 @@ class PivotTest extends AbstractSequenceTest {
   public function rows() {
     $pivot= Sequence::of($this->measurements())->collect(Collectors::toPivot()->groupingBy('type'));
     $this->assertEquals(['good', 'ok', 'bad'], $pivot->rows());
+  }
+
+  #[@test]
+  public function row() {
+    $pivot= Sequence::of($this->measurements())->collect(Collectors::toPivot()->groupingBy('type'));
+    $this->assertEquals(
+      [Pivot::COUNT => 2, Pivot::TOTAL => [], Pivot::ROWS => [], Pivot::COLS => []],
+      $pivot->row('good')
+    );
+  }
+
+  #[@test]
+  public function row_with_sum() {
+    $pivot= Sequence::of($this->measurements())->collect(Collectors::toPivot()
+      ->groupingBy('type')
+      ->summing('bytes')
+    );
+    $this->assertEquals(
+      [Pivot::COUNT => 2, Pivot::TOTAL => ['bytes' => 4020], Pivot::ROWS => [], Pivot::COLS => []],
+      $pivot->row('good')
+    );
+  }
+
+  #[@test]
+  public function row_with_sums() {
+    $pivot= Sequence::of($this->measurements())->collect(Collectors::toPivot()
+      ->groupingBy('type')
+      ->summing('bytes')
+      ->summing('occurrences')
+    );
+    $this->assertEquals(
+      [Pivot::COUNT => 2, Pivot::TOTAL => ['bytes' => 4020, 'occurrences' => 201], Pivot::ROWS => [], Pivot::COLS => []],
+      $pivot->row('good')
+    );
+  }
+
+  #[@test]
+  public function row_with_spreading() {
+    $pivot= Sequence::of($this->measurements())->collect(Collectors::toPivot()
+      ->groupingBy('type')
+      ->spreadingOn('date')
+      ->summing('occurrences')
+    );
+    $this->assertEquals(
+      [Pivot::COUNT => 2, Pivot::TOTAL => ['occurrences' => 201], Pivot::ROWS => [], Pivot::COLS => [
+        '2015-05-10' => ['occurrences' => 100],
+        '2015-05-11' => ['occurrences' => 101]
+      ]],
+      $pivot->row('good')
+    );
   }
 
   #[@test]

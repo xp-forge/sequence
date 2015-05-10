@@ -1,7 +1,5 @@
 <?php namespace util\data;
 
-use util\collections\HashTable;
-
 /**
  * A collector
  *
@@ -10,6 +8,12 @@ use util\collections\HashTable;
 class PivotCollector extends \lang\Object implements ICollector {
   private $groupBy= [], $spreadOn= null, $aggregate= [];
 
+  /**
+   * Helper for groupingBy() and spreadingOn()
+   *
+   * @param  var $arg
+   * @return function(var): var
+   */
   private function select($arg) {
     if (is_string($arg) || is_int($arg)) {
       return function($value) use($arg) { return $value[$arg]; };

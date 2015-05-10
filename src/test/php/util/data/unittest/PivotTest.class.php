@@ -73,8 +73,8 @@ class PivotTest extends AbstractSequenceTest {
     );
     $this->assertEquals(
       [Pivot::COUNT => 2, Pivot::TOTAL => ['occurrences' => 201], Pivot::ROWS => [], Pivot::COLS => [
-        '2015-05-10' => ['occurrences' => 100],
-        '2015-05-11' => ['occurrences' => 101]
+        '2015-05-10' => [Pivot::COUNT => 1, Pivot::TOTAL => ['occurrences' => 100]],
+        '2015-05-11' => [Pivot::COUNT => 1, Pivot::TOTAL => ['occurrences' => 101]]
       ]],
       $pivot->row('good')
     );
@@ -87,6 +87,16 @@ class PivotTest extends AbstractSequenceTest {
       ->summing('occurrences')
     );
     $this->assertEquals(220, $pivot->total()['occurrences']);
+  }
+
+  #[@test]
+  public function total_by_date() {
+    $pivot= Sequence::of($this->measurements())->collect(Collectors::toPivot()
+      ->groupingBy('type')
+      ->spreadingOn('date')
+      ->summing('occurrences')
+    );
+    $this->assertEquals(119, $pivot->total('2015-05-10')['occurrences']);
   }
 
   #[@test]
@@ -149,6 +159,19 @@ class PivotTest extends AbstractSequenceTest {
       ->summing('occurrences')
     );
     $this->assertEquals(['2015-05-10', '2015-05-11'], $pivot->columns());
+  }
+
+  #[@test]
+  public function column() {
+    $pivot= Sequence::of($this->measurements())->collect(Collectors::toPivot()
+      ->groupingBy('type')
+      ->spreadingOn('date')
+      ->summing('occurrences')
+    );
+    $this->assertEquals(
+      [Pivot::COUNT => 5, Pivot::TOTAL => ['occurrences' => 119]],
+      $pivot->column('2015-05-10')
+    );
   }
 
   #[@test, @values([[401, 1], [404, 4], [500, 5]])]

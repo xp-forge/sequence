@@ -23,8 +23,6 @@ use lang\IllegalArgumentException;
  * `-----------------------------------------------------------------------------´
  * ```
  *
- * Accessing a single row can be done via `row()`.
- *
  * Accessing by category
  * ---------------------
  * Use the `sum()`, `average()` and `percentage()` methods to access the values.
@@ -34,12 +32,14 @@ use lang\IllegalArgumentException;
  * of records included in the fact is returned by `count("OK")` = 2.
  *
  * To iterate over the categories, use the `rows()` method.
+ * Accessing a single row can be done via `row()`.
  *
  * Accessing by date
  * -----------------
  * Pass the date to the `total()` method, e.g. `total("2015-05-10")['n']` = 102.
  *
  * To iterate over the dates, use the `columns()` method.
+ * Accessing a single column can be done via `column()`.
  *
  * Grand totals
  * ------------
@@ -92,8 +92,8 @@ class Pivot extends \lang\Object {
     $ptr= &$this->facts;
     foreach ($this->groupBy as $group) {
       if (isset($ptr)) {
-        foreach ($ptr[self::TOTAL] as $name => $sum) {
-          $ptr[self::TOTAL][$name]+= $sums[$name];
+        foreach ($sums as $name => $sum) {
+          $ptr[self::TOTAL][$name]+= $sum;
         }
         $ptr[self::COUNT]++;
       } else {
@@ -101,13 +101,14 @@ class Pivot extends \lang\Object {
       }
 
       if ($this->spreadOn) {
-        $cols= &$ptr[self::COLS];
-        if (isset($cols[$spread])) {
-          foreach ($cols[$spread] as $name => $sum) {
-            $cols[$spread][$name]+= $sums[$name];
+        $cols= &$ptr[self::COLS][$spread];
+        if (isset($cols)) {
+          foreach ($sums as $name => $sum) {
+            $cols[self::TOTAL][$name]+= $sum;
           }
+          $cols[self::COUNT]++;
         } else {
-          $cols[$spread]= $sums;
+          $cols= [self::COUNT => 1, self::TOTAL => $sums];
         }
       }
 
@@ -206,6 +207,16 @@ class Pivot extends \lang\Object {
    */
   public function columns() {
     return array_keys($this->facts[self::COLS]);
+  }
+
+  /**
+   * Returns a single column
+   *
+   * @param  string $column
+   * @return var[]
+   */
+  public function column($column) {
+    return $this->facts[self::COLS][$column];
   }
 
   /**

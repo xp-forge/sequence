@@ -49,7 +49,7 @@ use lang\IllegalArgumentException;
  */
 class Pivot extends \lang\Object {
   const TOTAL = 0;
-  const COUNT = 'COUNT';
+  const COUNT = 1;
   const ROWS  = 2;
   const COLS  = 3;
 

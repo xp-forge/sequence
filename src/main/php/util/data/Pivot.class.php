@@ -7,20 +7,20 @@ use lang\IllegalArgumentException;
  * =====
  *
  * ```
- * .------------------------------------------------------------------------.
- * | Category  | 2015-05-10 | 2015-05-11 | Sum      | Percentage   | Avg.   |
- * |-----------|------------|------------|----------|--------------|--------|
- * | OK        | n:100      | n:95       | n:195    | n:97.5%      | n:97.5 |
- * | GOOD      | n:2        | n:0        | n:2      | n:1.0%       | n:1    |
- * | ERROR     | n:0        | n:3        | n:3      | n:1.5%       | n:1.5  |
- * | ^- client | ^- n:0     | ^- n:2     | ^- n:2   | ^- n:1.0%    | n:1    |
- * |   ^- 403  |   ^- n:0   |   ^- n:1   |   ^- n:1 |   ^- n:0.5%  | n:0.5  |
- * |   ^- 404  |   ^- n:0   |   ^- n:1   |   ^- n:1 |   ^- n:0.5%  | n:0.5  |
- * | ^- server | ^- n:0     | ^- n:1     | ^- n:1   | ^- n:0.5%    | n:0.5  |
- * |   ^- 500  |   ^- n:0   |   ^- n:1   |   ^- n:1 |   ^- n:0.5%  | n:0.5  |
- * |-----------|------------|------------|----------|--------------|--------|
- * | Total     | n:102      | n:98       | n:200    |              |        |
- * `------------------------------------------------------------------------´
+ * .-----------------------------------------------------------------------------.
+ * | Category  | 2015-05-10 | 2015-05-11 | Sum      | Percentage | Count | Avg.   |
+ * |-----------|------------|------------|----------|------------|-------|--------|
+ * | OK        | n:100      | n:95       | n:195    | n:97.5     | n:2   | n:97.5 |
+ * | GOOD      | n:2        | n:0        | n:2      | n:1.0      | n:1   | n:2    |
+ * | ERROR     | n:0        | n:3        | n:3      | n:1.5      | n:3   | n:1.0  |
+ * | ^- client | ^- n:0     | ^- n:2     | ^- n:2   | ^- n:1.0   | n:3   | n:0.67 |
+ * |   ^- 403  |   ^- n:0   |   ^- n:1   |   ^- n:1 |   ^- n:0.5 | n:1   | n:1.0  |
+ * |   ^- 404  |   ^- n:0   |   ^- n:1   |   ^- n:1 |   ^- n:0.5 | n:2   | n:0.5  |
+ * | ^- server | ^- n:0     | ^- n:1     | ^- n:1   | ^- n:0.5   | n:1   | n:0.5  |
+ * |   ^- 500  |   ^- n:0   |   ^- n:1   |   ^- n:1 |   ^- n:0.5 | n:1   | n:0.5  |
+ * |-----------|------------|------------|----------|------------|-------|--------|
+ * | Total     | n:102      | n:98       | n:200    |            | n:14  |        |
+ * `-----------------------------------------------------------------------------´
  * ```
  *
  * Accessing by category
@@ -28,7 +28,8 @@ use lang\IllegalArgumentException;
  * Use the `sum()`, `average()` and `percentage()` methods to access the values.
  * In the above example, `sum("OK")['n']` = 195, `average("ERROR")['n']` = 1.5
  * and `percentage("GOOD")['n']` = 1.0. The subtotals e.g. for client errors can
- * be accessed by passing in varargs: `sum("ERROR", "client")['n']` = 2.
+ * be accessed by passing in varargs: `sum("ERROR", "client")['n']` = 2. The number
+ * of records included in the fact is returned by `count("OK")` = 2.
  *
  * To iterate over the categories, use the `rows()` method.
  *
@@ -43,7 +44,7 @@ use lang\IllegalArgumentException;
  * Use the `total()` method without any argument to access the grand total for all
  * values (`['n' => 200]`).
  *
- * The `count()` method will return how many columns we spread on (2).
+ * The `count()` method will return many records we processed on (14).
  *
  * @test  xp://util.data.unittest.PivotTest
  */

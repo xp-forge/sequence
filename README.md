@@ -39,7 +39,7 @@ $names= Sequence::of($this->people)
   ->map('com.example.Person::name')
   ->collect(Collectors::joining(', '))
 ;
-// $return= "Timm, Alex, Dude"
+// $names= "Timm, Alex, Dude"
 
 $experience= Sequence::of($this->employees)
   ->collect(Collectors::groupingBy(
@@ -47,7 +47,7 @@ $experience= Sequence::of($this->employees)
     Collectors::averaging(function($e) { return $e->years(); })
   ))
 ;
-// $return= HashTable[2] {
+// $experience= util.collections.HashTable[2] {
 //   Department("A") => 12.8
 //   Department("B") => 3.5
 // }

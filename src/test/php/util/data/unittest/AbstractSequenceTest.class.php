@@ -1,6 +1,6 @@
 <?php namespace util\data\unittest;
 
-use lang\types\String;
+use lang\Object;
 use lang\types\ArrayList;
 use util\data\Sequence;
 use util\data\Collector;
@@ -72,7 +72,7 @@ abstract class AbstractSequenceTest extends \unittest\TestCase {
   protected function noncallables() {
     return [
       [null], [''], ['...'], [-1], [0], [1], [0.5], [false], [true],
-      [new \lang\Object()], [new String('...')], [$this],
+      [new Object()], [new Name('...')], [$this],
       [[]], [[$this]], [['xp']], [['xp', 'g']], [[$this, 'getName', 'excess-element']],
       ['xp:g'], ['xp::'], ['xp::g'], ['::gc'], ['typeo']
     ];

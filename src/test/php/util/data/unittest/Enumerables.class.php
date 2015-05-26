@@ -2,7 +2,6 @@
 
 use lang\types\ArrayList;
 use lang\types\ArrayMap;
-use lang\types\String;
 use lang\Object;
 use util\data\Sequence;
 
@@ -126,7 +125,7 @@ abstract class Enumerables extends Object {
   public static function invalid() {
     return [
       [''], ['...'], [-1], [0], [1], [0.5], [false], [true],
-      [new Object()], [new String('...')],
+      [new Object()], [new Name('...')],
       [function() { return 1; }]
     ];
   }

@@ -36,19 +36,11 @@ class OptionalTest extends \unittest\TestCase {
 
   #[@test]
   public function can_be_used_in_foreach() {
-    $values= [];
-    foreach (Optional::of('Test') as $value) {
-      $values[]= $value;
-    }
-    $this->assertEquals(['Test'], $values);
+    $this->assertEquals(['Test'], iterator_to_array(Optional::of('Test')));
   }
 
   #[@test]
   public function empty_can_be_used_in_foreach() {
-    $values= [];
-    foreach (Optional::$EMPTY as $value) {
-      $values[]= $value;
-    }
-    $this->assertEquals([], $values);
+    $this->assertEquals([], iterator_to_array(Optional::$EMPTY));
   }
 }

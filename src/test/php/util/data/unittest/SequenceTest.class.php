@@ -86,11 +86,7 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test]
   public function is_useable_inside_foreach() {
-    $values= [];
-    foreach (Sequence::of([1, 2, 3]) as $yielded) {
-      $values[]= $yielded;
-    }
-    $this->assertEquals([1, 2, 3], $values);
+    $this->assertEquals([1, 2, 3], iterator_to_array(Sequence::of([1, 2, 3])));
   }
 
   #[@test, @values([[['a', 'b', 'c', 'd']], [[]]])]

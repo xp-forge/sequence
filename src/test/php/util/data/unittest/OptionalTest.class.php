@@ -1,6 +1,7 @@
 <?php namespace util\data\unittest;
 
 use util\data\Optional;
+use lang\IllegalStateException;
 
 class OptionalTest extends \unittest\TestCase {
 
@@ -32,6 +33,18 @@ class OptionalTest extends \unittest\TestCase {
   #[@test]
   public function orElse_returns_default_when_no_value_is_present() {
     $this->assertEquals('Succeeded', Optional::$EMPTY->orElse('Succeeded'));
+  }
+
+  #[@test]
+  public function orUse_returns_value_passed_to_of() {
+    $this->assertEquals('Test', Optional::of('Test')->orUse(function() {
+      throw new IllegalStateException('No reached');
+    }));
+  }
+
+  #[@test]
+  public function orUse_invokes_supplier_when_no_value_is_present() {
+    $this->assertEquals('Succeeded', Optional::$EMPTY->orUse(function() { return 'Succeeded'; }));
   }
 
   #[@test]

@@ -62,13 +62,23 @@ class Optional extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Gets this optional's value, or a given default value, if no value is present.
+   * Gets this optional's value, or a given default value if no value is present.
    *
    * @param  var $default
    * @return var
    */
   public function orElse($default) {
     return $this->present ? $this->value : $default;
+  }
+
+  /**
+   * Gets this optional's value, or invoke a given supplier if no value is present.
+   *
+   * @param  function(): var $supplier
+   * @return var
+   */
+  public function orUse($supplier) {
+    return $this->present ? $this->value : Functions::$SUPPLY->newInstance($supplier)->__invoke();
   }
 
   /**
@@ -102,7 +112,6 @@ class Optional extends \lang\Object implements \IteratorAggregate {
   public function map($function) {
     if (!$this->present) return self::$EMPTY;
 
-    $mapper= Functions::$APPLY->newInstance($function);
-    return self::of($mapper($this->value));
+    return self::of(Functions::$APPLY->newInstance($function)->__invoke($this->value));
   }
 }

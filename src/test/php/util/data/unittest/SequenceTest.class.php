@@ -1,6 +1,5 @@
 <?php namespace util\data\unittest;
 
-use lang\types\String;
 use util\cmd\Console;
 use util\data\Sequence;
 use util\data\Optional;
@@ -78,7 +77,7 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test, @values([
   #  [[1, 2, 3], [1, 2, 2, 3, 1, 3]],
-  #  [[new String('a'), new String('b')], [new String('a'), new String('a'), new String('b')]]
+  #  [[new Name('a'), new Name('b')], [new Name('a'), new Name('a'), new Name('b')]]
   #])]
   public function distinct($result, $input) {
     $this->assertSequence($result, Sequence::of($input)->distinct());

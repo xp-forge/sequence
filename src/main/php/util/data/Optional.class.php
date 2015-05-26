@@ -1,6 +1,7 @@
 <?php namespace util\data;
 
 use util\NoSuchElementException;
+use util\Filter;
 
 /**
  * An optional
@@ -68,5 +69,40 @@ class Optional extends \lang\Object implements \IteratorAggregate {
    */
   public function orElse($default) {
     return $this->present ? $this->value : $default;
+  }
+
+  /**
+   * Returns a new optional by applying the given mapper to this optional's value.
+   * If this optional is empty, returns itself.
+   *
+   * @param  var $predicate either a util.Filter instance or a function
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
+  public function filter($predicate) {
+    if (!$this->present) return self::$EMPTY;
+
+    if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
+      $filter= Functions::$APPLY->cast([$predicate, 'accept']);
+    } else {
+      $filter= Functions::$APPLY->newInstance($predicate);
+    }
+
+    return $filter($this->value) ? $this : self::$EMPTY;
+  }
+
+  /**
+   * Returns a new optional by applying the given mapper to this optional's value.
+   * If this optional is empty, returns itself.
+   *
+   * @param  function(var): var $function
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
+  public function map($function) {
+    if (!$this->present) return self::$EMPTY;
+
+    $mapper= Functions::$APPLY->newInstance($function);
+    return self::of($mapper($this->value));
   }
 }

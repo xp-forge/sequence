@@ -43,4 +43,29 @@ class OptionalTest extends \unittest\TestCase {
   public function empty_can_be_used_in_foreach() {
     $this->assertEquals([], iterator_to_array(Optional::$EMPTY));
   }
+
+  #[@test]
+  public function filter_returns_empty_when_no_value_present() {
+    $this->assertEquals(Optional::$EMPTY, Optional::$EMPTY->filter('is_array'));
+  }
+
+  #[@test]
+  public function filter_returns_self_when_predicate_matches() {
+    $this->assertEquals([1, 2, 3], Optional::of([1, 2, 3])->filter('is_array')->get());
+  }
+
+  #[@test]
+  public function filter_returns_empty_when_predicate_does_not_match() {
+    $this->assertEquals(Optional::$EMPTY, Optional::of('test')->filter('is_array'));
+  }
+
+  #[@test]
+  public function map_applies_function_when_value_present() {
+    $this->assertEquals('123', Optional::of([1, 2, 3])->map('implode')->get());
+  }
+
+  #[@test]
+  public function map_returns_empty_when_no_value_present() {
+    $this->assertEquals(Optional::$EMPTY, Optional::$EMPTY->map('implode'));
+  }
 }

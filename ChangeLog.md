@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Added filter(), map() and orUse() implementations to util.data.Optional
+  See pull request #21
+  (@thekid)
+
 ## 2.1.1 / 2015-04-04
 
 * Don't keep index association when sorting, this yields arrays like 

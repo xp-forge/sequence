@@ -63,8 +63,8 @@ $user= $first->orUse(function() { return $this->currentUser(); });
 
 $name= $first
   ->filter(function($user) { return !$user->isDeleted(); })
+  ->whenNull($this->currentUser)
   ->map('com.example.User::name')
-  ->orElse($this->currentUser->name())
 ;
 ```
 

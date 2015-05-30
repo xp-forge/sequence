@@ -145,7 +145,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
       }
       foreach ($this->elements as $element) {
         $gen && $this->elements->closed= true;
-        return Optional::of($element);
+        return new Optional($element);
       }
       return Optional::$EMPTY;
     });

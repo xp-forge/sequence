@@ -11,6 +11,11 @@ class OptionalTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function optional_created_via_of_with_null_is_not_present() {
+    $this->assertFalse(Optional::of(null)->present());
+  }
+
+  #[@test]
   public function empty_optional_is_not_present() {
     $this->assertFalse(Optional::$EMPTY->present());
   }
@@ -38,13 +43,43 @@ class OptionalTest extends \unittest\TestCase {
   #[@test]
   public function orUse_returns_value_passed_to_of() {
     $this->assertEquals('Test', Optional::of('Test')->orUse(function() {
-      throw new IllegalStateException('No reached');
+      throw new IllegalStateException('Not reached');
     }));
   }
 
   #[@test]
   public function orUse_invokes_supplier_when_no_value_is_present() {
     $this->assertEquals('Succeeded', Optional::$EMPTY->orUse(function() { return 'Succeeded'; }));
+  }
+
+  #[@test]
+  public function whenNull_returns_value_passed_to_of() {
+    $this->assertEquals('Test', Optional::of('Test')->whenNull('Failed')->get());
+  }
+
+  #[@test]
+  public function whenNull_returns_value_when_no_value_is_present() {
+    $this->assertEquals('Succeeded', Optional::$EMPTY->whenNull('Succeeded')->get());
+  }
+
+  #[@test]
+  public function whenNull_returns_optionals_value_when_no_value_is_present() {
+    $this->assertEquals('Succeeded', Optional::$EMPTY->whenNull(Optional::of('Succeeded'))->get());
+  }
+
+  #[@test]
+  public function whenNull_returns_functions_return_value_when_no_value_is_present() {
+    $this->assertEquals('Succeeded', Optional::$EMPTY->whenNull(function() { return 'Succeeded'; })->get());
+  }
+
+  #[@test, @values([
+  #  [null],
+  #  [Optional::$EMPTY],
+  #  [function() { return null; }],
+  #  [function() { return \util\data\Optional::$EMPTY; }]
+  #])]
+  public function whenNull_chaining($value) {
+    $this->assertEquals('Succeeded', Optional::$EMPTY->whenNull($value)->whenNull('Succeeded')->get());
   }
 
   #[@test]

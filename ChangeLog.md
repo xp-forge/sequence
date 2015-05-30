@@ -5,6 +5,13 @@ Data sequences change log
 
 ## 2.2.0 / 2015-05-30
 
+* Made Optional's constructor public and allow `new Optional(null)` to
+  represent an optional with a present null value
+  (@thekid)
+* Changed Optional::of() to return an empty optional if `null` is passed
+  (@thekid)
+* Added whenNull() method to util.data.Optional to allow easy chaining
+  (@thekid)
 * Added filter(), map() and orUse() implementations to util.data.Optional
   See pull request #21
   (@thekid)

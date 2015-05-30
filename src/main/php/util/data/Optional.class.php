@@ -24,7 +24,7 @@ class Optional extends \lang\Object implements \IteratorAggregate {
    * @param  var $value
    * @param  bool $present
    */
-  protected function __construct($value, $present) {
+  public function __construct($value, $present= true) {
     $this->value= $value;
     $this->present= $present;
   }
@@ -36,7 +36,7 @@ class Optional extends \lang\Object implements \IteratorAggregate {
    * @param  self
    */
   public static function of($value) {
-    return new self($value, true);
+    return null === $value ? self::$EMPTY : new self($value, true);
   }
 
   /** @return php.Iterator */
@@ -77,6 +77,24 @@ class Optional extends \lang\Object implements \IteratorAggregate {
    */
   public function orUse($supplier) {
     return $this->present ? $this->value : Functions::$SUPPLY->newInstance($supplier)->__invoke();
+  }
+
+  /**
+   * Gets this optional or a new optional with the given value if no value is present
+   *
+   * @param  var $default
+   * @return self
+   */
+  public function whenNull($default) {
+    if ($this->present) {
+      return $this;
+    } else if ($default instanceof self) {
+      return $default;
+    } else if ($default instanceof \Closure) {
+      return $this->whenNull($default());
+    } else {
+      return self::of($default);
+    }
   }
 
   /**

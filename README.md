@@ -55,7 +55,7 @@ $experience= Sequence::of($this->employees)
 
 $first= Optional::of($repository->find($user));
 if ($first->present()) {
-  $user= $first->get();
+  $user= $first->get();    // When Repository::found() returned non-null
 }
 
 $user= $first->orElse($this->currentUser);
@@ -65,6 +65,7 @@ $name= $first
   ->filter(function($user) { return !$user->isDeleted(); })
   ->whenNull($this->currentUser)
   ->map('com.example.User::name')
+  ->get()
 ;
 ```
 

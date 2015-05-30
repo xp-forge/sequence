@@ -14,6 +14,7 @@ Examples
 
 ```php
 use util\data\Sequence;
+use util\data\Optional;
 use util\data\Collectors;
 
 $return= Sequence::of([1, 2, 3, 4])
@@ -51,6 +52,20 @@ $experience= Sequence::of($this->employees)
 //   Department("A") => 12.8
 //   Department("B") => 3.5
 // }
+
+$first= Optional::of($repository->find($user));
+if ($first->present()) {
+  $user= $first->get();
+}
+
+$user= $first->orElse($this->currentUser);
+$user= $first->orUse(function() { return $this->currentUser(); });
+
+$name= $first
+  ->filter(function($user) { return !$user->isDeleted(); })
+  ->map('com.example.User::name')
+  ->orElse($this->currentUser->name())
+;
 ```
 
 Creation operations

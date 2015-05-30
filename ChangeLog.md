@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 2.2.0 / 2015-05-30
+
 * Added filter(), map() and orUse() implementations to util.data.Optional
   See pull request #21
   (@thekid)

@@ -20,25 +20,17 @@ abstract class AbstractMapper extends \lang\Object implements \Iterator {
   }
 
   /** @return void */
-  public function rewind() {
-    $this->it->rewind();
-  }
+  public function rewind() { $this->it->rewind(); }
 
   /** @return var */
   public abstract function current();
 
   /** @return var */
-  public function key() {
-    return $this->it->key();
-  }
+  public function key() { return $this->it->key(); }
 
   /** @return void */
-  public function next() {
-    $this->it->next();
-  }
+  public function next() { $this->it->next(); }
 
   /** @return bool */
-  public function valid() {
-    return $this->it->valid();
-  }
+  public function valid() { return $this->it->valid(); }
 }

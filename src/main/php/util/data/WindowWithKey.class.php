@@ -11,6 +11,7 @@ class WindowWithKey extends AbstractWindow {
   public function skip() {
     return $this->skip->__invoke($this->it->current(), $this->it->key());
   }
+
   /** @return bool */
   public function stop() {
     return $this->stop->__invoke($this->it->current(), $this->it->key());

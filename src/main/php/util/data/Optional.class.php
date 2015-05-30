@@ -45,9 +45,7 @@ class Optional extends \lang\Object implements \IteratorAggregate {
   }
 
   /** @return bool */
-  public function present() {
-    return $this->present;
-  }
+  public function present() { return $this->present; }
 
   /**
    * Gets this optional's value

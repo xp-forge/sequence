@@ -59,14 +59,10 @@ abstract class AbstractWindow extends \lang\Object implements \Iterator {
   }
 
   /** @return var */
-  public function current() {
-    return $this->it->current();
-  }
+  public function current() { return $this->it->current(); }
 
   /** @return var */
-  public function key() {
-    return $this->it->key();
-  }
+  public function key() { return $this->it->key(); }
 
   /** @return void */
   public function next() {

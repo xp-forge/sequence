@@ -520,4 +520,17 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     }
     return new self($sort);
   }
+
+  /**
+   * Creates a string representation of this sequence
+   *
+   * @return string
+   */
+  public function toString() {
+    if ([] === $this->elements) {
+      return $this->getClassName().'<EMPTY>';
+    } else {
+      return $this->getClassName().'@'.Objects::stringOf($this->elements);
+    }
+  }
 }

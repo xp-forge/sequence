@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Implemented util.data.Sequence::toString() - @thekid
+
 ## 2.2.1 / 2015-05-31
 
 * Fixed issue #22: tests not running on HHVM - @thekid

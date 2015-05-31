@@ -147,4 +147,14 @@ class SequenceTest extends AbstractSequenceTest {
       function($r, $e) { /* Intentionally empty */ });
     });
   }
+
+  #[@test]
+  public function toString_for_empty_sequence() {
+    $this->assertEquals('util.data.Sequence<EMPTY>', Sequence::$EMPTY->toString());
+  }
+
+  #[@test]
+  public function toString_for_sequence_of_array() {
+    $this->assertEquals('util.data.Sequence@[1, 2, 3]', Sequence::of([1, 2, 3])->toString());
+  }
 }

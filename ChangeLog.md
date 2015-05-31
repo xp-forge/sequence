@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed issue #22: tests not running on HHVM - @thekid
+
 ## 2.2.0 / 2015-05-30
 
 * Made Optional's constructor public and allow `new Optional(null)` to

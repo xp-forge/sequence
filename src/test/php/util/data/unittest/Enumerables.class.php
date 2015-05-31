@@ -79,12 +79,12 @@ abstract class Enumerables extends Object {
       [
         [newinstance('util.XPIterator', [], '{
           protected $numbers= [1, 2, 3];
-          public function hasNext() { return $this->numbers; }
+          public function hasNext() { return !empty($this->numbers); }
           public function next() { return array_shift($this->numbers); }
         }'), 'xp-iterator'],
         [Sequence::of(newinstance('util.XPIterator', [], '{
           protected $numbers= [1, 2, 3];
-          public function hasNext() { return $this->numbers; }
+          public function hasNext() { return !empty($this->numbers); }
           public function next() { return array_shift($this->numbers); }
         }')), 'self-of-xp-iterator']
       ]

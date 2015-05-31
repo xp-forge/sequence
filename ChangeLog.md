@@ -3,8 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
-* Implemented util.data.Optional::toString() - @thekid
-* Implemented util.data.Sequence::toString() - @thekid
+* Implemented Optional::toString(), equals() and hashCode() - @thekid
+* Implemented Sequence::toString(), equals() and hashCode() - @thekid
 
 ## 2.2.1 / 2015-05-31
 

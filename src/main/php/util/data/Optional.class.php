@@ -133,7 +133,26 @@ class Optional extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Creates a string representation of this sequence
+   * Returns a hashcode
+   *
+   * @return strintg
+   */
+  public function hashCode() {
+    return 'O'.($this->present ? Objects::hashOf($this->value) : 'N');
+  }
+
+  /**
+   * Returns whether this optional equals a given value.
+   *
+   * @param  var $cmp
+   * @return bool
+   */
+  public function equals($cmp) {
+    return $cmp instanceof self && $this->present === $cmp->present && Objects::equal($this->value, $cmp->value);
+  }
+
+  /**
+   * Creates a string representation of this optional
    *
    * @return string
    */

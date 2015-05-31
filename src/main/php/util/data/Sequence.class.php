@@ -522,6 +522,25 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Returns a hashcode
+   *
+   * @return strintg
+   */
+  public function hashCode() {
+    return 'S'.Objects::hashOf($this->elements);
+  }
+
+  /**
+   * Returns whether this sequence equals a given value.
+   *
+   * @param  var $cmp
+   * @return bool
+   */
+  public function equals($cmp) {
+    return $cmp instanceof self && Objects::equal($this->elements, $cmp->elements);
+  }
+
+  /**
    * Creates a string representation of this sequence
    *
    * @return string

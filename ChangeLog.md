@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 2.2.1 / 2015-05-31
+
 * Fixed issue #22: tests not running on HHVM - @thekid
 
 ## 2.2.0 / 2015-05-30

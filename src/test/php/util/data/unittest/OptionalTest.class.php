@@ -116,4 +116,14 @@ class OptionalTest extends \unittest\TestCase {
   public function map_returns_empty_when_no_value_present() {
     $this->assertEquals(Optional::$EMPTY, Optional::$EMPTY->map('implode'));
   }
+
+  #[@test]
+  public function toString_for_empty_optional() {
+    $this->assertEquals('util.data.Optional<EMPTY>', Optional::$EMPTY->toString());
+  }
+
+  #[@test]
+  public function toString_for_sequence_of_array() {
+    $this->assertEquals('util.data.Optional@[1, 2, 3]', Optional::of([1, 2, 3])->toString());
+  }
 }

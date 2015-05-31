@@ -2,6 +2,7 @@
 
 use util\NoSuchElementException;
 use util\Filter;
+use util\Objects;
 
 /**
  * An optional
@@ -129,5 +130,18 @@ class Optional extends \lang\Object implements \IteratorAggregate {
     if (!$this->present) return self::$EMPTY;
 
     return self::of(Functions::$APPLY->newInstance($function)->__invoke($this->value));
+  }
+
+  /**
+   * Creates a string representation of this sequence
+   *
+   * @return string
+   */
+  public function toString() {
+    if ($this->present) {
+      return $this->getClassName().'@'.Objects::stringOf($this->value);
+    } else {
+      return $this->getClassName().'<EMPTY>';
+    }
   }
 }

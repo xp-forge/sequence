@@ -72,8 +72,8 @@ $user= $first->orUse(function() { return $this->currentUser(); });
 
 $name= $first
   ->filter(function($user) { return !$user->isDeleted(); })
-  ->whenNull($this->currentUser)
-  ->whenNull(function() { return $this->guestUser(); })
+  ->whenAbsent($this->currentUser)
+  ->whenAbsent(function() { return $this->guestUser(); })
   ->map('com.example.User::name')
   ->get()
 ;

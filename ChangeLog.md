@@ -5,7 +5,7 @@ Data sequences change log
 
 ## 3.0.0 / 2015-06-01
 
-* Renamed whenNull() to `isAbsent()` in util.data.Optional. This is
+* Renamed whenNull() to `whenAbsent()` in util.data.Optional. This is
   more consistent with the present() method. See pull request #23
   (@thekid)
 * Implemented Optional::toString(), equals() and hashCode() - @thekid

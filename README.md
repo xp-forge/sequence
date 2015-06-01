@@ -71,7 +71,7 @@ $user= $first->orElse($this->currentUser);
 $user= $first->orUse(function() { return $this->currentUser(); });
 
 $name= $first
-  ->filter(function($user) { return !$user->isDeleted(); })
+  ->filter(function($user) { return $user->isActive(); })
   ->whenAbsent($this->currentUser)
   ->whenAbsent(function() { return $this->guestUser(); })
   ->map('com.example.User::name')

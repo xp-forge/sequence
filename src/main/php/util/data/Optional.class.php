@@ -86,13 +86,13 @@ class Optional extends \lang\Object implements \IteratorAggregate {
    * @param  var $default
    * @return self
    */
-  public function whenNull($default) {
+  public function whenAbsent($default) {
     if ($this->present) {
       return $this;
     } else if ($default instanceof self) {
       return $default;
     } else if ($default instanceof \Closure) {
-      return $this->whenNull($default());
+      return $this->whenAbsent($default());
     } else {
       return self::of($default);
     }

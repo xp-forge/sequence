@@ -12,10 +12,11 @@ This API allows working with data sequences of different kinds in a functional s
 
 Examples
 --------
+### Sequence
+Instances of the `util.data.Sequence` class can be created from iterable input, either an in-memory structure or a stream of data, e.g. read from a network socket. The Sequence class provides intermediate (work on single elements, return a new Sequence) and terminal (consume all elements, returning a single value) operations.
 
 ```php
 use util\data\Sequence;
-use util\data\Optional;
 use util\data\Collectors;
 
 $return= Sequence::of([1, 2, 3, 4])
@@ -53,6 +54,13 @@ $experience= Sequence::of($this->employees)
 //   Department("A") => 12.8
 //   Department("B") => 3.5
 // }
+```
+
+### Optional
+Instances of the `util.data.Optional` class are thin wrappers around possible NULL values. The operations provided by Optional class help in reducing conditional code:
+
+```php
+use util\data\Optional;
 
 $first= Optional::of($repository->find($user));
 if ($first->present()) {
@@ -75,7 +83,7 @@ Creation operations
 -------------------
 Sequences can be created from a variety of sources, and by using these static methods:
 
-* **of** - accepts PHP arrays (zero-based as well as associative), all traversable data structures including `lang.types.ArrayList` and `lang.types.ArrayList` as well as anything from `util.collections`, `util.XPIterator` instances, PHP iterators and iterator aggregates, PHP 5.5 generators (*yield*), as well as sequences themselves. Passing NULL will yield an empty sequence.
+* **of** - accepts PHP arrays (zero-based as well as associative), all traversable data structures including `lang.types.ArrayList` and `lang.types.ArrayMap` as well as anything from `util.collections`, `util.XPIterator` instances, PHP iterators and iterator aggregates, PHP 5.5 generators (*yield*), as well as sequences themselves. Passing NULL will yield an empty sequence.
 * **iterate** - Iterates starting with a given seed, applying a unary operator on this value and passing the result to the next invocation, forever. Combine with `limit()`!
 * **generate** - Iterates forever, returning whatever the given supplier function returns. Combine with `limit()`!
 * **concat** - Concatenates a variable number of arguments with anything `of()` accepts into one large sequence.

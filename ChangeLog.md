@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #24: Implement support for mapping keys - @thekid
+
 ## 3.0.0 / 2015-06-01
 
 * Renamed whenNull() to `whenAbsent()` in util.data.Optional. This is

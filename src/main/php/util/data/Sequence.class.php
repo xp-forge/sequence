@@ -284,7 +284,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Performs a mutable reduction operation on the elements of this stream.
    *
-   * @param  util.data.ICollector
+   * @param  util.data.ICollector $collector
    * @return var
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */

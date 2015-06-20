@@ -2,6 +2,7 @@
 
 use util\data\Sequence;
 use util\data\Collectors;
+use util\data\Collector;
 use util\collections\Vector;
 use util\collections\HashSet;
 use util\collections\HashTable;
@@ -90,6 +91,34 @@ class CollectorsTest extends \unittest\TestCase {
     $this->assertEquals($map, Sequence::of($this->people)->collect(Collectors::toMap(
       function($e) { return $e->name(); }
     )));
+  }
+
+  #[@test]
+  public function toMap_can_use_sequence_keys() {
+    $map= new HashTable();
+    $map['color']= 'green';
+
+    $this->assertEquals($map, Sequence::of(['color' => 'green'])->collect(Collectors::toMap()));
+  }
+
+  #[@test]
+  public function toMap_key_function_can_be_omitted() {
+    $map= new HashTable();
+    $map['color']= 'GREEN';
+
+    $this->assertEquals($map, Sequence::of(['color' => 'green'])->collect(Collectors::toMap(
+      null,
+      'strtoupper'
+    )));
+  }
+
+  #[@test]
+  public function collect_with_key() {
+    $result= Sequence::of(['color' => 'green', 'price' => 12.99])->collect(new Collector(
+      function() { return []; },
+      function(&$result, $arg, $key) { $result[strtoupper($key)]= $arg; }
+    ));
+    $this->assertEquals(['COLOR' => 'green', 'PRICE' => 12.99], $result);
   }
 
   #[@test]

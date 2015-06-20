@@ -10,13 +10,6 @@ class SequenceMappingTest extends AbstractSequenceTest {
     $this->assertSequence([2, 4, 6, 8], Sequence::of([1, 2, 3, 4])->map(function($e) { return $e * 2; }));
   }
 
-  #[@test, @action(new VerifyThat(function() { return class_exists('Generator', false); }))]
-  public function with_generator() {
-    $records= Sequence::of([['unit' => 'yellow', 'amount' => 20], ['unit' => 'blue', 'amount' => 19]]);
-    $generator= eval('return function($record) { yield $record["unit"] => $record["amount"]; };');
-    $this->assertEquals(['yellow' => 20, 'blue' => 19], $records->map($generator)->toMap());
-  }
-
   #[@test]
   public function with_with_floor_native_function() {
     $this->assertSequence([1.0, 2.0, 3.0], Sequence::of([1.9, 2.5, 3.1])->map('floor'));
@@ -48,5 +41,20 @@ class SequenceMappingTest extends AbstractSequenceTest {
       ['Timm', 'Test'],
       Sequence::of($people)->map('util.data.unittest.Person::name')
     );
+  }
+
+  #[@test, @action(new VerifyThat(function() { return class_exists('Generator', false); }))]
+  public function with_generator() {
+    $records= Sequence::of([['unit' => 'yellow', 'amount' => 20], ['unit' => 'blue', 'amount' => 19]]);
+    $generator= eval('return function($record) { yield $record["unit"] => $record["amount"]; };');
+    $this->assertEquals(['yellow' => 20, 'blue' => 19], $records->map($generator)->toMap());
+  }
+
+
+  #[@test, @action(new VerifyThat(function() { return class_exists('Generator', false); }))]
+  public function with_generator_and_key() {
+    $records= Sequence::of(['color' => 'green', 'price' => 12.99]);
+    $generator= eval('return function($value, $key) { yield strtoupper($key) => $value; };');
+    $this->assertEquals(['COLOR' => 'green', 'PRICE' => 12.99], $records->map($generator)->toMap());
   }
 }

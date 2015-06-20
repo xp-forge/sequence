@@ -2,6 +2,7 @@
 
 use util\data\Sequence;
 use util\data\Collectors;
+use util\data\Collector;
 use util\collections\Vector;
 use util\collections\HashSet;
 use util\collections\HashTable;
@@ -109,6 +110,15 @@ class CollectorsTest extends \unittest\TestCase {
       null,
       'strtoupper'
     )));
+  }
+
+  #[@test]
+  public function collect_with_key() {
+    $result= Sequence::of(['color' => 'green', 'price' => 12.99])->collect(new Collector(
+      function() { return []; },
+      function(&$result, $arg, $key) { $result[strtoupper($key)]= $arg; }
+    ));
+    $this->assertEquals(['COLOR' => 'green', 'PRICE' => 12.99], $result);
   }
 
   #[@test]

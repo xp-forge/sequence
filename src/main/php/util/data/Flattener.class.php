@@ -10,17 +10,14 @@
 class Flattener extends \lang\Object implements \Iterator {
   protected $it;
   protected $seq;
-  protected $func;
 
   /**
    * Creates a new Flattener instance
    *
    * @param  php.Iterator $it
-   * @param  php.Closure $func
    */
-  public function __construct(\Iterator $it, \Closure $func= null) {
+  public function __construct(\Iterator $it) {
     $this->it= $it;
-    $this->func= $func;
   }
 
   /**

@@ -50,7 +50,6 @@ class SequenceMappingTest extends AbstractSequenceTest {
     $this->assertEquals(['yellow' => 20, 'blue' => 19], $records->map($generator)->toMap());
   }
 
-
   #[@test, @action(new VerifyThat(function() { return class_exists('Generator', false); }))]
   public function with_generator_and_key() {
     $records= Sequence::of(['color' => 'green', 'price' => 12.99]);

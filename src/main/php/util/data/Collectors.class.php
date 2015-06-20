@@ -57,8 +57,18 @@ final class Collectors extends \lang\Object {
    * @param  function(var): var $value If omitted, element is used in value
    * @return util.data.ICollector
    */
-  public static function toMap($key, $value= null) {
-    if (null === $value) {
+  public static function toMap($key= null, $value= null) {
+    if (null === $key && null === $value) {
+      return new Collector(
+        function() { return new HashTable(); },
+        function($result, $arg, $key) { $result->put($key, $arg); }
+      );
+    } else if (null === $key) {
+      return new Collector(
+        function() { return new HashTable(); },
+        function($result, $arg, $key) use($value) { $result->put($key, $value($arg)); }
+      );
+    } else if (null === $value) {
       return new Collector(
         function() { return new HashTable(); },
         function($result, $arg) use($key) { $result->put($key($arg), $arg); }

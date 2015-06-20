@@ -93,6 +93,25 @@ class CollectorsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function toMap_can_use_sequence_keys() {
+    $map= new HashTable();
+    $map['color']= 'green';
+
+    $this->assertEquals($map, Sequence::of(['color' => 'green'])->collect(Collectors::toMap()));
+  }
+
+  #[@test]
+  public function toMap_key_function_can_be_omitted() {
+    $map= new HashTable();
+    $map['color']= 'GREEN';
+
+    $this->assertEquals($map, Sequence::of(['color' => 'green'])->collect(Collectors::toMap(
+      null,
+      'strtoupper'
+    )));
+  }
+
+  #[@test]
   public function summing_years() {
     $this->assertEquals(33, Sequence::of($this->people)
       ->collect(Collectors::summing(function($e) { return $e->years(); }))

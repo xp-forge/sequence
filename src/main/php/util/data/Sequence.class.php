@@ -294,10 +294,15 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
       $finisher= $collector->finisher();
 
       $return= $collector->supplier()->__invoke();
-      foreach ($this->elements as $element) {
-        $accumulator($return, $element);
+      if (Functions::$CONSUME_WITH_KEY->isInstance($accumulator)) {
+        foreach ($this->elements as $key => $element) {
+          $accumulator($return, $element, $key);
+        }
+      } else {
+        foreach ($this->elements as $element) {
+          $accumulator($return, $element);
+        }
       }
-
       return $finisher ? $finisher($return) : $return;
     });
   }

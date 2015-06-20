@@ -1,12 +1,20 @@
 <?php namespace util\data\unittest;
 
 use util\data\Sequence;
+use unittest\actions\VerifyThat;
 
 class SequenceMappingTest extends AbstractSequenceTest {
 
   #[@test]
   public function with_function() {
     $this->assertSequence([2, 4, 6, 8], Sequence::of([1, 2, 3, 4])->map(function($e) { return $e * 2; }));
+  }
+
+  #[@test, @action(new VerifyThat(function() { return class_exists('Generator', false); }))]
+  public function with_generator() {
+    $records= Sequence::of([['unit' => 'yellow', 'amount' => 20], ['unit' => 'blue', 'amount' => 19]]);
+    $generator= eval('return function($record) { yield $record["unit"] => $record["amount"]; };');
+    $this->assertEquals(['yellow' => 20, 'blue' => 19], $records->map($generator)->toMap());
   }
 
   #[@test]

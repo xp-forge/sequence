@@ -5,8 +5,8 @@
  * iterator returns and returns its result.
  */
 abstract class AbstractMapper extends \lang\Object implements \Iterator {
-  protected $it;
-  protected $func;
+  protected $it, $func;
+  private $current, $key, $valid;
 
   /**
    * Creates a new Mapper instance
@@ -19,18 +19,40 @@ abstract class AbstractMapper extends \lang\Object implements \Iterator {
     $this->func= $func;
   }
 
-  /** @return void */
-  public function rewind() { $this->it->rewind(); }
-
   /** @return var */
-  public abstract function current();
-
-  /** @return var */
-  public function key() { return $this->it->key(); }
+  protected abstract function map();
 
   /** @return void */
-  public function next() { $this->it->next(); }
+  protected function forward() {
+    if ($this->valid= $this->it->valid()) {
+      $result= $this->map();
+      if ($result instanceof \Generator) {
+        foreach ($result as $this->key => $this->current) { }
+      } else {
+        $this->key= $this->it->key();
+        $this->current= $result;
+      }
+    }
+  }
+
+  /** @return void */
+  public function rewind() {
+    $this->it->rewind();
+    $this->forward();
+  }
+
+  /** @return void */
+  public function next() {
+    $this->it->next();
+    $this->forward();
+  }
+
+  /** @return var */
+  public function current() { return $this->current; }
+
+  /** @return var */
+  public function key() { return $this->key; }
 
   /** @return bool */
-  public function valid() { return $this->it->valid(); }
+  public function valid() { return $this->valid; }
 }

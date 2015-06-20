@@ -3,6 +3,7 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #25: Implement support for using keys in collect() - @thekid
 * Merged PR #24: Implement support for mapping keys - @thekid
 
 ## 3.0.0 / 2015-06-01

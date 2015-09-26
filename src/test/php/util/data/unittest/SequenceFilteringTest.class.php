@@ -1,5 +1,6 @@
 <?php namespace util\data\unittest;
 
+use util\Filter;
 use util\data\Sequence;
 
 class SequenceFilteringTest extends AbstractSequenceTest {
@@ -16,7 +17,7 @@ class SequenceFilteringTest extends AbstractSequenceTest {
 
   #[@test]
   public function with_filter_instance() {
-    $this->assertSequence(['Hello', 'World'], Sequence::of(['Hello', '', 'World'])->filter(newinstance('util.Filter', [], [
+    $this->assertSequence(['Hello', 'World'], Sequence::of(['Hello', '', 'World'])->filter(newinstance(Filter::class, [], [
       'accept' => function($e) { return strlen($e) > 0; }
     ])));
   }

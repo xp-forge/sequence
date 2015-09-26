@@ -24,7 +24,7 @@ class SequenceSortingTest extends AbstractSequenceTest {
   public function sorted_by_comparator() {
     $this->assertSequence(
       [new Date('1977-12-14'), new Date('1979-12-29')],
-      Sequence::of([new Date('1979-12-29'), new Date('1977-12-14')])->sorted(newinstance('util.Comparator', [], [
+      Sequence::of([new Date('1979-12-29'), new Date('1977-12-14')])->sorted(newinstance(Comparator::class, [], [
         'compare' => function($a, $b) { return $b->compareTo($a); }
       ]))
     );

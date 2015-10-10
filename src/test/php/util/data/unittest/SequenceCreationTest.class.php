@@ -12,7 +12,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
 
   #[@test, @values('util.data.unittest.Enumerables::valid')]
   public function can_create_via_of($input, $name) {
-    $this->assertInstanceOf('util.data.Sequence', Sequence::of($input), $name);
+    $this->assertInstanceOf(Sequence::class, Sequence::of($input), $name);
   }
 
   #[@test, @expect('lang.IllegalArgumentException'), @values('util.data.unittest.Enumerables::invalid')]
@@ -22,7 +22,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
 
   #[@test, @values('unaryops')]
   public function can_create_via_iterate($input, $name) {
-    $this->assertInstanceOf('util.data.Sequence', Sequence::iterate(0, $input), $name);
+    $this->assertInstanceOf(Sequence::class, Sequence::iterate(0, $input), $name);
   }
 
   #[@test, @expect('lang.IllegalArgumentException'), @values('noncallables')]
@@ -32,7 +32,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
 
   #[@test, @values('suppliers')]
   public function can_create_via_generate($input) {
-    $this->assertInstanceOf('util.data.Sequence', Sequence::generate($input));
+    $this->assertInstanceOf(Sequence::class, Sequence::generate($input));
   }
 
   #[@test, @expect('lang.IllegalArgumentException'), @values('noncallables')]

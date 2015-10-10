@@ -1,5 +1,6 @@
 <?php namespace util\data\unittest;
 
+use util\Comparator;
 use util\data\Sequence;
 use util\Date;
 
@@ -18,7 +19,7 @@ class BoundariesTest extends AbstractSequenceTest {
   public function min_using_comparator() {
     $this->assertEquals(
       new Date('1977-12-14'),
-      Sequence::of([new Date('1977-12-14'), new Date('2014-07-17'), new Date('1979-12-29')])->min(newinstance('util.Comparator', [], [
+      Sequence::of([new Date('1977-12-14'), new Date('2014-07-17'), new Date('1979-12-29')])->min(newinstance(Comparator::class, [], [
         'compare' => function($a, $b) { return $b->compareTo($a); }
       ]))
     );
@@ -47,7 +48,7 @@ class BoundariesTest extends AbstractSequenceTest {
   public function max_using_comparator() {
     $this->assertEquals(
       new Date('2014-07-17'),
-      Sequence::of([new Date('1977-12-14'), new Date('2014-07-17'), new Date('1979-12-29')])->max(newinstance('util.Comparator', [], [
+      Sequence::of([new Date('1977-12-14'), new Date('2014-07-17'), new Date('1979-12-29')])->max(newinstance(Comparator::class, [], [
         'compare' => function($a, $b) { return $b->compareTo($a); }
       ]))
     );

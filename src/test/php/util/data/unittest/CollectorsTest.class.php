@@ -30,7 +30,7 @@ class CollectorsTest extends \unittest\TestCase {
    * @throws unittest.AssertionFailedError
    */
   protected function assertHashTable($expected, $actual) {
-    $this->assertInstanceOf('util.collections.HashTable', $actual);
+    $this->assertInstanceOf(HashTable::class, $actual);
     $compare= [];
     foreach ($actual as $pair) {
       $compare[$pair->key]= $pair->value;

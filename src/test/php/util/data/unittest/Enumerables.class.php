@@ -1,5 +1,6 @@
 <?php namespace util\data\unittest;
 
+use util\XPIterator;
 use lang\types\ArrayList;
 use lang\types\ArrayMap;
 use lang\Object;
@@ -77,12 +78,12 @@ abstract class Enumerables extends Object {
         [eval('$f= function() { yield 1; yield 2; yield 3; }; return $f();'), 'generator']
       ] : [],
       [
-        [newinstance('util.XPIterator', [], '{
+        [newinstance(XPIterator::class, [], '{
           protected $numbers= [1, 2, 3];
           public function hasNext() { return !empty($this->numbers); }
           public function next() { return array_shift($this->numbers); }
         }'), 'xp-iterator'],
-        [Sequence::of(newinstance('util.XPIterator', [], '{
+        [Sequence::of(newinstance(XPIterator::class, [], '{
           protected $numbers= [1, 2, 3];
           public function hasNext() { return !empty($this->numbers); }
           public function next() { return array_shift($this->numbers); }

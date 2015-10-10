@@ -3,6 +3,13 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 4.0.0 / 2015-10-10
+
+* **Heads up: Dropped PHP 5.4 support**. See pull request #26. *Note: As
+  the main source is not touched, unofficial PHP 5.4 support is still
+  available though not tested with Travis-CI*.
+  (@thekid)
+
 ## 3.1.0 / 2015-06-20
 
 * Merged PR #25: Implement support for using keys in collect() - @thekid

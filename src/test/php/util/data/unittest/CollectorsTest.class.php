@@ -62,6 +62,14 @@ class CollectorsTest extends \unittest\TestCase {
     ];
   }
 
+  /** @return var[][] */
+  private function dinosaurEmployees() {
+    return [
+      [function($e) { return $e->years() > 10; }],
+      [[Employee::class, 'isDinosaur']]
+    ];
+  }
+
   #[@test, @values('employeesName')]
   public function toList($nameOf) {
     $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
@@ -255,11 +263,11 @@ class CollectorsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
-  public function partitioningBy() {
+  #[@test, @values('dinosaurEmployees')]
+  public function partitioningBy($moreThanTen) {
     $this->assertHashTable(
       [true => new Vector([$this->people[1549], $this->people[1552]]), false => new Vector([$this->people[6100]])],
-      Sequence::of($this->people)->collect(Collectors::partitioningBy(function($e) { return $e->years() > 10; }))
+      Sequence::of($this->people)->collect(Collectors::partitioningBy($moreThanTen))
     );
   }
 }

@@ -159,6 +159,7 @@ final class Collectors extends \lang\Object {
    */
   public static function partitioningBy($predicate, ICollector $collector= null) {
     if (null === $collector) $collector= self::toList();
+    $func= Functions::$APPLY->cast($predicate);
     $supplier= $collector->supplier();
     $accumulator= $collector->accumulator();
 
@@ -169,8 +170,8 @@ final class Collectors extends \lang\Object {
         $result[false]= $supplier();
         return $result;
       },
-      function($result, $arg) use($predicate, $accumulator) {
-        $accumulator($result[$predicate($arg)], $arg);
+      function($result, $arg) use($func, $accumulator) {
+        $accumulator($result[$func($arg)], $arg);
       }
     );
   }

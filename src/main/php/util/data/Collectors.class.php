@@ -102,6 +102,7 @@ final class Collectors extends \lang\Object {
    */
   public static function groupingBy($classifier, ICollector $collector= null) {
     if (null === $collector) $collector= self::toList();
+    $func= Functions::$APPLY->cast($classifier);
     $supplier= $collector->supplier();
     $accumulator= $collector->accumulator();
     $finisher= $collector->finisher();
@@ -120,8 +121,8 @@ final class Collectors extends \lang\Object {
     if ($f->getNumberOfParameters() > 1 && $f->getParameters()[0]->isPassedByReference()) {
       return new Collector(
         $return,
-        function($result, $arg) use($classifier, $supplier, $accumulator) {
-          $key= $classifier($arg);
+        function($result, $arg) use($func, $supplier, $accumulator) {
+          $key= $func($arg);
           if ($result->containsKey($key)) {
             $value= $result->get($key);
           } else {
@@ -135,8 +136,8 @@ final class Collectors extends \lang\Object {
     } else {
       return new Collector(
         $return,
-        function($result, $arg) use($classifier, $supplier, $accumulator) {
-          $key= $classifier($arg);
+        function($result, $arg) use($func, $supplier, $accumulator) {
+          $key= $func($arg);
           if ($result->containsKey($key)) {
             $accumulator($result->get($key), $arg);
           } else {

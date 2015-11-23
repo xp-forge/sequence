@@ -227,11 +227,11 @@ class CollectorsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
-  public function groupingBy() {
+  #[@test, @values('employeesDepartment')]
+  public function groupingBy($departmentOf) {
     $this->assertHashTable(
       ['B' => new Vector([$this->people[1549]]), 'I' => new Vector([$this->people[1552], $this->people[6100]])],
-      Sequence::of($this->people)->collect(Collectors::groupingBy(function($e) { return $e->department(); }))
+      Sequence::of($this->people)->collect(Collectors::groupingBy($departmentOf))
     );
   }
 

@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 4.1.0 / 2015-11-23
+
 * Merged PR #28: Fix Collectors class' methods to cast given functions
   (@thekid)
 * Merged PR #27: Add support for optional mapper in toSet() and toList()

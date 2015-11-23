@@ -47,6 +47,14 @@ class CollectorsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function toList_with_extraction() {
+    $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
+      ->collect(Collectors::toList(function($e) { return $e->name(); }))
+      ->elements()
+    );
+  }
+
+  #[@test]
   public function toSet() {
     $set= new HashSet();
     $set->addAll(['Timm', 'Alex', 'Dude']);
@@ -54,6 +62,14 @@ class CollectorsTest extends \unittest\TestCase {
     $this->assertEquals($set, Sequence::of($this->people)
       ->map(function($e) { return $e->name(); })
       ->collect(Collectors::toSet())
+    );
+  }
+
+  #[@test]
+  public function toSet_with_extraction() {
+    $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
+      ->collect(Collectors::toSet(function($e) { return $e->name(); }))
+      ->toArray()
     );
   }
 

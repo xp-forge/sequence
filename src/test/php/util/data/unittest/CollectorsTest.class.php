@@ -40,9 +40,10 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test]
   public function toList() {
-    $this->assertEquals(new Vector(['Timm', 'Alex', 'Dude']), Sequence::of($this->people)
+    $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->map(function($e) { return $e->name(); })
       ->collect(Collectors::toList())
+      ->elements()
     );
   }
 
@@ -56,12 +57,10 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test]
   public function toSet() {
-    $set= new HashSet();
-    $set->addAll(['Timm', 'Alex', 'Dude']);
-
-    $this->assertEquals($set, Sequence::of($this->people)
+    $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->map(function($e) { return $e->name(); })
       ->collect(Collectors::toSet())
+      ->toArray()
     );
   }
 
@@ -75,12 +74,10 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test]
   public function toCollection_with_HashSet_class() {
-    $set= new HashSet();
-    $set->addAll(['Timm', 'Alex', 'Dude']);
-
-    $this->assertEquals($set, Sequence::of($this->people)
+    $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->map(function($e) { return $e->name(); })
       ->collect(Collectors::toCollection(XPClass::forName('util.collections.HashSet')))
+      ->toArray()
     );
   }
 

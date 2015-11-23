@@ -270,4 +270,14 @@ class CollectorsTest extends \unittest\TestCase {
       Sequence::of($this->people)->collect(Collectors::partitioningBy($moreThanTen))
     );
   }
+
+  #[@test]
+  public function partitioningBy_handles_non_booleans() {
+    $this->assertHashTable(
+      [true => new Vector(['Test', 'Unittest']), false => new Vector(['Trial & Error'])],
+      Sequence::of(['Test', 'Unittest', 'Trial & Error'])->collect(Collectors::partitioningBy(function($e) {
+        return stristr($e, 'Test');
+      }))
+    );
+  }
 }

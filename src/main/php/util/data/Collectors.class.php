@@ -171,7 +171,7 @@ final class Collectors extends \lang\Object {
         return $result;
       },
       function($result, $arg) use($func, $accumulator) {
-        $accumulator($result[$func($arg)], $arg);
+        $accumulator($result[(bool)$func($arg)], $arg);
       }
     );
   }

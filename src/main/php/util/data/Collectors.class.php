@@ -20,10 +20,13 @@ final class Collectors extends \lang\Object {
    * @return util.data.ICollector
    */
   public static function toList($value= null) {
-    return new Collector(function() { return new Vector(); }, null === $value
-      ? function($result, $arg) { $result->add($arg); }
-      : function($result, $arg) use($value) { $result->add($value($arg)); }
-    );
+    if (null === $value) {
+      $accumulator= function($result, $arg) { $result->add($arg); };
+    } else {
+      $func= Functions::$APPLY->newInstance($value);
+      $accumulator= function($result, $arg) use($func) { $result->add($func($arg)); };
+    }
+    return new Collector(function() { return new Vector(); }, $accumulator);
   }
 
   /**
@@ -33,10 +36,13 @@ final class Collectors extends \lang\Object {
    * @return util.data.ICollector
    */
   public static function toSet($value= null) {
-    return new Collector(function() { return new HashSet(); }, null === $value
-      ? function($result, $arg) { $result->add($arg); }
-      : function($result, $arg) use($value) { $result->add($value($arg)); }
-    );
+    if (null === $value) {
+      $accumulator= function($result, $arg) { $result->add($arg); };
+    } else {
+      $func= Functions::$APPLY->newInstance($value);
+      $accumulator= function($result, $arg) use($func) { $result->add($func($arg)); };
+    }
+    return new Collector(function() { return new HashSet(); }, $accumulator);
   }
 
   /**
@@ -66,19 +72,23 @@ final class Collectors extends \lang\Object {
         function($result, $arg, $key) { $result->put($key, $arg); }
       );
     } else if (null === $key) {
+      $v= Functions::$APPLY->newInstance($value);
       return new Collector(
         function() { return new HashTable(); },
-        function($result, $arg, $key) use($value) { $result->put($key, $value($arg)); }
+        function($result, $arg, $key) use($v) { $result->put($key, $v($arg)); }
       );
     } else if (null === $value) {
+      $k= Functions::$APPLY->newInstance($key);
       return new Collector(
         function() { return new HashTable(); },
-        function($result, $arg) use($key) { $result->put($key($arg), $arg); }
+        function($result, $arg) use($k) { $result->put($k($arg), $arg); }
       );
     } else {
+      $k= Functions::$APPLY->newInstance($key);
+      $v= Functions::$APPLY->newInstance($value);
       return new Collector(
         function() { return new HashTable(); },
-        function($result, $arg) use($key, $value) { $result->put($key($arg), $value($arg)); }
+        function($result, $arg) use($k, $v) { $result->put($k($arg), $v($arg)); }
       );
     }
   }

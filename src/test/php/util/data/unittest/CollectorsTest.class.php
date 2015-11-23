@@ -9,7 +9,7 @@ use util\collections\HashTable;
 use lang\XPClass;
 
 class CollectorsTest extends \unittest\TestCase {
-  protected $people;
+  private $people;
 
   /**
    * Sets up test, initializing people member
@@ -29,7 +29,7 @@ class CollectorsTest extends \unittest\TestCase {
    * @param  util.collections.HashTable $actual
    * @throws unittest.AssertionFailedError
    */
-  protected function assertHashTable($expected, $actual) {
+  private function assertHashTable($expected, $actual) {
     $this->assertInstanceOf(HashTable::class, $actual);
     $compare= [];
     foreach ($actual as $pair) {
@@ -38,51 +38,59 @@ class CollectorsTest extends \unittest\TestCase {
     return $this->assertEquals($expected, $compare);
   }
 
-  #[@test]
-  public function toList() {
+  /** @return var[][] */
+  private function employeesName() {
+    return [
+      [function($e) { return $e->name(); }],
+      [[Employee::class, 'name']]
+    ];
+  }
+
+  #[@test, @values('employeesName')]
+  public function toList($nameOf) {
     $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
-      ->map(function($e) { return $e->name(); })
+      ->map($nameOf)
       ->collect(Collectors::toList())
       ->elements()
     );
   }
 
-  #[@test]
-  public function toList_with_extraction() {
+  #[@test, @values('employeesName')]
+  public function toList_with_extraction($nameOf) {
     $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
-      ->collect(Collectors::toList(function($e) { return $e->name(); }))
+      ->collect(Collectors::toList($nameOf))
       ->elements()
     );
   }
 
-  #[@test]
-  public function toSet() {
+  #[@test, @values('employeesName')]
+  public function toSet($nameOf) {
     $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
-      ->map(function($e) { return $e->name(); })
+      ->map($nameOf)
       ->collect(Collectors::toSet())
       ->toArray()
     );
   }
 
-  #[@test]
-  public function toSet_with_extraction() {
+  #[@test, @values('employeesName')]
+  public function toSet_with_extraction($nameOf) {
     $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
-      ->collect(Collectors::toSet(function($e) { return $e->name(); }))
+      ->collect(Collectors::toSet($nameOf))
       ->toArray()
     );
   }
 
-  #[@test]
-  public function toCollection_with_HashSet_class() {
+  #[@test, @values('employeesName')]
+  public function toCollection_with_HashSet_class($nameOf) {
     $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
-      ->map(function($e) { return $e->name(); })
+      ->map($nameOf)
       ->collect(Collectors::toCollection(XPClass::forName('util.collections.HashSet')))
       ->toArray()
     );
   }
 
-  #[@test]
-  public function toMap() {
+  #[@test, @values('employeesName')]
+  public function toMap($nameOf) {
     $map= new HashTable();
     $map[1549]= 'Timm';
     $map[1552]= 'Alex';
@@ -90,19 +98,20 @@ class CollectorsTest extends \unittest\TestCase {
 
     $this->assertEquals($map, Sequence::of($this->people)->collect(Collectors::toMap(
       function($e) { return $e->id(); },
-      function($e) { return $e->name(); }
+      $nameOf
     )));
   }
 
-  #[@test]
-  public function toMap_uses_complete_value_if_value_function_omitted() {
+  #[@test, @values('employeesName')]
+  public function toMap_uses_complete_value_if_value_function_omitted($nameOf) {
     $map= new HashTable();
     $map['Timm']= $this->people[1549];
     $map['Alex']= $this->people[1552];
     $map['Dude']= $this->people[6100];
 
     $this->assertEquals($map, Sequence::of($this->people)->collect(Collectors::toMap(
-      function($e) { return $e->name(); }
+      $nameOf,
+      null
     )));
   }
 

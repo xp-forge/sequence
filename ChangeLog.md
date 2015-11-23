@@ -3,6 +3,9 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #27: Add support for optional mapper in toSet() and toList()
+  (@thekid)
+
 ## 4.0.0 / 2015-10-10
 
 * **Heads up: Dropped PHP 5.4 support**. See pull request #26. *Note: As

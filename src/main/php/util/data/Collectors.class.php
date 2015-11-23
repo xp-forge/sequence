@@ -186,10 +186,11 @@ final class Collectors extends \lang\Object {
     if (null === $collector) $collector= self::toList();
     $accumulator= $collector->accumulator();
 
+    $func= Functions::$APPLY->newInstance($mapper);
     return new Collector(
       $collector->supplier(),
-      function($result, $arg) use($mapper, $accumulator) {
-        $accumulator($result, $mapper($arg));
+      function($result, $arg) use($func, $accumulator) {
+        $accumulator($result, $func($arg));
       }
     );
   }
@@ -205,7 +206,8 @@ final class Collectors extends \lang\Object {
     if (null === $num) {
       $accumulator= function(&$result, $arg) use($num) { $result+= $arg; };
     } else {
-      $accumulator= function(&$result, $arg) use($num) { $result+= $num($arg); }; 
+      $func= Functions::$APPLY->newInstance($num);
+      $accumulator= function(&$result, $arg) use($func) { $result+= $func($arg); }; 
     }
 
     return new Collector(
@@ -226,7 +228,8 @@ final class Collectors extends \lang\Object {
     if (null === $num) {
       $accumulator= function(&$result, $arg) use($num) { $result[0]+= $arg; $result[1]++;  };
     } else {
-      $accumulator= function(&$result, $arg) use($num) { $result[0]+= $num($arg); $result[1]++;  }; 
+      $func= Functions::$APPLY->newInstance($num);
+      $accumulator= function(&$result, $arg) use($func) { $result[0]+= $func($arg); $result[1]++;  }; 
     }
 
     return new Collector(

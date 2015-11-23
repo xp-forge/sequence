@@ -46,6 +46,22 @@ class CollectorsTest extends \unittest\TestCase {
     ];
   }
 
+  /** @return var[][] */
+  private function employeesDepartment() {
+    return [
+      [function($e) { return $e->department(); }],
+      [[Employee::class, 'department']]
+    ];
+  }
+
+  /** @return var[][] */
+  private function employeesYears() {
+    return [
+      [function($e) { return $e->years(); }],
+      [[Employee::class, 'years']]
+    ];
+  }
+
   #[@test, @values('employeesName')]
   public function toList($nameOf) {
     $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
@@ -143,32 +159,32 @@ class CollectorsTest extends \unittest\TestCase {
     $this->assertEquals(['COLOR' => 'green', 'PRICE' => 12.99], $result);
   }
 
-  #[@test]
-  public function summing_years() {
+  #[@test, @values('employeesYears')]
+  public function summing_years($yearsOf) {
     $this->assertEquals(33, Sequence::of($this->people)
-      ->collect(Collectors::summing(function($e) { return $e->years(); }))
+      ->collect(Collectors::summing($yearsOf))
     );
   }
 
-  #[@test]
-  public function summing_elements() {
+  #[@test, @values('employeesYears')]
+  public function summing_elements($yearsOf) {
     $this->assertEquals(33, Sequence::of($this->people)
-      ->map(function($e) { return $e->years(); })
+      ->map($yearsOf)
       ->collect(Collectors::summing())
     );
   }
 
-  #[@test]
-  public function averaging_years() {
+  #[@test, @values('employeesYears')]
+  public function averaging_years($yearsOf) {
     $this->assertEquals(11, Sequence::of($this->people)
-      ->collect(Collectors::averaging(function($e) { return $e->years(); }))
+      ->collect(Collectors::averaging($yearsOf))
     );
   }
 
-  #[@test]
-  public function averaging_elements() {
+  #[@test, @values('employeesYears')]
+  public function averaging_elements($yearsOf) {
     $this->assertEquals(11, Sequence::of($this->people)
-      ->map(function($e) { return $e->years(); })
+      ->map($yearsOf)
       ->collect(Collectors::averaging())
     );
   }
@@ -180,10 +196,10 @@ class CollectorsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
-  public function mapping_by_department() {
+  #[@test, @values('employeesDepartment')]
+  public function mapping_by_department($departmentOf) {
     $this->assertEquals(new Vector(['B', 'I', 'I']), Sequence::of($this->people)
-      ->collect(Collectors::mapping(function($e) { return $e->department(); }))
+      ->collect(Collectors::mapping($departmentOf))
     );
   }
 

@@ -33,6 +33,9 @@ class Employee extends \lang\Object {
   /** @return int */
   public function years() { return $this->years; }
 
+  /** @return bool */
+  public function isDinosaur() { return $this->years > 10; }
+
   /**
    * Creates a string representation
    *

@@ -20,10 +20,13 @@ final class Collectors extends \lang\Object {
    * @return util.data.ICollector
    */
   public static function toList($value= null) {
-    return new Collector(function() { return new Vector(); }, null === $value
-      ? function($result, $arg) { $result->add($arg); }
-      : function($result, $arg) use($value) { $result->add($value($arg)); }
-    );
+    if (null === $value) {
+      $accumulator= function($result, $arg) { $result->add($arg); };
+    } else {
+      $func= Functions::$APPLY->newInstance($value);
+      $accumulator= function($result, $arg) use($func) { $result->add($func($arg)); };
+    }
+    return new Collector(function() { return new Vector(); }, $accumulator);
   }
 
   /**
@@ -33,10 +36,13 @@ final class Collectors extends \lang\Object {
    * @return util.data.ICollector
    */
   public static function toSet($value= null) {
-    return new Collector(function() { return new HashSet(); }, null === $value
-      ? function($result, $arg) { $result->add($arg); }
-      : function($result, $arg) use($value) { $result->add($value($arg)); }
-    );
+    if (null === $value) {
+      $accumulator= function($result, $arg) { $result->add($arg); };
+    } else {
+      $func= Functions::$APPLY->newInstance($value);
+      $accumulator= function($result, $arg) use($func) { $result->add($func($arg)); };
+    }
+    return new Collector(function() { return new HashSet(); }, $accumulator);
   }
 
   /**
@@ -66,19 +72,23 @@ final class Collectors extends \lang\Object {
         function($result, $arg, $key) { $result->put($key, $arg); }
       );
     } else if (null === $key) {
+      $v= Functions::$APPLY->newInstance($value);
       return new Collector(
         function() { return new HashTable(); },
-        function($result, $arg, $key) use($value) { $result->put($key, $value($arg)); }
+        function($result, $arg, $key) use($v) { $result->put($key, $v($arg)); }
       );
     } else if (null === $value) {
+      $k= Functions::$APPLY->newInstance($key);
       return new Collector(
         function() { return new HashTable(); },
-        function($result, $arg) use($key) { $result->put($key($arg), $arg); }
+        function($result, $arg) use($k) { $result->put($k($arg), $arg); }
       );
     } else {
+      $k= Functions::$APPLY->newInstance($key);
+      $v= Functions::$APPLY->newInstance($value);
       return new Collector(
         function() { return new HashTable(); },
-        function($result, $arg) use($key, $value) { $result->put($key($arg), $value($arg)); }
+        function($result, $arg) use($k, $v) { $result->put($k($arg), $v($arg)); }
       );
     }
   }
@@ -92,6 +102,7 @@ final class Collectors extends \lang\Object {
    */
   public static function groupingBy($classifier, ICollector $collector= null) {
     if (null === $collector) $collector= self::toList();
+    $func= Functions::$APPLY->cast($classifier);
     $supplier= $collector->supplier();
     $accumulator= $collector->accumulator();
     $finisher= $collector->finisher();
@@ -110,8 +121,8 @@ final class Collectors extends \lang\Object {
     if ($f->getNumberOfParameters() > 1 && $f->getParameters()[0]->isPassedByReference()) {
       return new Collector(
         $return,
-        function($result, $arg) use($classifier, $supplier, $accumulator) {
-          $key= $classifier($arg);
+        function($result, $arg) use($func, $supplier, $accumulator) {
+          $key= $func($arg);
           if ($result->containsKey($key)) {
             $value= $result->get($key);
           } else {
@@ -125,8 +136,8 @@ final class Collectors extends \lang\Object {
     } else {
       return new Collector(
         $return,
-        function($result, $arg) use($classifier, $supplier, $accumulator) {
-          $key= $classifier($arg);
+        function($result, $arg) use($func, $supplier, $accumulator) {
+          $key= $func($arg);
           if ($result->containsKey($key)) {
             $accumulator($result->get($key), $arg);
           } else {
@@ -148,6 +159,7 @@ final class Collectors extends \lang\Object {
    */
   public static function partitioningBy($predicate, ICollector $collector= null) {
     if (null === $collector) $collector= self::toList();
+    $func= Functions::$APPLY->cast($predicate);
     $supplier= $collector->supplier();
     $accumulator= $collector->accumulator();
 
@@ -158,8 +170,8 @@ final class Collectors extends \lang\Object {
         $result[false]= $supplier();
         return $result;
       },
-      function($result, $arg) use($predicate, $accumulator) {
-        $accumulator($result[$predicate($arg)], $arg);
+      function($result, $arg) use($func, $accumulator) {
+        $accumulator($result[(bool)$func($arg)], $arg);
       }
     );
   }
@@ -174,12 +186,13 @@ final class Collectors extends \lang\Object {
    */
   public static function mapping($mapper, ICollector $collector= null) {
     if (null === $collector) $collector= self::toList();
+    $func= Functions::$APPLY->newInstance($mapper);
     $accumulator= $collector->accumulator();
 
     return new Collector(
       $collector->supplier(),
-      function($result, $arg) use($mapper, $accumulator) {
-        $accumulator($result, $mapper($arg));
+      function($result, $arg) use($func, $accumulator) {
+        $accumulator($result, $func($arg));
       }
     );
   }
@@ -195,7 +208,8 @@ final class Collectors extends \lang\Object {
     if (null === $num) {
       $accumulator= function(&$result, $arg) use($num) { $result+= $arg; };
     } else {
-      $accumulator= function(&$result, $arg) use($num) { $result+= $num($arg); }; 
+      $func= Functions::$APPLY->newInstance($num);
+      $accumulator= function(&$result, $arg) use($func) { $result+= $func($arg); }; 
     }
 
     return new Collector(
@@ -216,7 +230,8 @@ final class Collectors extends \lang\Object {
     if (null === $num) {
       $accumulator= function(&$result, $arg) use($num) { $result[0]+= $arg; $result[1]++;  };
     } else {
-      $accumulator= function(&$result, $arg) use($num) { $result[0]+= $num($arg); $result[1]++;  }; 
+      $func= Functions::$APPLY->newInstance($num);
+      $accumulator= function(&$result, $arg) use($func) { $result[0]+= $func($arg); $result[1]++;  }; 
     }
 
     return new Collector(

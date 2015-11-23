@@ -16,24 +16,26 @@ final class Collectors extends \lang\Object {
   /**
    * Creates a new collector gathering the elements in a list
    *
+   * @param  function(var): var $value If omitted, element is used in value
    * @return util.data.ICollector
    */
-  public static function toList() {
-    return new Collector(
-      function() { return new Vector(); },
-      function($result, $arg) { $result->add($arg); }
+  public static function toList($value= null) {
+    return new Collector(function() { return new Vector(); }, null === $value
+      ? function($result, $arg) { $result->add($arg); }
+      : function($result, $arg) use($value) { $result->add($value($arg)); }
     );
   }
 
   /**
-   * Creates a new collector gathering the elements in a list
+   * Creates a new collector gathering the elements in a set
    *
+   * @param  function(var): var $value If omitted, element is used in value
    * @return util.data.ICollector
    */
-  public static function toSet() {
-    return new Collector(
-      function() { return new HashSet(); },
-      function($result, $arg) { $result->add($arg); }
+  public static function toSet($value= null) {
+    return new Collector(function() { return new HashSet(); }, null === $value
+      ? function($result, $arg) { $result->add($arg); }
+      : function($result, $arg) use($value) { $result->add($value($arg)); }
     );
   }
 

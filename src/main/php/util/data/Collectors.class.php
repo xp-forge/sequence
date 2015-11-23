@@ -186,9 +186,9 @@ final class Collectors extends \lang\Object {
    */
   public static function mapping($mapper, ICollector $collector= null) {
     if (null === $collector) $collector= self::toList();
+    $func= Functions::$APPLY->newInstance($mapper);
     $accumulator= $collector->accumulator();
 
-    $func= Functions::$APPLY->newInstance($mapper);
     return new Collector(
       $collector->supplier(),
       function($result, $arg) use($func, $accumulator) {

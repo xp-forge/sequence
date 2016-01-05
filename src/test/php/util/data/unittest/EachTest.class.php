@@ -72,12 +72,12 @@ class EachTest extends AbstractSequenceTest {
     $this->assertEquals('1234', $bytes);
   }
 
-  #[@test, @values('invalidArguments'), @expect('lang.IllegalArgumentException')]
+  #[@test, @values('invalidArguments'), @expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->each($noncallable);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function raises_exception_when_given_null_and_args() {
     Sequence::of([])->each(null, []);
   }

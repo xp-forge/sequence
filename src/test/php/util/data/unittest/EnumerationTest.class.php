@@ -1,6 +1,7 @@
 <?php namespace util\data\unittest;
 
 use util\data\Enumeration;
+use lang\IllegalArgumentException;
 
 class EnumerationTest extends \unittest\TestCase {
 
@@ -22,12 +23,12 @@ class EnumerationTest extends \unittest\TestCase {
     $this->assertEquals(['color' => 'green', 'price' => 12.99], $result, $desc);
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::invalid'), @expect('lang.IllegalArgumentException')]
+  #[@test, @values('util.data.unittest.Enumerables::invalid'), @expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($value) {
     Enumeration::of($value);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function raises_exception_when_given_null() {
     Enumeration::of(null);
   }

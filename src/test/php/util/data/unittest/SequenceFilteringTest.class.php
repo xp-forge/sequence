@@ -2,6 +2,7 @@
 
 use util\Filter;
 use util\data\Sequence;
+use lang\IllegalArgumentException;
 
 class SequenceFilteringTest extends AbstractSequenceTest {
 
@@ -29,7 +30,7 @@ class SequenceFilteringTest extends AbstractSequenceTest {
     ])));
   }
 
-  #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
+  #[@test, @values('noncallables'), @expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->filter($noncallable);
   }

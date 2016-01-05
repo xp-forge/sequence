@@ -2,6 +2,7 @@
 
 use util\data\Optional;
 use lang\IllegalStateException;
+use util\NoSuchElementException;
 
 class OptionalTest extends \unittest\TestCase {
 
@@ -25,7 +26,7 @@ class OptionalTest extends \unittest\TestCase {
     $this->assertEquals('Test', Optional::of('Test')->get());
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function get_throws_exception_when_no_value_is_present() {
     Optional::$EMPTY->get();
   }

@@ -20,7 +20,7 @@ class SequenceTest extends AbstractSequenceTest {
     $func($seq);
     try {
       $func($seq);
-      $this->fail('No exception raised', null, 'lang.IllegalStateException');
+      $this->fail('No exception raised', null, IllegalStateException::class);
     } catch (IllegalStateException $expected) {
       // OK
     }

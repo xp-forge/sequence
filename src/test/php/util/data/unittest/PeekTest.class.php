@@ -3,10 +3,11 @@
 use util\data\Sequence;
 use io\streams\MemoryOutputStream;
 use util\cmd\Console;
+use lang\IllegalArgumentException;
 
 class PeekTest extends AbstractSequenceTest {
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values(['@non-existant-func@'])]
+  #[@test, @expect(IllegalArgumentException::class), @values(['@non-existant-func@'])]
   public function invalid($arg) {
     Sequence::$EMPTY->peek($arg);
   }
@@ -56,7 +57,7 @@ class PeekTest extends AbstractSequenceTest {
     $this->assertEquals('1234', $bytes);
   }
 
-  #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
+  #[@test, @values('noncallables'), @expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->peek($noncallable);
   }

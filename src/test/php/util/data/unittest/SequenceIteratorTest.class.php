@@ -2,6 +2,7 @@
 
 use util\data\Sequence;
 use util\XPIterator;
+use util\NoSuchElementException;
 use lang\IllegalStateException;
 
 class SequenceIteratorTest extends AbstractSequenceTest {
@@ -35,7 +36,7 @@ class SequenceIteratorTest extends AbstractSequenceTest {
     $this->assertFalse(Sequence::$EMPTY->iterator()->hasNext());
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function next_throws_exception_when_at_end_of_sequence() {
     Sequence::$EMPTY->iterator()->next();
   }

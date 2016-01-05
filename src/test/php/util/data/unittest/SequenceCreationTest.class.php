@@ -1,6 +1,7 @@
 <?php namespace util\data\unittest;
 
 use util\data\Sequence;
+use lang\IllegalArgumentException;
 
 /**
  * Tests the three Sequence class' creation methods `of()`, `iterate()`
@@ -15,7 +16,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
     $this->assertInstanceOf(Sequence::class, Sequence::of($input), $name);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values('util.data.unittest.Enumerables::invalid')]
+  #[@test, @expect(IllegalArgumentException::class), @values('util.data.unittest.Enumerables::invalid')]
   public function invalid_type_for_of($input) {
     Sequence::of($input);
   }
@@ -25,7 +26,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
     $this->assertInstanceOf(Sequence::class, Sequence::iterate(0, $input), $name);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values('noncallables')]
+  #[@test, @expect(IllegalArgumentException::class), @values('noncallables')]
   public function invalid_type_for_iterate($input) {
     Sequence::iterate(0, $input);
   }
@@ -35,7 +36,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
     $this->assertInstanceOf(Sequence::class, Sequence::generate($input));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values('noncallables')]
+  #[@test, @expect(IllegalArgumentException::class), @values('noncallables')]
   public function invalid_type_for_generate($input) {
     Sequence::generate($input);
   }

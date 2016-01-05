@@ -2,6 +2,7 @@
 
 use util\data\Sequence;
 use unittest\actions\VerifyThat;
+use lang\IllegalArgumentException;
 
 class SequenceMappingTest extends AbstractSequenceTest {
 
@@ -15,7 +16,7 @@ class SequenceMappingTest extends AbstractSequenceTest {
     $this->assertSequence([1.0, 2.0, 3.0], Sequence::of([1.9, 2.5, 3.1])->map('floor'));
   }
 
-  #[@test, @values('noncallables'), @expect('lang.IllegalArgumentException')]
+  #[@test, @values('noncallables'), @expect(IllegalArgumentException::class)]
   public function map_raises_exception_when_given($noncallable) {
     Sequence::of([])->map($noncallable);
   }

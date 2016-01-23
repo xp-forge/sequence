@@ -158,9 +158,9 @@ class Optional extends \lang\Object implements \IteratorAggregate {
    */
   public function toString() {
     if ($this->present) {
-      return $this->getClassName().'@'.Objects::stringOf($this->value);
+      return nameof($this).'@'.Objects::stringOf($this->value);
     } else {
-      return $this->getClassName().'<EMPTY>';
+      return nameof($this).'<EMPTY>';
     }
   }
 }

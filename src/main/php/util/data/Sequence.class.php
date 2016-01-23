@@ -552,9 +552,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function toString() {
     if ([] === $this->elements) {
-      return $this->getClassName().'<EMPTY>';
+      return nameof($this).'<EMPTY>';
     } else {
-      return $this->getClassName().'@'.Objects::stringOf($this->elements);
+      return nameof($this).'@'.Objects::stringOf($this->elements);
     }
   }
 }

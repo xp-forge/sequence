@@ -42,7 +42,7 @@ class Employee extends \lang\Object {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'('.
+    return nameof($this).'('.
       'id= '.$this->id.', name= '.$this->name.', department= '.$this->department.', years= '.$this->years.
     ')';
   }

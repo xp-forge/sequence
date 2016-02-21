@@ -1,7 +1,6 @@
 <?php namespace util\data\unittest;
 
 use lang\Object;
-use lang\types\ArrayList;
 use util\data\Sequence;
 use util\data\Collector;
 

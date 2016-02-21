@@ -1,8 +1,6 @@
 <?php namespace util\data\unittest;
 
 use util\XPIterator;
-use lang\types\ArrayList;
-use lang\types\ArrayMap;
 use lang\Object;
 use util\data\Sequence;
 
@@ -60,7 +58,7 @@ abstract class Enumerables extends Object {
   public static function fixedArrays() {
     return [
       [[1, 2, 3], 'array'],
-      [new ArrayList(1, 2, 3), 'fixed-iterable'],
+      [new \ArrayObject([1, 2, 3]), 'fixed-iterable'],
       [new \ArrayIterator([1, 2, 3]), 'rewindable-iterator'],
       [Sequence::of([1, 2, 3]), 'self-of-fixed-enumerable'],
     ];
@@ -100,7 +98,7 @@ abstract class Enumerables extends Object {
   public static function fixedMaps() {
     return [
       [['color' => 'green', 'price' => 12.99], 'map'],
-      [new ArrayMap(['color' => 'green', 'price' => 12.99]), 'iterable'],
+      [new \ArrayObject(['color' => 'green', 'price' => 12.99]), 'iterable'],
       [new \ArrayIterator(['color' => 'green', 'price' => 12.99]), 'iterator'],
       [Sequence::of(['color' => 'green', 'price' => 12.99]), 'self']
     ];

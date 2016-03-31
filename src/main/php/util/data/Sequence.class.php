@@ -463,6 +463,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     return new self($p);
   }
 
+  public function calculating($calculation) {
+    return new self(new \CallbackFilterIterator($this->getIterator(), $calculation));
+  }
+
   /**
    * Returns a new stream which counts the number of elements as iteration
    * proceeeds. A short form of `peek()` with a function incrementing a local

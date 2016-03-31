@@ -463,8 +463,19 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     return new self($p);
   }
 
-  public function calculating($calculation) {
-    return new self(new \CallbackFilterIterator($this->getIterator(), $calculation));
+  public function collecting(ICollector $collector, &$return) {
+    $collection= function() use($collector, &$return) {
+      $accumulator= $collector->accumulator();
+      $finisher= $collector->finisher();
+
+      $result= $collector->supplier()->__invoke();
+      foreach ($this->elements as $element) {
+        $accumulator($result, $element);
+        yield $element;
+      }
+      $return= $finisher ? $finisher($result) : $result;
+    };
+    return new self($collection());
   }
 
   /**

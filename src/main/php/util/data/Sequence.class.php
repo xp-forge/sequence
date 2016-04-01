@@ -423,6 +423,15 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     return new self($p);
   }
 
+  /**
+   * Returns a new stream which additionally calls the given collector for 
+   * each element it consumes. Use this e.g. for statistics.
+   *
+   * @param  function(var): void $action
+   * @param  var $args Additional args to pass to function
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
   public function collecting(ICollector $collector, &$return) {
     $collection= function() use($collector, &$return) {
       $accumulator= $collector->accumulator();

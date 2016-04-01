@@ -72,7 +72,6 @@ final class Calculations {
   /**
    * Counts all elements
    *
-   * @return int
    * @return util.data.ICollector
    */
   public static function count() {

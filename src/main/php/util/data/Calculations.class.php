@@ -2,7 +2,9 @@
 
 use util\Comparator;
 
-class Calculations {
+final class Calculations {
+
+  private function __construct() { }
 
   public static function min($comparator= null) {
     if (null === $comparator) {

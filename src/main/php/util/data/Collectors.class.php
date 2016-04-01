@@ -13,6 +13,8 @@ use util\collections\HashSet;
  */
 final class Collectors extends \lang\Object {
 
+  private function __construct() { }
+
   /**
    * Creates a new collector gathering the elements in a list
    *

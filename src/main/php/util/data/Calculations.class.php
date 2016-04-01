@@ -2,10 +2,23 @@
 
 use util\Comparator;
 
+/**
+ * Calculations factory
+ *
+ * @see   xp://util.data.ICollector
+ * @test  xp://util.data.unittest.CalculationsTest
+ */
 final class Calculations {
 
   private function __construct() { }
 
+  /**
+   * Returns the smallest element. Optimized for the case when the no comparator
+   * is given, using the `<` operator.
+   *
+   * @param  var $comparator default NULL Either a Comparator or a closure to compare.
+   * @return util.data.ICollector
+   */
   public static function min($comparator= null) {
     if (null === $comparator) {
       $accumulator= function(&$result, $arg) { if (null === $result || $arg < $result) $result= $arg; };
@@ -16,6 +29,13 @@ final class Calculations {
     return new Collector(function() { return null; }, $accumulator);
   }
 
+  /**
+   * Returns the largest element. Optimized for the case when no comparator is 
+   * given, using the `>` operator.
+   *
+   * @param  var $comparator default NULL Either a Comparator or a closure to compare.
+   * @return util.data.ICollector
+   */
   public static function max($comparator= null) {
     if (null === $comparator) {
       $accumulator= function(&$result, $arg) { if (null === $result || $arg > $result) $result= $arg; };
@@ -26,7 +46,21 @@ final class Calculations {
     return new Collector(function() { return null; }, $accumulator);
   }
 
+  /**
+   * Creates a new collector to calculate an average for all the given elements. Uses
+   * the given function to produce a number for each element. If omitted, uses the
+   * elements themselves.
+   *
+   * @param  function(var): var $num
+   * @return util.data.ICollector
+   */
   public static function average($num= null) { return Collectors::averaging($num); }
 
+  /**
+   * Counts all elements
+   *
+   * @return int
+   * @return util.data.ICollector
+   */
   public static function count() { return Collectors::counting(); }
 }

@@ -7,7 +7,7 @@ class CalculationsTest extends \unittest\TestCase {
 
   #[@test]
   public function min_max_average_and_count_for_empty_sequence() {
-    Sequence::of([])
+    Sequence::$EMPTY
       ->collecting(Calculations::min(), $min)
       ->collecting(Calculations::max(), $max)
       ->collecting(Calculations::average(), $average)

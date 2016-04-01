@@ -54,7 +54,20 @@ final class Calculations {
    * @param  function(var): var $num
    * @return util.data.ICollector
    */
-  public static function average($num= null) { return Collectors::averaging($num); }
+  public static function average($num= null) {
+    if (null === $num) {
+      $accumulator= function(&$result, $arg) use($num) { $result[0]+= $arg; $result[1]++; };
+    } else {
+      $f= Functions::$APPLY->newInstance($num);
+      $accumulator= function(&$result, $arg) use($f) { $result[0]+= $f($arg); $result[1]++;  };
+    }
+
+    return new Collector(
+      function() { return [0, 0]; },
+      $accumulator,
+      function($result) { return $result[1] ? $result[0] / $result[1] : null; }
+    );
+  }
 
   /**
    * Counts all elements
@@ -62,5 +75,10 @@ final class Calculations {
    * @return int
    * @return util.data.ICollector
    */
-  public static function count() { return Collectors::counting(); }
+  public static function count() {
+    return new Collector(
+      function() { return 0; },
+      function(&$result, $arg) { $result++; }
+    );
+  }
 }

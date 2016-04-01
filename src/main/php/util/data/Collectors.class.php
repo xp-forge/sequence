@@ -228,32 +228,14 @@ final class Collectors extends \lang\Object {
    * @param  function(var): var $num
    * @return util.data.ICollector
    */
-  public static function averaging($num= null) {
-    if (null === $num) {
-      $accumulator= function(&$result, $arg) use($num) { $result[0]+= $arg; $result[1]++;  };
-    } else {
-      $func= Functions::$APPLY->newInstance($num);
-      $accumulator= function(&$result, $arg) use($func) { $result[0]+= $func($arg); $result[1]++;  }; 
-    }
-
-    return new Collector(
-      function() { return [0, 0]; },
-      $accumulator,
-      function($result) { return $result[1] ? $result[0] / $result[1] : null; }
-    );
-  }
+  public static function averaging($num= null) { return Calculations::average($num); }
 
   /**
    * Creates a new collector counting all elements
    *
    * @return util.data.ICollector
    */
-  public static function counting() {
-    return new Collector(
-      function() { return 0; },
-      function(&$result, $arg) { $result++; }
-    );
-  }
+  public static function counting() { return Calculations::count(); }
 
   /**
    * Creates a new collector to join elements

@@ -47,6 +47,24 @@ final class Calculations {
   }
 
   /**
+   * Creates a new collector to sum up elements. Uses the given function to produce a 
+   * number for each element. If omitted, uses the elements themselves.
+   *
+   * @param  function(var): var $num
+   * @return util.data.ICollector
+   */
+  public static function sum($num= null) {
+    if (null === $num) {
+      $accumulator= function(&$result, $arg) use($num) { $result+= $arg; };
+    } else {
+      $func= Functions::$APPLY->newInstance($num);
+      $accumulator= function(&$result, $arg) use($func) { $result+= $func($arg); }; 
+    }
+
+    return new Collector(function() { return 0; }, $accumulator);
+  }
+
+  /**
    * Creates a new collector to calculate an average for all the given elements. Uses
    * the given function to produce a number for each element. If omitted, uses the
    * elements themselves.

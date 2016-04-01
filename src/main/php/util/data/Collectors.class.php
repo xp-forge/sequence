@@ -206,19 +206,7 @@ final class Collectors extends \lang\Object {
    * @param  function(var): var $num
    * @return util.data.ICollector
    */
-  public static function summing($num= null) {
-    if (null === $num) {
-      $accumulator= function(&$result, $arg) use($num) { $result+= $arg; };
-    } else {
-      $func= Functions::$APPLY->newInstance($num);
-      $accumulator= function(&$result, $arg) use($func) { $result+= $func($arg); }; 
-    }
-
-    return new Collector(
-      function() { return 0; },
-      $accumulator
-    );
-  }
+  public static function summing($num= null) { return Calculations::sum($num); }
 
   /**
    * Creates a new collector to calculate an average for all the given elements. Uses

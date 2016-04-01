@@ -200,26 +200,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Helper for min() and max()
-   *
-   * @param  var $comparator Either a Comparator or a closure to compare.
-   * @param  int $n direction, either -1 or +1
-   * @return var
-   */
-  protected function select($comparator, $n) {
-    $return= null;
-    if ($comparator instanceof Comparator) {
-      $cmp= Functions::$COMPARATOR->newInstance([$comparator, 'compare']);
-    } else {
-      $cmp= Functions::$COMPARATOR->newInstance($comparator);
-    }
-    foreach ($this->elements as $element) {
-      if (null === $return || $cmp($element, $return) * $n > 0) $return= $element;
-    }
-    return $return;
-  }
-
-  /**
    * Returns the smallest element. Optimized for the case when the no comparator
    * is given, using the `<` operator.
    *
@@ -228,16 +208,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function min($comparator= null) {
-    return $this->terminal(function() use($comparator) {
-      if (null === $comparator) {
-        $return= null;
-        foreach ($this->elements as $element) {
-          if (null === $return || $element < $return) $return= $element;
-        }
-        return $return;
-      }
-      return $this->select($comparator, -1);
-    });
+    return $this->collect(Calculations::min($comparator));
   }
 
   /**
@@ -249,16 +220,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function max($comparator= null) {
-    return $this->terminal(function() use($comparator) {
-      if (null === $comparator) {
-        $return= null;
-        foreach ($this->elements as $element) {
-          if (null === $return || $element > $return) $return= $element;
-        }
-        return $return;
-      }
-      return $this->select($comparator, +1);
-    });
+    return $this->collect(Calculations::max($comparator));
   }
 
   /**

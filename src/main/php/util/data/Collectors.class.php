@@ -237,7 +237,7 @@ final class Collectors extends \lang\Object {
     return new Collector(
       function() { return [0, 0]; },
       $accumulator,
-      function($result) { return $result[0] / $result[1]; }
+      function($result) { return $result[1] ? $result[0] / $result[1] : null; }
     );
   }
 

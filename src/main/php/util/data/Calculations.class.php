@@ -17,4 +17,6 @@ class Calculations {
   }
 
   public static function average($num= null) { return Collectors::averaging($num); }
+
+  public static function count() { return Collectors::counting(); }
 }

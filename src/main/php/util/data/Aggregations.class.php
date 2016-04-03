@@ -55,7 +55,7 @@ final class Aggregations {
    */
   public static function sum($num= null) {
     if (null === $num) {
-      $accumulator= function(&$result, $arg) use($num) { $result+= $arg; };
+      $accumulator= function(&$result, $arg) { $result+= $arg; };
     } else {
       $func= Functions::$APPLY->newInstance($num);
       $accumulator= function(&$result, $arg) use($func) { $result+= $func($arg); }; 
@@ -74,7 +74,7 @@ final class Aggregations {
    */
   public static function average($num= null) {
     if (null === $num) {
-      $accumulator= function(&$result, $arg) use($num) { $result[0]+= $arg; $result[1]++; };
+      $accumulator= function(&$result, $arg) { $result[0]+= $arg; $result[1]++; };
     } else {
       $f= Functions::$APPLY->newInstance($num);
       $accumulator= function(&$result, $arg) use($f) { $result[0]+= $f($arg); $result[1]++;  };

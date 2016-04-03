@@ -206,7 +206,7 @@ final class Collectors extends \lang\Object {
    * @param  function(var): var $num
    * @return util.data.ICollector
    */
-  public static function summing($num= null) { return Calculations::sum($num); }
+  public static function summing($num= null) { return Aggregations::sum($num); }
 
   /**
    * Creates a new collector to calculate an average for all the given elements. Uses
@@ -216,14 +216,14 @@ final class Collectors extends \lang\Object {
    * @param  function(var): var $num
    * @return util.data.ICollector
    */
-  public static function averaging($num= null) { return Calculations::average($num); }
+  public static function averaging($num= null) { return Aggregations::average($num); }
 
   /**
    * Creates a new collector counting all elements
    *
    * @return util.data.ICollector
    */
-  public static function counting() { return Calculations::count(); }
+  public static function counting() { return Aggregations::count(); }
 
   /**
    * Creates a new collector to join elements

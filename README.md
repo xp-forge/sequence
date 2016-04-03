@@ -48,7 +48,7 @@ $names= Sequence::of($this->people)
 $experience= Sequence::of($this->employees)
   ->collect(Collectors::groupingBy(
     function($e) { return $e->department(); },
-    Calculations::average(function($e) { return $e->years(); })
+    Aggregations::average(function($e) { return $e->years(); })
   ))
 ;
 // $experience= util.collections.HashTable[2] {

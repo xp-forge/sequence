@@ -207,7 +207,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function min($comparator= null) {
-    return $this->collect(Calculations::min($comparator));
+    return $this->collect(Aggregations::min($comparator));
   }
 
   /**
@@ -218,7 +218,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function max($comparator= null) {
-    return $this->collect(Calculations::max($comparator));
+    return $this->collect(Aggregations::max($comparator));
   }
 
   /**

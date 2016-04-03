@@ -3,12 +3,12 @@
 use util\Comparator;
 
 /**
- * Calculations factory
+ * Aggregations factory
  *
  * @see   xp://util.data.ICollector
- * @test  xp://util.data.unittest.CalculationsTest
+ * @test  xp://util.data.unittest.AggregationsTest
  */
-final class Calculations {
+final class Aggregations {
 
   private function __construct() { }
 

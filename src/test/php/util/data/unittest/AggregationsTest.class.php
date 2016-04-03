@@ -1,18 +1,18 @@
 <?php namespace util\data\unittest;
 
 use util\data\Sequence;
-use util\data\Calculations;
+use util\data\Aggregations;
 
-class CalculationsTest extends \unittest\TestCase {
+class AggregationsTest extends \unittest\TestCase {
 
   #[@test]
   public function min_max_sum_average_and_count_for_empty_sequence() {
     Sequence::$EMPTY
-      ->collecting(Calculations::min(), $min)
-      ->collecting(Calculations::max(), $max)
-      ->collecting(Calculations::average(), $average)
-      ->collecting(Calculations::sum(), $sum)
-      ->collecting(Calculations::count(), $count)
+      ->collecting(Aggregations::min(), $min)
+      ->collecting(Aggregations::max(), $max)
+      ->collecting(Aggregations::average(), $average)
+      ->collecting(Aggregations::sum(), $sum)
+      ->collecting(Aggregations::count(), $count)
       ->each()
     ;
     $this->assertNull($min);
@@ -25,11 +25,11 @@ class CalculationsTest extends \unittest\TestCase {
   #[@test]
   public function min_max_sum_average_and_count_for_non_empty() {
     Sequence::of([1, 2, 3, 4])
-      ->collecting(Calculations::min(), $min)
-      ->collecting(Calculations::max(), $max)
-      ->collecting(Calculations::average(), $average)
-      ->collecting(Calculations::sum(), $sum)
-      ->collecting(Calculations::count(), $count)
+      ->collecting(Aggregations::min(), $min)
+      ->collecting(Aggregations::max(), $max)
+      ->collecting(Aggregations::average(), $average)
+      ->collecting(Aggregations::sum(), $sum)
+      ->collecting(Aggregations::count(), $count)
       ->each()
     ;
     $this->assertEquals(1, $min);

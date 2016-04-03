@@ -433,18 +433,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function collecting(ICollector $collector, &$return) {
-    $collection= function() use($collector, &$return) {
-      $accumulator= $collector->accumulator();
-      $finisher= $collector->finisher();
-
-      $result= $collector->supplier()->__invoke();
-      foreach ($this->elements as $element) {
-        $accumulator($result, $element);
-        yield $element;
-      }
-      $return= $finisher ? $finisher($result) : $result;
-    };
-    return new self($collection());
+    $return= $collector->supplier()->__invoke();
+    return new self(new Aggregator($this->getIterator(), $return, $collector->accumulator(), $collector->finisher()));
   }
 
   /**

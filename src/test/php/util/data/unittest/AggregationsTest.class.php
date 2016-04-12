@@ -8,11 +8,11 @@ class AggregationsTest extends \unittest\TestCase {
   #[@test]
   public function min_max_sum_average_and_count_for_empty_sequence() {
     Sequence::$EMPTY
-      ->collecting(Aggregations::min(), $min)
-      ->collecting(Aggregations::max(), $max)
-      ->collecting(Aggregations::average(), $average)
-      ->collecting(Aggregations::sum(), $sum)
-      ->collecting(Aggregations::count(), $count)
+      ->collecting($min, Aggregations::min())
+      ->collecting($max, Aggregations::max())
+      ->collecting($average, Aggregations::average())
+      ->collecting($sum, Aggregations::sum())
+      ->collecting($count, Aggregations::count())
       ->each()
     ;
     $this->assertNull($min);
@@ -25,11 +25,11 @@ class AggregationsTest extends \unittest\TestCase {
   #[@test]
   public function min_max_sum_average_and_count_for_non_empty() {
     Sequence::of([1, 2, 3, 4])
-      ->collecting(Aggregations::min(), $min)
-      ->collecting(Aggregations::max(), $max)
-      ->collecting(Aggregations::average(), $average)
-      ->collecting(Aggregations::sum(), $sum)
-      ->collecting(Aggregations::count(), $count)
+      ->collecting($min, Aggregations::min())
+      ->collecting($max, Aggregations::max())
+      ->collecting($average, Aggregations::average())
+      ->collecting($sum, Aggregations::sum())
+      ->collecting($count, Aggregations::count())
       ->each()
     ;
     $this->assertEquals(1, $min);

@@ -61,7 +61,7 @@ final class Aggregations {
       $accumulator= function(&$result, $arg) use($func) { $result+= $func($arg); }; 
     }
 
-    return new Collector(function() { return 0; }, $accumulator);
+    return new Collector(function() { return null; }, $accumulator);
   }
 
   /**

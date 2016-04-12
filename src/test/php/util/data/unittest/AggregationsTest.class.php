@@ -18,7 +18,7 @@ class AggregationsTest extends \unittest\TestCase {
     $this->assertNull($min);
     $this->assertNull($max);
     $this->assertNull($average);
-    $this->assertEquals(0, $sum);
+    $this->assertNull($sum);
     $this->assertEquals(0, $count);
   }
 

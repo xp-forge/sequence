@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 5.1.0 / 2016-04-21
+
+* Merged PR #29: Collection API - @thekid
+
 ## 5.0.0 / 2016-02-21
 
 * Added version compatibility with XP 7 - @thekid

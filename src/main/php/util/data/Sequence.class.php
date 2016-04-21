@@ -200,65 +200,25 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Helper for min() and max()
-   *
-   * @param  var $comparator Either a Comparator or a closure to compare.
-   * @param  int $n direction, either -1 or +1
-   * @return var
-   */
-  protected function select($comparator, $n) {
-    $return= null;
-    if ($comparator instanceof Comparator) {
-      $cmp= Functions::$COMPARATOR->newInstance([$comparator, 'compare']);
-    } else {
-      $cmp= Functions::$COMPARATOR->newInstance($comparator);
-    }
-    foreach ($this->elements as $element) {
-      if (null === $return || $cmp($element, $return) * $n > 0) $return= $element;
-    }
-    return $return;
-  }
-
-  /**
-   * Returns the smallest element. Optimized for the case when the no comparator
-   * is given, using the `<` operator.
+   * Returns the smallest element.
    *
    * @param  var $comparator default NULL Either a Comparator or a closure to compare.
    * @return var
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function min($comparator= null) {
-    return $this->terminal(function() use($comparator) {
-      if (null === $comparator) {
-        $return= null;
-        foreach ($this->elements as $element) {
-          if (null === $return || $element < $return) $return= $element;
-        }
-        return $return;
-      }
-      return $this->select($comparator, -1);
-    });
+    return $this->collect(Aggregations::min($comparator));
   }
 
   /**
-   * Returns the largest element. Optimized for the case when no comparator is 
-   * given, using the `>` operator.
+   * Returns the largest element.
    *
    * @param  var $comparator default NULL Either a Comparator or a closure to compare.
    * @return var
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function max($comparator= null) {
-    return $this->terminal(function() use($comparator) {
-      if (null === $comparator) {
-        $return= null;
-        foreach ($this->elements as $element) {
-          if (null === $return || $element > $return) $return= $element;
-        }
-        return $return;
-      }
-      return $this->select($comparator, +1);
-    });
+    return $this->collect(Aggregations::max($comparator));
   }
 
   /**
@@ -461,6 +421,20 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
       $p= new Mapper($this->getIterator(), function($e) use($f) { $f($e); return $e; });
     }
     return new self($p);
+  }
+
+  /**
+   * Returns a new stream which additionally calls the given collector for 
+   * each element it consumes. Use this e.g. for statistics.
+   *
+   * @param  var $args Additional args to pass to function
+   * @param  function(var): void $action
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
+  public function collecting(&$return, ICollector $collector) {
+    $return= $collector->supplier()->__invoke();
+    return new self(new Aggregator($this->getIterator(), $return, $collector->accumulator(), $collector->finisher()));
   }
 
   /**

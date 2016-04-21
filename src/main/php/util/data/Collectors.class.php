@@ -13,6 +13,8 @@ use util\collections\HashSet;
  */
 final class Collectors extends \lang\Object {
 
+  private function __construct() { }
+
   /**
    * Creates a new collector gathering the elements in a list
    *
@@ -204,19 +206,7 @@ final class Collectors extends \lang\Object {
    * @param  function(var): var $num
    * @return util.data.ICollector
    */
-  public static function summing($num= null) {
-    if (null === $num) {
-      $accumulator= function(&$result, $arg) use($num) { $result+= $arg; };
-    } else {
-      $func= Functions::$APPLY->newInstance($num);
-      $accumulator= function(&$result, $arg) use($func) { $result+= $func($arg); }; 
-    }
-
-    return new Collector(
-      function() { return 0; },
-      $accumulator
-    );
-  }
+  public static function summing($num= null) { return Aggregations::sum($num); }
 
   /**
    * Creates a new collector to calculate an average for all the given elements. Uses
@@ -226,32 +216,14 @@ final class Collectors extends \lang\Object {
    * @param  function(var): var $num
    * @return util.data.ICollector
    */
-  public static function averaging($num= null) {
-    if (null === $num) {
-      $accumulator= function(&$result, $arg) use($num) { $result[0]+= $arg; $result[1]++;  };
-    } else {
-      $func= Functions::$APPLY->newInstance($num);
-      $accumulator= function(&$result, $arg) use($func) { $result[0]+= $func($arg); $result[1]++;  }; 
-    }
-
-    return new Collector(
-      function() { return [0, 0]; },
-      $accumulator,
-      function($result) { return $result[0] / $result[1]; }
-    );
-  }
+  public static function averaging($num= null) { return Aggregations::average($num); }
 
   /**
    * Creates a new collector counting all elements
    *
    * @return util.data.ICollector
    */
-  public static function counting() {
-    return new Collector(
-      function() { return 0; },
-      function(&$result, $arg) { $result++; }
-    );
-  }
+  public static function counting() { return Aggregations::count(); }
 
   /**
    * Creates a new collector to join elements

@@ -31,8 +31,8 @@ class Processing extends \lang\Object implements \Iterator {
     }
   }
 
-  public function defer($value, $key= null) {
-    null === $key && $key= $this->key;
+  public function defer($value) {
+    $key= $this->key;
     $this->defer[]= function() use($key, $value) {
       $this->key= $key;
       $this->current= $value;
@@ -41,13 +41,14 @@ class Processing extends \lang\Object implements \Iterator {
     $this->key= null;
   }
 
-  public function drop($value, $key= null) {
+  public function drop($value) {
     $this->key= null;
   }
 
-  public function retry($value, $key= null) {
-    null === $key && $key= $this->key;
-    $this->defer[]= function() use($key, $value) {
+  public function retry($value, $closure= null) {
+    $key= $this->key;
+    $this->defer[]= function() use($key, $value, $closure) {
+      $closure && $closure();
       return $this->process($key, $value);
     };
     $this->key= null;

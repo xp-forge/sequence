@@ -379,6 +379,17 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Returns a new stream which calls a processing function for each element.
+   *
+   * @param  function(var): var $function
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
+  public function process($function) {
+    return new self(new Processing($this->getIterator(), Functions::$APPLY->newInstance($function)));
+  }
+
+  /**
    * Returns a new stream which flattens, mapping the given function to each
    * element.
    *

@@ -144,9 +144,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
         if (isset($instance->elements->closed)) {
           throw new IllegalStateException('Generator closed');
         }
-        if ($instance->elements->valid()) {
+        foreach ($instance->elements as $element) {
           $instance->elements->closed= true;
-          return new Optional($instance->elements->current());
+          return new Optional($element);
         }
       } else {
         foreach ($instance->elements as $element) {

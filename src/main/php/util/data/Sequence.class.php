@@ -137,16 +137,23 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return util.data.Optional
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  public function first() {
-    return $this->terminal(function() {
-      $gen= $this->elements instanceof \Generator;
-      if ($gen && isset($this->elements->closed)) {
-        throw new IllegalStateException('Generator closed');
+  public function first($filter= null) {
+    $instance= $filter ? $this->filter($filter) : $this;
+    return $this->terminal(function() use($instance) {
+      if ($instance->elements instanceof \Generator) {
+        if (isset($instance->elements->closed)) {
+          throw new IllegalStateException('Generator closed');
+        }
+        foreach ($instance->elements as $element) {
+          $instance->elements->closed= true;
+          return new Optional($element);
+        }
+      } else {
+        foreach ($instance->elements as $element) {
+          return new Optional($element);
+        }
       }
-      foreach ($this->elements as $element) {
-        $gen && $this->elements->closed= true;
-        return new Optional($element);
-      }
+
       return Optional::$EMPTY;
     });
   }

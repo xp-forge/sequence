@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 5.2.0 / 2016-06-03
+
+* Merged PR #31: Add optional filter to first() operation - @thekid
+
 ## 5.1.0 / 2016-04-21
 
 * Merged PR #29: Collection API - @thekid

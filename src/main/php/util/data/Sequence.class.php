@@ -68,12 +68,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return  php.Iterator
    */
   public function getIterator() {
-    if ($this->elements instanceof \Iterator) {
-      return $this->elements;
-    } else if ($this->elements instanceof \Traversable) {
-      return new \IteratorIterator($this->elements);
-    } else {
-      return new \ArrayIterator($this->elements);
+    foreach ($this->elements as $key => $element) {
+      yield $key => $element;
     }
   }
 

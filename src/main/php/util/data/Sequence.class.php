@@ -68,12 +68,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return  php.Iterator
    */
   public function getIterator() {
-    if ($this->elements instanceof \Iterator) {
-      return $this->elements;
-    } else if ($this->elements instanceof \Traversable) {
-      return new \IteratorIterator($this->elements);
-    } else {
-      return new \ArrayIterator($this->elements);
+    foreach ($this->elements as $key => $element) {
+      yield $key => $element;
     }
   }
 
@@ -127,8 +123,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @param  var... $args An iterator, iterable or an array
    * @return self
    */
-  public static function concat() {
-    return new self(new Iterators(func_get_args()));
+  public static function concat(... $args) {
+    return new self(new Iterators($args));
   }
 
   /**
@@ -287,7 +283,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
       $t= function() use($consumer, $args) {
         $inv= Functions::$APPLY->newInstance($consumer);
         $i= 0;
-        foreach ($this->elements as $element) { call_user_func_array($inv, array_merge([$element], $args)); $i++; }
+        foreach ($this->elements as $element) { $inv(...array_merge([$element], $args)); $i++; }
         return $i;
       };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($consumer)) {
@@ -417,7 +413,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     if (null !== $args) {
       $f= Functions::$APPLY->newInstance($action);
       $p= new MapperWithKey($this->getIterator(), function($e) use($f, $args) {
-        call_user_func_array($f, array_merge([$e], $args));
+        $f(...array_merge([$e], $args));
         return $e;
       });
     } else if (Functions::$APPLY_WITH_KEY->isInstance($action)) {

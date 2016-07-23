@@ -3,6 +3,11 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 6.0.0 / 2016-07-24
+
+* Merged PR #32: Drop PHP 5.5 support, use native varargs & unpacking
+  (@thekid)
+
 ## 5.2.0 / 2016-06-03
 
 * Merged PR #31: Add optional filter to first() operation - @thekid

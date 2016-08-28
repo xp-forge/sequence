@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 6.1.0 / 2016-08-28
+
+* Added forward compatibility with XP 8.0.0 - @thekid
+
 ## 6.0.0 / 2016-07-24
 
 * Merged PR #32: Drop PHP 5.5 support, use native varargs & unpacking

@@ -93,6 +93,16 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertSequence($result, Sequence::of($input)->distinct());
   }
 
+  #[@test, @values([
+  #  function($record) { return $record['id']; }
+  #])]
+  public function distinct_with($function) {
+    $this->assertSequence(
+      [['id' => 1, 'name' => 'Timm']],
+      Sequence::of([['id' => 1, 'name' => 'Timm'], ['id' => 1]])->distinct($function)
+    );
+  }
+
   #[@test]
   public function is_useable_inside_foreach() {
     $this->assertEquals([1, 2, 3], iterator_to_array(Sequence::of([1, 2, 3])));

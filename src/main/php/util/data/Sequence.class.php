@@ -458,19 +458,21 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a stream with distinct elements
    *
+   * @param  function(var): var $function - if omitted, `util.Objects::hashOf()` is used
    * @return self
    */
-  public function distinct() {
-    $set= [];
-    return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use(&$set) {
-      $h= Objects::hashOf($e);
-      if (isset($set[$h])) {
-        return false;
-      } else {
-        $set[$h]= true;
-        return true;
+  public function distinct($function= null) {
+    $hash= Functions::$APPLY->newInstance($function ?: 'util.Objects::hashOf');
+    return self::of(function() use($hash) {
+      $set= [];
+      foreach ($this->elements as $e) {
+        $h= $hash($e);
+        if (!isset($set[$h])) {
+          $set[$h]= true;
+          yield $e;
+        }
       }
-    }));
+    });
   }
 
   /**

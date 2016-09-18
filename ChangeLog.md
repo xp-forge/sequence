@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 6.2.0 / 2016-08-28
+
+* Merged PR #33: Add optional "function" parameter to distinct() - @thekid
+
 ## 6.1.0 / 2016-08-28
 
 * Added forward compatibility with XP 8.0.0 - @thekid

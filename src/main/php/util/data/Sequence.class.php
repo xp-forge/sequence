@@ -463,16 +463,16 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function distinct($function= null) {
     $hash= Functions::$APPLY->newInstance($function ?: 'util.Objects::hashOf');
-    $set= [];
-    return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use(&$set, $hash) {
-      $h= $hash($e);
-      if (isset($set[$h])) {
-        return false;
-      } else {
-        $set[$h]= true;
-        return true;
+    return self::of(function() use($hash) {
+      $set= [];
+      foreach ($this->elements as $e) {
+        $h= $hash($e);
+        if (!isset($set[$h])) {
+          $set[$h]= true;
+          yield $e;
+        }
       }
-    }));
+    });
   }
 
   /**

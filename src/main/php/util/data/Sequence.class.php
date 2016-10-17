@@ -393,9 +393,9 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     if (null === $function) {
       $it= $this->getIterator();
     } else if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
-      $it= new MapperWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($function));
+      $it= new MapperWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($function), false);
     } else {
-      $it= new Mapper($this->getIterator(), Functions::$APPLY->newInstance($function));
+      $it= new Mapper($this->getIterator(), Functions::$APPLY->newInstance($function), false);
     }
     return new self(new Flattener($it));
   }

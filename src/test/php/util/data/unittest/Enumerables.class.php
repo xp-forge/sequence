@@ -15,11 +15,6 @@ use util\data\Sequence;
  * @see   php://generators
  */
 abstract class Enumerables extends Object {
-  private static $generators;
-
-  static function __static() {
-    self::$generators= class_exists('Generator', false);
-  }
 
   /**
    * Returns valid arguments for the `of()` method.
@@ -32,7 +27,7 @@ abstract class Enumerables extends Object {
 
   /**
    * Returns valid arguments for the `of()` method: Arrays, iterables, 
-   * iterators and generators (the latter only if available).
+   * iterators and generators.
    *
    * @return var[][]
    */
@@ -42,7 +37,7 @@ abstract class Enumerables extends Object {
 
   /**
    * Returns valid arguments for the `of()` method: Maps, iterables, 
-   * iterators and generators (the latter only if available).
+   * iterators and generators.
    *
    * @return var[][]
    */
@@ -70,24 +65,21 @@ abstract class Enumerables extends Object {
    * @return var[][]
    */
   public static function streamedArrays() {
-    return array_merge(
-      self::$generators ? [
-        [eval('return function() { yield 1; yield 2; yield 3; };'), 'closure'],
-        [eval('$f= function() { yield 1; yield 2; yield 3; }; return $f();'), 'generator']
-      ] : [],
-      [
-        [newinstance(XPIterator::class, [], '{
-          protected $numbers= [1, 2, 3];
-          public function hasNext() { return !empty($this->numbers); }
-          public function next() { return array_shift($this->numbers); }
-        }'), 'xp-iterator'],
-        [Sequence::of(newinstance(XPIterator::class, [], '{
-          protected $numbers= [1, 2, 3];
-          public function hasNext() { return !empty($this->numbers); }
-          public function next() { return array_shift($this->numbers); }
-        }')), 'self-of-xp-iterator']
-      ]
-    );
+    $f= function() { yield 1; yield 2; yield 3; };
+    return [
+      [$f, 'closure'],
+      [$f(), 'generator'],
+      [newinstance(XPIterator::class, [], '{
+        protected $numbers= [1, 2, 3];
+        public function hasNext() { return !empty($this->numbers); }
+        public function next() { return array_shift($this->numbers); }
+      }'), 'xp-iterator'],
+      [Sequence::of(newinstance(XPIterator::class, [], '{
+        protected $numbers= [1, 2, 3];
+        public function hasNext() { return !empty($this->numbers); }
+        public function next() { return array_shift($this->numbers); }
+      }')), 'self-of-xp-iterator']
+    ];
   }
 
   /**
@@ -110,10 +102,8 @@ abstract class Enumerables extends Object {
    * @return var[][]
    */
   public static function streamedMaps() {
-    return self::$generators ? [
-      [eval('return function() { yield "color" => "green"; yield "price" => 12.99; };'), 'closure'],
-      [eval('$f= function() { yield "color" => "green"; yield "price" => 12.99; }; return $f();'), 'generator']
-    ] : [];
+    $f= function() { yield 'color' => 'green'; yield 'price' => 12.99; };
+    return [[$f, 'closure'], [$f(), 'generator']];
   }
   /**
    * Returns invalid arguments for the `of()` method: Primitives, non-iterable

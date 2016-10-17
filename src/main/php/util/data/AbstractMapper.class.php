@@ -5,7 +5,7 @@
  * iterator returns and returns its result.
  */
 abstract class AbstractMapper extends \lang\Object implements \Iterator {
-  protected $it, $func;
+  protected $it, $func, $yieldMap;
   private $current, $key, $valid;
 
   /**
@@ -13,10 +13,12 @@ abstract class AbstractMapper extends \lang\Object implements \Iterator {
    *
    * @param  php.Mapper $it
    * @param  php.Closure $func
+   * @param  bool $yieldMap Whether yield $key => $value should be used to create maps
    */
-  public function __construct(\Iterator $it, \Closure $func) {
+  public function __construct(\Iterator $it, \Closure $func, $yieldMap= true) {
     $this->it= $it;
     $this->func= $func;
+    $this->yieldMap= $yieldMap;
   }
 
   /** @return var */
@@ -26,7 +28,7 @@ abstract class AbstractMapper extends \lang\Object implements \Iterator {
   protected function forward() {
     if ($this->valid= $this->it->valid()) {
       $result= $this->map();
-      if ($result instanceof \Generator) {
+      if ($this->yieldMap && $result instanceof \Generator) {
         foreach ($result as $this->key => $this->current) { }
       } else {
         $this->key= $this->it->key();

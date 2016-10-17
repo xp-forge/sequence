@@ -67,7 +67,7 @@ abstract class AbstractWindow extends \lang\Object implements \Iterator {
   /** @return void */
   public function next() {
     $this->it->next();
-    if ($this->stop()) {
+    if ($this->it->valid() && $this->stop()) {
       $this->valid= false;
     }
   }

@@ -85,4 +85,15 @@ class WindowTest extends \unittest\TestCase {
     );
     $this->assertEquals(['skip' => [1, 2, 3], 'stop' => [1, 2, 3, 4]], $invocations);
   }
+
+  #[@test]
+  public function all_elements_received_if_no_stop_condition() {
+    $invocations= [];
+    $this->window(
+      self::$fixture,
+      function($e) { return false; },
+      function($e) use(&$invocations) { $invocations[]= $e; return false; }
+    );
+    $this->assertEquals([1, 2, 3, 4, 5], $invocations);
+  }
 }

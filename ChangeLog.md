@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed issue with `limit()` closure being invoked with *NULL* when the
+  end of the sequence is reached.
+  (@thekid)
+
 ## 6.2.0 / 2016-08-28
 
 * Merged PR #33: Add optional "function" parameter to distinct() - @thekid

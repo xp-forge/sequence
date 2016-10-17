@@ -44,4 +44,23 @@ class SequenceFlatteningTest extends AbstractSequenceTest {
     Sequence::of(['one' => [1], 'two' => [2], 'three' => [3]])->flatten(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->each();
     $this->assertEquals(['one', 'two', 'three'], $keys);
   }
+
+  #[@test]
+  public function flatten_generator() {
+    $this->assertSequence([2, 4, 0, 4, 1], Sequence::of([2])->flatten(function($n) {
+      yield $n;
+      yield $n + $n;
+      yield $n - $n;
+      yield $n * $n;
+      yield $n / $n;
+    }));
+  }
+
+  #[@test]
+  public function flatten_generator_with_key() {
+    $this->assertSequence([3, 6], Sequence::of([1 => 2])->flatten(function($n, $key) {
+      yield $n + $key;
+      yield $n * ($n + $key);
+    }));
+  }
 }

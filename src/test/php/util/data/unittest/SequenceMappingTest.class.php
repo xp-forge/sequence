@@ -44,17 +44,17 @@ class SequenceMappingTest extends AbstractSequenceTest {
     );
   }
 
-  #[@test, @action(new VerifyThat(function() { return class_exists('Generator', false); }))]
+  #[@test]
   public function with_generator() {
     $records= Sequence::of([['unit' => 'yellow', 'amount' => 20], ['unit' => 'blue', 'amount' => 19]]);
-    $generator= eval('return function($record) { yield $record["unit"] => $record["amount"]; };');
+    $generator= function($record) { yield $record['unit'] => $record['amount']; };
     $this->assertEquals(['yellow' => 20, 'blue' => 19], $records->map($generator)->toMap());
   }
 
-  #[@test, @action(new VerifyThat(function() { return class_exists('Generator', false); }))]
+  #[@test]
   public function with_generator_and_key() {
     $records= Sequence::of(['color' => 'green', 'price' => 12.99]);
-    $generator= eval('return function($value, $key) { yield strtoupper($key) => $value; };');
+    $generator= function($value, $key) { yield strtoupper($key) => $value; };
     $this->assertEquals(['COLOR' => 'green', 'PRICE' => 12.99], $records->map($generator)->toMap());
   }
 }

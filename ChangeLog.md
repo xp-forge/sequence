@@ -3,6 +3,11 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 6.3.0 / 2016-10-18
+
+* Merged PR #34: Add ability to use yield statements inside flatten()
+  (@thekid)
+
 ## 6.2.1 / 2016-10-17
 
 * Fixed issue with `limit()` closure being invoked with *NULL* when the

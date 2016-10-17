@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 6.2.1 / 2016-10-17
+
 * Fixed issue with `limit()` closure being invoked with *NULL* when the
   end of the sequence is reached.
   (@thekid)

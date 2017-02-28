@@ -42,18 +42,21 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    *
    * @param  function(): var $operation
    * @return var
+   * @throws util.data.CannotReset
    */
   protected function terminal($operation) {
     static $message= 'Underlying value is streamed and cannot be processed more than once';
 
     try {
       return $operation();
-    } catch (IllegalStateException $e) {
-      throw new IllegalStateException($message, $e);
+    } catch (CannotReset $e) {
+      throw new CannotReset($message, $e);
     } catch (Throwable $e) {
       throw $e;
-    } catch (\Exception $e) {
-      throw new IllegalStateException($message.':'.$e->getMessage());
+    } catch (\Throwable $e) {   // PHP7
+      throw new CannotReset($message.':'.$e->getMessage());
+    } catch (\Exception $e) {   // PHP5
+      throw new CannotReset($message.':'.$e->getMessage());
     }
   }
 
@@ -131,14 +134,14 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns the first element of this stream, or an empty optional
    *
    * @return util.data.Optional
-   * @throws lang.IllegalArgumentException if streamed and invoked more than once
+   * @throws util.data.CannotReset if streamed and invoked more than once
    */
   public function first($filter= null) {
     $instance= $filter ? $this->filter($filter) : $this;
     return $this->terminal(function() use($instance) {
       if ($instance->elements instanceof \Generator) {
         if (isset($instance->elements->closed)) {
-          throw new IllegalStateException('Generator closed');
+          throw new CannotReset('Generator closed');
         }
         foreach ($instance->elements as $element) {
           $instance->elements->closed= true;

@@ -1,7 +1,6 @@
 <?php namespace util\data;
 
 use util\NoSuchElementException;
-use lang\IllegalStateException;
 
 /**
  * Iterates over Sequence instances
@@ -22,8 +21,10 @@ class SequenceIterator extends \lang\Object implements \util\XPIterator, \Iterat
     $this->it= $seq->getIterator();
     try {
       $this->it->rewind();
-    } catch (\Exception $e) {
-      throw new IllegalStateException($e->getMessage());
+    } catch (\Throwable $e) {   // PHP7
+      throw new CannotReset($e->getMessage());
+    } catch (\Exception $e) {   // PHP5
+      throw new CannotReset($e->getMessage());
     }
   }
 

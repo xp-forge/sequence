@@ -17,8 +17,7 @@ Examples
 Instances of the `util.data.Sequence` class can be created from iterable input, either an in-memory structure or a stream of data, e.g. read from a network socket. The Sequence class provides intermediate (work on single elements, return a new Sequence) and terminal (consume all elements, returning a single value) operations.
 
 ```php
-use util\data\Sequence;
-use util\data\Collectors;
+use util\data\{Sequence, Collectors, Aggregations};
 
 $return= Sequence::of([1, 2, 3, 4])
   ->filter(function($e) { return 0 === $e % 2; })

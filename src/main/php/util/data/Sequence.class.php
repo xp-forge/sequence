@@ -45,19 +45,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws util.data.CannotReset
    */
   protected function terminal($operation) {
-    static $message= 'Underlying value is streamed and cannot be processed more than once';
-
-    try {
-      return $operation();
-    } catch (CannotReset $e) {
-      throw $e;
-    } catch (Throwable $e) {
-      throw $e;
-    } catch (\Throwable $e) {   // PHP7
-      throw new CannotReset($message.':'.$e->getMessage());
-    } catch (\Exception $e) {   // PHP5
-      throw new CannotReset($message.':'.$e->getMessage());
-    }
+    return $operation();
   }
 
   /** @return util.XPIterator */
@@ -138,23 +126,10 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function first($filter= null) {
     $instance= $filter ? $this->filter($filter) : $this;
-    return $this->terminal(function() use($instance) {
-      if ($instance->elements instanceof \Generator) {
-        if (isset($instance->elements->closed)) {
-          throw new CannotReset('Generator closed');
-        }
-        foreach ($instance->elements as $element) {
-          $instance->elements->closed= true;
-          return new Optional($element);
-        }
-      } else {
-        foreach ($instance->elements as $element) {
-          return new Optional($element);
-        }
-      }
-
-      return Optional::$EMPTY;
-    });
+    foreach ($instance->elements as $element) {
+      return new Optional($element);
+    }
+    return Optional::$EMPTY;
   }
 
   /**

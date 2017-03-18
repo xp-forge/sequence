@@ -6,24 +6,15 @@
  *
  * @test  xp://util.data.unittest.ContinuationOfTest
  */
-class ContinuationOf extends \lang\Object implements \Iterator {
-  private $it;
+class ContinuationOf extends Iterator {
 
-  /** @param php.Iterator $it */
-  public function __construct($it) { $this->it= $it; }
-
-  /** @return var */
-  public function current() { return $this->it->current(); }
-
-  /** @return var */
-  public function key() { return $this->it->key(); }
-
-  /** @return bool */
-  public function valid() { return $this->it->valid(); }
-
-  /** @return void */
-  public function next() { $this->it->next(); }
-
-  /** @return void */
-  public function rewind() { /* NOOP */ }
+  /**
+   * Rewind
+   *
+   * @return void
+   * @throws util.data.CannotReset
+   */
+  public function rewind() {
+    // NOOP
+  }
 }

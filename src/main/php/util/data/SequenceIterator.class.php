@@ -19,13 +19,7 @@ class SequenceIterator extends \lang\Object implements \util\XPIterator, \Iterat
    */
   public function __construct(Sequence $seq) {
     $this->it= $seq->getIterator();
-    try {
-      $this->it->rewind();
-    } catch (\Throwable $e) {   // PHP7
-      throw new CannotReset($e->getMessage());
-    } catch (\Exception $e) {   // PHP5
-      throw new CannotReset($e->getMessage());
-    }
+    $this->it->rewind();
   }
 
   /**

@@ -28,12 +28,16 @@ abstract class Enumeration extends \lang\Object {
    * @throws lang.IllegalArgumentException
    */
   public static function of($arg) {
-    if ($arg instanceof \Traversable) {
+    if ($arg instanceof Sequence) {
       return $arg;
+    } else if ($arg instanceof \Generator) {
+      return new YieldingOf($arg);
+    } else if ($arg instanceof \Traversable) {
+      return new TraversalOf($arg);
     } else if ($arg instanceof \Closure) {
       $generator= $arg();
       if ($generator instanceof \Generator) {
-        return $generator;
+        return new YieldingOf($generator);
       }
     } else if ($arg instanceof XPIterator) {
       return new XPIteratorAdapter($arg);

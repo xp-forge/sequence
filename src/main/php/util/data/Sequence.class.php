@@ -37,17 +37,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     $this->elements= $elements;
   }
 
-  /**
-   * Invoke terminal operation
-   *
-   * @param  function(): var $operation
-   * @return var
-   * @throws util.data.CannotReset
-   */
-  protected function terminal($operation) {
-    return $operation();
-  }
-
   /** @return util.XPIterator */
   public function iterator() { return new SequenceIterator($this); }
 
@@ -139,13 +128,11 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function toArray() {
-    return $this->terminal(function() {
-      $return= [];
-      foreach ($this->elements as $element) {
-        $return[]= $element;
-      }
-      return $return;
-    });
+    $return= [];
+    foreach ($this->elements as $element) {
+      $return[]= $element;
+    }
+    return $return;
   }
 
   /**
@@ -155,13 +142,11 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function toMap() {
-    return $this->terminal(function() {
-      $return= [];
-      foreach ($this->elements as $key => $element) {
-        $return[$key]= $element;
-      }
-      return $return;
-    });
+    $return= [];
+    foreach ($this->elements as $key => $element) {
+      $return[$key]= $element;
+    }
+    return $return;
   }
 
   /**
@@ -171,13 +156,11 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function count() {
-    return $this->terminal(function() {
-      $return= 0;
-      foreach ($this->elements as $element) {
-        $return++;
-      }
-      return $return;
-    });
+    $return= 0;
+    foreach ($this->elements as $element) {
+      $return++;
+    }
+    return $return;
   }
 
   /**
@@ -212,14 +195,12 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function reduce($identity, $accumulator) {
-    return $this->terminal(function() use($identity, $accumulator) {
-      $closure= Functions::$BINARYOP->newInstance($accumulator);
-      $return= $identity;
-      foreach ($this->elements as $element) {
-        $return= $closure($return, $element);
-      }
-      return $return;
-    });
+    $closure= Functions::$BINARYOP->newInstance($accumulator);
+    $return= $identity;
+    foreach ($this->elements as $element) {
+      $return= $closure($return, $element);
+    }
+    return $return;
   }
 
   /**
@@ -230,22 +211,20 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function collect(ICollector $collector) {
-    return $this->terminal(function() use($collector) {
-      $accumulator= $collector->accumulator();
-      $finisher= $collector->finisher();
+    $accumulator= $collector->accumulator();
+    $finisher= $collector->finisher();
 
-      $return= $collector->supplier()->__invoke();
-      if (Functions::$CONSUME_WITH_KEY->isInstance($accumulator)) {
-        foreach ($this->elements as $key => $element) {
-          $accumulator($return, $element, $key);
-        }
-      } else {
-        foreach ($this->elements as $element) {
-          $accumulator($return, $element);
-        }
+    $return= $collector->supplier()->__invoke();
+    if (Functions::$CONSUME_WITH_KEY->isInstance($accumulator)) {
+      foreach ($this->elements as $key => $element) {
+        $accumulator($return, $element, $key);
       }
-      return $finisher ? $finisher($return) : $return;
-    });
+    } else {
+      foreach ($this->elements as $element) {
+        $accumulator($return, $element);
+      }
+    }
+    return $finisher ? $finisher($return) : $return;
   }
 
   /**
@@ -258,35 +237,25 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function each($consumer= null, $args= null) {
     if (null !== $args) {
-      $t= function() use($consumer, $args) {
-        $inv= Functions::$APPLY->newInstance($consumer);
-        $i= 0;
-        foreach ($this->elements as $element) { $inv(...array_merge([$element], $args)); $i++; }
-        return $i;
-      };
+      $inv= Functions::$APPLY->newInstance($consumer);
+      $i= 0;
+      foreach ($this->elements as $element) { $inv(...array_merge([$element], $args)); $i++; }
+      return $i;
     } else if (Functions::$APPLY_WITH_KEY->isInstance($consumer)) {
-      $t= function() use($consumer) {
-        $inv= Functions::$APPLY_WITH_KEY->cast($consumer);
-        $i= 0;
-        foreach ($this->elements as $key => $element) { $inv($element, $key); $i++; }
-        return $i;
-      };
+      $inv= Functions::$APPLY_WITH_KEY->cast($consumer);
+      $i= 0;
+      foreach ($this->elements as $key => $element) { $inv($element, $key); $i++; }
+      return $i;
     } else if (null !== $consumer) {
-      $t= function() use($consumer) {
-        $inv= Functions::$APPLY->newInstance($consumer);
-        $i= 0;
-        foreach ($this->elements as $element) { $inv($element); $i++; }
-        return $i;
-      };
+      $inv= Functions::$APPLY->newInstance($consumer);
+      $i= 0;
+      foreach ($this->elements as $element) { $inv($element); $i++; }
+      return $i;
     } else {
-      $t= function() {
-        $i= 0;
-        foreach ($this->elements as $element) { $i++; }
-        return $i;
-      };
-
+      $i= 0;
+      foreach ($this->elements as $element) { $i++; }
+      return $i;
     }
-    return $this->terminal($t);
   }
 
   /**

@@ -65,7 +65,7 @@ use util\data\Optional;
 
 $first= Optional::of($repository->find($user));
 if ($first->present()) {
-  $user= $first->get();    // When Repository::found() returned non-null
+  $user= $first->get();    // When Repository::find() returned non-null
 }
 
 $user= $first->orElse($this->currentUser);
@@ -119,7 +119,7 @@ The following operations return a single value by consuming all of the sequence:
 
 Iteration
 ---------
-To use controlled iteration on a sequence, you can use the `foreach` statement or receive a "hasNext/next"-iterator via the `iterator()` accessor. If the sequence is based on seekable data (rule of thumb: all in-memory structures will be seekable), these operations can be repeated with the same effect. Otherwise, a `lang.IllegalStateException` will be raised (e.g., for data streamed from a socket).
+To use controlled iteration on a sequence, you can use the `foreach` statement or receive a "hasNext/next"-iterator via the `iterator()` accessor. If the sequence is based on seekable data (rule of thumb: all in-memory structures will be seekable), these operations can be repeated with the same effect. Otherwise, a `util.data.CannotReset` exception will be raised (e.g., for data streamed from a socket).
 
 Further reading
 ---------------

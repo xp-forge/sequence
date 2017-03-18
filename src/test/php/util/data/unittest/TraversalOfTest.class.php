@@ -43,4 +43,23 @@ class TraversalOfTest extends \unittest\TestCase {
       // OK
     }
   }
+
+  #[@test]
+  public function exceptions_during_iteration_are_left_untouched() {
+    $fixture= new TraversalOf(newinstance(\Iterator::class, [], [
+      'rewind'  => function() { },
+      'current' => function() { throw new IllegalStateException('Test'); },
+      'key'     => function() { return null; },
+      'valid'   => function() { return true; },
+      'next'    => function() { }
+    ]));
+    $fixture->rewind();
+
+    try {
+      $fixture->current();
+      $this->fail('Expected exception not caught', null, IllegalStateException::class);
+    } catch (IllegalStateException $expected) {
+      // OK
+    }
+  }
 }

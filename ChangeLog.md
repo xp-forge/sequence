@@ -3,6 +3,14 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 6.4.0 / 2017-03-18
+
+* Merged PR #35: Add `util.data.CannotReset` exception class replacing
+  lang.IllegalStateException for indicating a sequence can't be processed
+  more than once. This makes it easier to distinguish exception causes
+  and handle them separately if necessary.
+  (@thekid)
+
 ## 6.3.0 / 2016-10-18
 
 * Merged PR #34: Add ability to use yield statements inside flatten()

@@ -3,7 +3,7 @@
 use util\data\Sequence;
 use util\XPIterator;
 use util\NoSuchElementException;
-use lang\IllegalStateException;
+use util\data\CannotReset;
 
 class SequenceIteratorTest extends AbstractSequenceTest {
 
@@ -59,8 +59,8 @@ class SequenceIteratorTest extends AbstractSequenceTest {
     $this->iterated($seq->iterator());
     try {
       $this->iterated($seq->iterator());
-      $this->fail('No exception raised', null, 'lang.IllegalStateException');
-    } catch (IllegalStateException $expected) {
+      $this->fail('No exception raised', null, 'util.data.CannotReset');
+    } catch (CannotReset $expected) {
       // OK
     }
   }

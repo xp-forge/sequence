@@ -4,7 +4,7 @@ use util\cmd\Console;
 use util\data\Sequence;
 use util\data\Optional;
 use util\data\Collector;
-use lang\IllegalStateException;
+use util\data\CannotReset;
 
 class SequenceTest extends AbstractSequenceTest {
 
@@ -20,8 +20,8 @@ class SequenceTest extends AbstractSequenceTest {
     $func($seq);
     try {
       $func($seq);
-      $this->fail('No exception raised', null, IllegalStateException::class);
-    } catch (IllegalStateException $expected) {
+      $this->fail('No exception raised', null, CannotReset::class);
+    } catch (CannotReset $expected) {
       // OK
     }
   }

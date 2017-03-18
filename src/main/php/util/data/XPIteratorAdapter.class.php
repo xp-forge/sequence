@@ -1,7 +1,5 @@
 <?php namespace util\data;
 
-use lang\IllegalStateException;
-
 /**
  * Adapter class for wrapping an util.XPIterator instance in an iterator
  * useable by PHP.
@@ -34,7 +32,7 @@ class XPIteratorAdapter extends \lang\Object implements \Iterator {
   /** @return void */
   public function rewind() {
     if ($this->key > -1) {
-      throw new IllegalStateException('Cannot rewind iterator');
+      throw new CannotReset('Cannot rewind iterator');
     } else {
       $this->next();
     }

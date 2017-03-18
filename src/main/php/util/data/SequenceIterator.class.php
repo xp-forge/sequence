@@ -15,7 +15,7 @@ class SequenceIterator extends \lang\Object implements \util\XPIterator, \Iterat
    * Creates a new iterator over a sequence
    *
    * @param  util.data.Sequence $seq
-   * @throws lang.IllegalStateException If the sequence has been processed
+   * @throws util.data.CannotReset If the sequence has been processed
    */
   public function __construct(Sequence $seq) {
     $this->it= $seq->getIterator();

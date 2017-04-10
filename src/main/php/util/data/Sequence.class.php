@@ -110,6 +110,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns the first element of this stream, or an empty optional
    *
+   * @param  util.Filter|function(var): bool $filter An optional filter
    * @return util.data.Optional
    * @throws util.data.CannotReset if streamed and invoked more than once
    */
@@ -297,7 +298,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a new stream with elements matching the given predicate
    *
-   * @param  var $predicate either a util.Filter instance or a function
+   * @param  util.Filter|function(var): bool $predicate
    * @return self
    * @throws lang.IllegalArgumentException
    */

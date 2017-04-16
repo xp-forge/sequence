@@ -96,6 +96,15 @@ final class Collectors extends \lang\Object {
   }
 
   /**
+   * Creates a new collector gathering the elements in a pivot table
+   *
+   * @return util.data.ICollector
+   */
+  public static function toPivot() {
+    return new PivotCollector();
+  }
+
+  /**
    * Creates a new collector gathering the elements in a map.
    *
    * @param  function(var): var $classifier

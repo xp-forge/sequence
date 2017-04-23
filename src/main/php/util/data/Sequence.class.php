@@ -57,15 +57,15 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Creates a new stream with an enumeration of elements
    *
    * @see    xp://util.data.Enumeration
-   * @param  var $elements an iterator, iterable, generator or array
+   * @param  var... $enumerations an iterator, iterable, generator or array
    * @return self
    * @throws lang.IllegalArgumentException if type of elements argument is incorrect
    */
-  public static function of($elements) {
-    if (null === $elements) {
-      return self::$EMPTY;
+  public static function of(... $enumerations) {
+    if (sizeof($enumerations) > 1) {
+      return new self(new Iterators($enumerations));
     } else {
-      return new self(Enumeration::of($elements));
+      return null === $enumerations[0] ? self::$EMPTY : new self(Enumeration::of($enumerations[0]));
     }
   }
 
@@ -100,6 +100,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Concatenates all given iteration sources
    *
+   * @deprecated Use of() with multiple arguments instead!
    * @param  var... $args An iterator, iterable or an array
    * @return self
    */

@@ -167,7 +167,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns the smallest element.
    *
-   * @param  var $comparator default NULL Either a Comparator or a closure to compare.
+   * @param  util.Comparator|function(var, var): int $comparator default NULL
    * @return var
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
@@ -178,7 +178,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns the largest element.
    *
-   * @param  var $comparator default NULL Either a Comparator or a closure to compare.
+   * @param  util.Comparator|function(var, var): int $comparator default NULL
    * @return var
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
@@ -262,7 +262,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a new stream with only the first `n` elements
    *
-   * @param  var $arg either an integer or a closure
+   * @param  int|function(var): bool $arg either an integer or a closure
    * @return self
    * @throws lang.IllegalArgumentException
    */
@@ -280,7 +280,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns a new stream with only the first `n` elements
    *
-   * @param  var $arg either an integer or a closure
+   * @param  int|function(var): bool $arg either an integer or a closure
    * @return self
    * @throws lang.IllegalArgumentException
    */
@@ -378,8 +378,8 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Returns a new stream which additionally calls the given collector for 
    * each element it consumes. Use this e.g. for statistics.
    *
-   * @param  var $args Additional args to pass to function
-   * @param  function(var): void $action
+   * @param  var $return A reference to the return value
+   * @param  util.data.ICollector $collector
    * @return self
    * @throws lang.IllegalArgumentException
    */
@@ -436,7 +436,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @see    php://array_multisort
    * @see    php://uasort
    * @see    php://asort
-   * @param  var $comparator either a Comparator instance, a callable or optional sort flags
+   * @param  util.Comparator|function(var, var): int|int Optional sorting method
    * @return self
    */
   public function sorted($comparator= null) {
@@ -453,11 +453,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     return new self($sort);
   }
 
-  /**
-   * Returns a hashcode
-   *
-   * @return strintg
-   */
+  /** @return string */
   public function hashCode() {
     return 'S'.Objects::hashOf($this->elements);
   }

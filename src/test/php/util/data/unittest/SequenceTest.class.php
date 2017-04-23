@@ -42,6 +42,14 @@ class SequenceTest extends AbstractSequenceTest {
   }
 
   #[@test]
+  public function toArray_optionally_accepts_mapper() {
+    $this->assertEquals(
+      [2, 4],
+      Sequence::of([1, 2])->toArray(function($v) { return $v * 2; })
+    );
+  }
+
+  #[@test]
   public function toMap_for_empty_sequence() {
     $this->assertEquals([], Sequence::$EMPTY->toMap());
   }
@@ -49,6 +57,14 @@ class SequenceTest extends AbstractSequenceTest {
   #[@test, @values('util.data.unittest.Enumerables::validMaps')]
   public function toMap_returns_elements_as_map($input) {
     $this->assertEquals(['color' => 'green', 'price' => 12.99], Sequence::of($input)->toMap());
+  }
+
+  #[@test]
+  public function toMap_optionally_accepts_mapper() {
+    $this->assertEquals(
+      ['a' => 2, 'b' => 4],
+      Sequence::of(['a' => 1, 'b' => 2])->toMap(function($v) { return $v * 2; })
+    );
   }
 
   #[@test, @values([

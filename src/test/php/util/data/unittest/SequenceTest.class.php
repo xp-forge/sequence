@@ -38,7 +38,7 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test, @values('util.data.unittest.Enumerables::validArrays')]
   public function toArray_returns_elements_as_array($input, $name) {
-    $this->assertSequence([1, 2, 3], Sequence::of($input), $name);
+    $this->assertEquals([1, 2, 3], Sequence::of($input)->toArray(), $name);
   }
 
   #[@test]

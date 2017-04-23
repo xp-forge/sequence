@@ -70,6 +70,23 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Appends another enumeration and returns a new stream
+   *
+   * @param  var $enumeration an iterator, iterable, generator or array
+   * @return self
+   * @throws lang.IllegalArgumentException if type of elements argument is incorrect
+   */
+  public function append($enumeration) {
+    if (null === $enumeration) {
+      return $this;
+    } else if ([] === $this->elements) {
+      return self::of($enumeration);
+    } else {
+      return new self($this, $enumeration);
+    }
+  }
+
+  /**
    * Creates a new stream iteratively calling the given operation, starting
    * with a given seed, and continuing with op(seed), op(op(seed)), etc.
    *

@@ -278,7 +278,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Returns a new stream with only the first `n` elements
+   * Returns a new stream without the first `n` elements
    *
    * @param  int|function(var): bool $arg either an integer or a closure
    * @return self
@@ -286,13 +286,40 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function skip($arg) {
     if (is_numeric($arg)) {
-      $w= new \LimitIterator($this->getIterator(), (int)$arg, -1);
+      $max= (int)$arg;
+      $f= function() use($max) {
+        $i= 0;
+        foreach ($this->elements as $key => $element) {
+          if (++$i > $max) yield $key => $element;
+        }
+      };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($arg)) {
-      $w= new WindowWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($arg), function() { return false; });
+      $skip= Functions::$APPLY_WITH_KEY->cast($arg);
+      $f= function() use($skip) {
+        $skipping= true;
+        foreach ($this->elements as $key => $element) {
+          if ($skipping) {
+            if ($skip($element, $key)) continue;
+            $skipping= false;
+          }
+          yield $key => $element;
+        }
+      };
     } else {
-      $w= new Window($this->getIterator(), Functions::$APPLY->newInstance($arg), function() { return false; });
+      $skip= Functions::$APPLY->newInstance($arg);
+      $f= function() use($skip) {
+        $skipping= true;
+        foreach ($this->elements as $key => $element) {
+          if ($skipping) {
+            if ($skip($element)) continue;
+            $skipping= false;
+          }
+          yield $key => $element;
+        }
+      };
     }
-    return new self($w);
+
+    return new self($f());
   }
 
   /**

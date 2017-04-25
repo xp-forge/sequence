@@ -6,12 +6,13 @@ Data sequences change log
 * Merged PR #41: Inline collecting() and counting(). Both methods are
   now four times faster.
   (@thekid)
-* Heads up: Deprecated the following classes, which have been inlined.
+* **Heads up**: Deprecated the following classes which were inlined:
   . AbstractMapper, Mapper, MapperWithKey
   . AbstractWindow, Window, WindowWithKey
   . AbstractFilterable, Filterable, FilterableWithKey
   . Flattener
   . Generator
+  These will be removed in the next major release!
   (@thekid)
 * Merged PR #40: Inline Generator class. Improves performance of the
   creation methods `generate()` and `iterate()` roughly three times.

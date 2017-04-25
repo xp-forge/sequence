@@ -3,6 +3,7 @@
 use util\data\Flattener;
 use util\data\Sequence;
 
+/** @deprecated */
 class FlattenerTest extends \unittest\TestCase {
 
   /**

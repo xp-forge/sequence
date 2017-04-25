@@ -5,6 +5,7 @@
  * sequence itself and returns each of its elements before continuing
  * with the iterator's next element.
  *
+ * @deprecated
  * @test  xp://util.data.unittest.FlattenerTest
  */
 class Flattener extends \lang\Object implements \Iterator {

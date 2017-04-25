@@ -5,6 +5,7 @@
  * iterator that match its "skip" closure, then returns elements
  * until its "stop" closure is reached.
  *
+ * @deprecated
  * @see   php://LimitIterator but uses closures and not just offsets
  */
 abstract class AbstractWindow extends \lang\Object implements \Iterator {

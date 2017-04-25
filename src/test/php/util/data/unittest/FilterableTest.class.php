@@ -2,6 +2,7 @@
 
 use util\data\Filterable;
 
+/** @deprecated */
 class FilterableTest extends \unittest\TestCase {
 
   /**

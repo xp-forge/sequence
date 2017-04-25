@@ -3,6 +3,7 @@
 use util\data\Mapper;
 use lang\IllegalStateException;
 
+/** @deprecated */
 class MapperTest extends \unittest\TestCase {
 
   /**

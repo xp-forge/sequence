@@ -3,6 +3,8 @@
 /**
  * A mapper reaches applies a given mapper function to each value an
  * iterator returns and returns its result.
+ *
+ * @deprecated
  */
 abstract class AbstractMapper extends \lang\Object implements \Iterator {
   protected $it, $func, $yieldMap;

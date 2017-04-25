@@ -3,6 +3,8 @@
 /**
  * A mapper reaches applies a given mapper function to each value an
  * iterator returns and returns its result.
+ *
+ * @deprecated
  */
 class MapperWithKey extends AbstractMapper {
 

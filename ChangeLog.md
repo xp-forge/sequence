@@ -3,6 +3,9 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #41: Inline collecting() and counting(). Both methods are
+  now four times faster.
+  (@thekid)
 * Heads up: Deprecated the following classes, which have been inlined.
   . AbstractMapper, Mapper, MapperWithKey
   . AbstractWindow, Window, WindowWithKey

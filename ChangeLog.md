@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 6.4.1 / 2017-04-25
+
 * Merged PR #41: Inline collecting() and counting(). Both methods are
   now four times faster.
   (@thekid)

@@ -375,13 +375,28 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function flatten($function= null) {
     if (null === $function) {
-      $it= $this->getIterator();
+      $f= function() {
+        foreach ($this->elements as $element) {
+          foreach ($element as $k => $v) { yield $k => $v;  }
+        }
+      };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
-      $it= new MapperWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($function), false);
+      $mapper= Functions::$APPLY_WITH_KEY->cast($function);
+      $f= function() use($mapper) {
+        foreach ($this->elements as $key => $element) {
+          foreach ($mapper($element, $key) as $k => $v) { yield $k => $v; }
+        }
+      };
     } else {
-      $it= new Mapper($this->getIterator(), Functions::$APPLY->newInstance($function), false);
+      $mapper= Functions::$APPLY->newInstance($function);
+      $f= function() use($mapper) {
+        foreach ($this->elements as $key => $element) {
+          foreach ($mapper($element) as $k => $v) { yield $k => $v; }
+        }
+      };
     }
-    return new self(new Flattener($it));
+
+    return new self($f());
   }
 
   /**

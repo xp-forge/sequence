@@ -395,19 +395,32 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function peek($action, $args= null) {
     if (null !== $args) {
-      $f= Functions::$APPLY->newInstance($action);
-      $p= new MapperWithKey($this->getIterator(), function($e) use($f, $args) {
-        $f(...array_merge([$e], $args));
-        return $e;
-      });
+      $peek= Functions::$APPLY->newInstance($action);
+      $f= function() use($peek, $args) {
+        foreach ($this->elements as $key => $element) {
+          $peek($element, ...$args);
+          yield $key => $element;
+        }
+      };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($action)) {
-      $f= Functions::$APPLY_WITH_KEY->cast($action);
-      $p= new MapperWithKey($this->getIterator(), function($e, $key) use($f) { $f($e, $key); return $e; });
+      $peek= Functions::$APPLY_WITH_KEY->cast($action);
+      $f= function() use($peek) {
+        foreach ($this->elements as $key => $element) {
+          $peek($element, $key);
+          yield $key => $element;
+        }
+      };
     } else {
-      $f= Functions::$APPLY->newInstance($action);
-      $p= new Mapper($this->getIterator(), function($e) use($f) { $f($e); return $e; });
+      $peek= Functions::$APPLY->newInstance($action);
+      $f= function() use($peek) {
+        foreach ($this->elements as $key => $element) {
+          $peek($element);
+          yield $key => $element;
+        }
+      };
     }
-    return new self($p);
+
+    return new self($f());
   }
 
   /**

@@ -86,7 +86,6 @@ Sequences can be created from a variety of sources, and by using these static me
 * **of** - accepts PHP arrays (zero-based as well as associative), all traversable data structures including `lang.types.ArrayList` and `lang.types.ArrayMap` as well as anything from `util.collections`, `util.XPIterator` instances, PHP iterators and iterator aggregates, PHP 5.5 generators (*yield*), as well as sequences themselves. Passing NULL will yield an empty sequence.
 * **iterate** - Iterates starting with a given seed, applying a unary operator on this value and passing the result to the next invocation, forever. Combine with `limit()`!
 * **generate** - Iterates forever, returning whatever the given supplier function returns. Combine with `limit()`!
-* **concat** - Concatenates a variable number of arguments with anything `of()` accepts into one large sequence.
 
 Intermediate operations
 -----------------------

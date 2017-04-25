@@ -500,8 +500,29 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function collecting(&$return, ICollector $collector) {
+    $accumulator= $collector->accumulator();
+    $finisher= $collector->finisher();
+
     $return= $collector->supplier()->__invoke();
-    return new self(new Aggregator($this->getIterator(), $return, $collector->accumulator(), $collector->finisher()));
+    if (Functions::$CONSUME_WITH_KEY->isInstance($accumulator)) {
+      $f= function() use(&$return, $accumulator, $finisher) {
+        foreach ($this->elements as $key => $element) {
+          $accumulator($return, $element, $key);
+          yield $key => $element;
+        }
+        $finisher && $return= $finisher($return);
+      };
+    } else {
+      $f= function() use(&$return, $accumulator, $finisher) {
+        foreach ($this->elements as $key => $element) {
+          $accumulator($return, $element);
+          yield $key => $element;
+        }
+        $finisher && $return= $finisher($return);
+      };
+    }
+
+    return new self($f());
   }
 
   /**
@@ -513,10 +534,14 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self
    */
   public function counting(&$count) {
-    return new self(new \CallbackFilterIterator($this->getIterator(), function($e) use(&$count) {
-      $count++;
-      return true;
-    }));
+    $f= function() use(&$count) {
+      foreach ($this->elements as $key => $element) {
+        $count++;
+        yield $key => $element;
+      }
+    };
+
+    return new self($f());
   }
 
   /**

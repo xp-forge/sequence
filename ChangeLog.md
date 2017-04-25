@@ -3,8 +3,15 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Heads up: Deprecated the following classes, which have been inlined.
+  . AbstractMapper, Mapper, MapperWithKey
+  . AbstractWindow, Window, WindowWithKey
+  . AbstractFilterable, Filterable, FilterableWithKey
+  . Flattener
+  . Generator
+  (@thekid)
 * Merged PR #40: Inline Generator class. Improves performance of the
-  creation methods `generate()` and `iterate()` roughly three times
+  creation methods `generate()` and `iterate()` roughly three times.
   (@thekid)
 * Merged PR #39: Inline intermediate operations using `yield`. This
   brings a performance improvement for `filter()`, `map()`, `peek()`,

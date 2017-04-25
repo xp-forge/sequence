@@ -3,6 +3,8 @@
 /**
  * A filterable only returns elements which the given accept function
  * returns true for, omitting the others.
+ *
+ * @deprecated
  */
 abstract class AbstractFilterable extends \lang\Object implements \Iterator {
   protected $it;

@@ -3,6 +3,9 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #40: Inline Generator class. Improves performance of the
+  creation methods `generate()` and `iterate()` roughly three times
+  (@thekid)
 * Merged PR #39: Inline intermediate operations using `yield`. This
   brings a performance improvement for `filter()`, `map()`, `peek()`,
   `flatten()`, `skip()` and `limit()` with factors ranging from 4.1

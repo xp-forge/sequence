@@ -3,6 +3,13 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #39: Inline intermediate operations using `yield`. This
+  brings a performance improvement for `filter()`, `map()`, `peek()`,
+  `flatten()`, `skip()` and `limit()` with factors ranging from 4.1
+  up until 8.7 for the default cases; and double performance for both
+  `skip()` and `limit()` with integer limits.
+  (@thekid)
+
 ## 6.4.0 / 2017-03-18
 
 * Merged PR #35: Add `util.data.CannotReset` exception class replacing

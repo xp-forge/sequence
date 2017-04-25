@@ -304,13 +304,28 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function filter($predicate) {
     if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
-      $f= new Filterable($this->getIterator(), Functions::$APPLY->cast([$predicate, 'accept']));
+      $f= function() use($predicate) {
+        foreach ($this->elements as $key => $element) {
+          if ($predicate->accept($element)) yield $key => $element;
+        }
+      };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($predicate)) {
-      $f= new FilterableWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($predicate));
+      $filter= Functions::$APPLY_WITH_KEY->cast($predicate);
+      $f= function() use($filter) {
+        foreach ($this->elements as $key => $element) {
+          if ($filter($element, $key)) yield $key => $element;
+        }
+      };
     } else {
-      $f= new Filterable($this->getIterator(), Functions::$APPLY->newInstance($predicate));
+      $filter= Functions::$APPLY->newInstance($predicate);
+      $f= function() use($filter) {
+        foreach ($this->elements as $key => $element) {
+          if ($filter($element)) yield $key => $element;
+        }
+      };
     }
-    return new self($f);
+
+    return new self($f());
   }
 
   /**
@@ -322,11 +337,32 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function map($function) {
     if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
-      $m= new MapperWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($function));
+      $mapper= Functions::$APPLY_WITH_KEY->cast($function);
+      $f= function() use($mapper) {
+        foreach ($this->elements as $key => $element) {
+          $mapped= $mapper($element, $key);
+          if ($mapped instanceof \Generator) {
+            foreach ($mapped as $key => $value) { yield $key => $value; }
+          } else {
+            yield $key => $mapped;
+          }
+        }
+      };
     } else {
-      $m= new Mapper($this->getIterator(), Functions::$APPLY->newInstance($function));
+      $mapper= Functions::$APPLY->newInstance($function);
+      $f= function() use($mapper) {
+        foreach ($this->elements as $key => $element) {
+          $mapped= $mapper($element);
+          if ($mapped instanceof \Generator) {
+            foreach ($mapped as $key => $value) { yield $key => $value; }
+          } else {
+            yield $key => $mapped;
+          }
+        }
+      };
     }
-    return new self($m);
+
+    return new self($f());
   }
 
   /**

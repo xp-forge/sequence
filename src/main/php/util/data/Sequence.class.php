@@ -268,13 +268,33 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function limit($arg) {
     if (is_numeric($arg)) {
-      $w= new \LimitIterator($this->getIterator(), 0, (int)$arg);
+      $max= (int)$arg;
+      $f= function() use($max) {
+        $i= 0;
+        foreach ($this->elements as $key => $element) {
+          if (++$i > $max) break;
+          yield $key => $element;
+        }
+      };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($arg)) {
-      $w= new WindowWithKey($this->getIterator(), function() { return false; }, Functions::$APPLY_WITH_KEY->cast($arg));
+      $limit= Functions::$APPLY_WITH_KEY->cast($arg);
+      $f= function() use($limit) {
+        foreach ($this->elements as $key => $element) {
+          if ($limit($element, $key)) break;
+          yield $key => $element;
+        }
+      };
     } else {
-      $w= new Window($this->getIterator(), function() { return false; }, Functions::$APPLY->newInstance($arg));
+      $limit= Functions::$APPLY->newInstance($arg);
+      $f= function() use($limit) {
+        foreach ($this->elements as $key => $element) {
+          if ($limit($element)) break;
+          yield $key => $element;
+        }
+      };
     }
-    return new self($w);
+
+    return new self($f());
   }
 
   /**

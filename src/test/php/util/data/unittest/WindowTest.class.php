@@ -2,6 +2,7 @@
 
 use util\data\Window;
 
+/** @deprecated */
 class WindowTest extends \unittest\TestCase {
   protected static $fixture= [1, 2, 3, 4, 5];
 

@@ -268,17 +268,37 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function limit($arg) {
     if (is_numeric($arg)) {
-      $w= new \LimitIterator($this->getIterator(), 0, (int)$arg);
+      $max= (int)$arg;
+      $f= function() use($max) {
+        $i= 0;
+        foreach ($this->elements as $key => $element) {
+          if (++$i > $max) break;
+          yield $key => $element;
+        }
+      };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($arg)) {
-      $w= new WindowWithKey($this->getIterator(), function() { return false; }, Functions::$APPLY_WITH_KEY->cast($arg));
+      $limit= Functions::$APPLY_WITH_KEY->cast($arg);
+      $f= function() use($limit) {
+        foreach ($this->elements as $key => $element) {
+          if ($limit($element, $key)) break;
+          yield $key => $element;
+        }
+      };
     } else {
-      $w= new Window($this->getIterator(), function() { return false; }, Functions::$APPLY->newInstance($arg));
+      $limit= Functions::$APPLY->newInstance($arg);
+      $f= function() use($limit) {
+        foreach ($this->elements as $key => $element) {
+          if ($limit($element)) break;
+          yield $key => $element;
+        }
+      };
     }
-    return new self($w);
+
+    return new self($f());
   }
 
   /**
-   * Returns a new stream with only the first `n` elements
+   * Returns a new stream without the first `n` elements
    *
    * @param  int|function(var): bool $arg either an integer or a closure
    * @return self
@@ -286,13 +306,40 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function skip($arg) {
     if (is_numeric($arg)) {
-      $w= new \LimitIterator($this->getIterator(), (int)$arg, -1);
+      $max= (int)$arg;
+      $f= function() use($max) {
+        $i= 0;
+        foreach ($this->elements as $key => $element) {
+          if (++$i > $max) yield $key => $element;
+        }
+      };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($arg)) {
-      $w= new WindowWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($arg), function() { return false; });
+      $skip= Functions::$APPLY_WITH_KEY->cast($arg);
+      $f= function() use($skip) {
+        $skipping= true;
+        foreach ($this->elements as $key => $element) {
+          if ($skipping) {
+            if ($skip($element, $key)) continue;
+            $skipping= false;
+          }
+          yield $key => $element;
+        }
+      };
     } else {
-      $w= new Window($this->getIterator(), Functions::$APPLY->newInstance($arg), function() { return false; });
+      $skip= Functions::$APPLY->newInstance($arg);
+      $f= function() use($skip) {
+        $skipping= true;
+        foreach ($this->elements as $key => $element) {
+          if ($skipping) {
+            if ($skip($element)) continue;
+            $skipping= false;
+          }
+          yield $key => $element;
+        }
+      };
     }
-    return new self($w);
+
+    return new self($f());
   }
 
   /**
@@ -304,13 +351,28 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function filter($predicate) {
     if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
-      $f= new Filterable($this->getIterator(), Functions::$APPLY->cast([$predicate, 'accept']));
+      $f= function() use($predicate) {
+        foreach ($this->elements as $key => $element) {
+          if ($predicate->accept($element)) yield $key => $element;
+        }
+      };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($predicate)) {
-      $f= new FilterableWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($predicate));
+      $filter= Functions::$APPLY_WITH_KEY->cast($predicate);
+      $f= function() use($filter) {
+        foreach ($this->elements as $key => $element) {
+          if ($filter($element, $key)) yield $key => $element;
+        }
+      };
     } else {
-      $f= new Filterable($this->getIterator(), Functions::$APPLY->newInstance($predicate));
+      $filter= Functions::$APPLY->newInstance($predicate);
+      $f= function() use($filter) {
+        foreach ($this->elements as $key => $element) {
+          if ($filter($element)) yield $key => $element;
+        }
+      };
     }
-    return new self($f);
+
+    return new self($f());
   }
 
   /**
@@ -322,11 +384,32 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function map($function) {
     if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
-      $m= new MapperWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($function));
+      $mapper= Functions::$APPLY_WITH_KEY->cast($function);
+      $f= function() use($mapper) {
+        foreach ($this->elements as $key => $element) {
+          $mapped= $mapper($element, $key);
+          if ($mapped instanceof \Generator) {
+            foreach ($mapped as $key => $value) { yield $key => $value; }
+          } else {
+            yield $key => $mapped;
+          }
+        }
+      };
     } else {
-      $m= new Mapper($this->getIterator(), Functions::$APPLY->newInstance($function));
+      $mapper= Functions::$APPLY->newInstance($function);
+      $f= function() use($mapper) {
+        foreach ($this->elements as $key => $element) {
+          $mapped= $mapper($element);
+          if ($mapped instanceof \Generator) {
+            foreach ($mapped as $key => $value) { yield $key => $value; }
+          } else {
+            yield $key => $mapped;
+          }
+        }
+      };
     }
-    return new self($m);
+
+    return new self($f());
   }
 
   /**
@@ -339,13 +422,28 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function flatten($function= null) {
     if (null === $function) {
-      $it= $this->getIterator();
+      $f= function() {
+        foreach ($this->elements as $element) {
+          foreach ($element as $k => $v) { yield $k => $v;  }
+        }
+      };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
-      $it= new MapperWithKey($this->getIterator(), Functions::$APPLY_WITH_KEY->cast($function), false);
+      $mapper= Functions::$APPLY_WITH_KEY->cast($function);
+      $f= function() use($mapper) {
+        foreach ($this->elements as $key => $element) {
+          foreach ($mapper($element, $key) as $k => $v) { yield $k => $v; }
+        }
+      };
     } else {
-      $it= new Mapper($this->getIterator(), Functions::$APPLY->newInstance($function), false);
+      $mapper= Functions::$APPLY->newInstance($function);
+      $f= function() use($mapper) {
+        foreach ($this->elements as $key => $element) {
+          foreach ($mapper($element) as $k => $v) { yield $k => $v; }
+        }
+      };
     }
-    return new self(new Flattener($it));
+
+    return new self($f());
   }
 
   /**
@@ -359,19 +457,32 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public function peek($action, $args= null) {
     if (null !== $args) {
-      $f= Functions::$APPLY->newInstance($action);
-      $p= new MapperWithKey($this->getIterator(), function($e) use($f, $args) {
-        $f(...array_merge([$e], $args));
-        return $e;
-      });
+      $peek= Functions::$APPLY->newInstance($action);
+      $f= function() use($peek, $args) {
+        foreach ($this->elements as $key => $element) {
+          $peek($element, ...$args);
+          yield $key => $element;
+        }
+      };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($action)) {
-      $f= Functions::$APPLY_WITH_KEY->cast($action);
-      $p= new MapperWithKey($this->getIterator(), function($e, $key) use($f) { $f($e, $key); return $e; });
+      $peek= Functions::$APPLY_WITH_KEY->cast($action);
+      $f= function() use($peek) {
+        foreach ($this->elements as $key => $element) {
+          $peek($element, $key);
+          yield $key => $element;
+        }
+      };
     } else {
-      $f= Functions::$APPLY->newInstance($action);
-      $p= new Mapper($this->getIterator(), function($e) use($f) { $f($e); return $e; });
+      $peek= Functions::$APPLY->newInstance($action);
+      $f= function() use($peek) {
+        foreach ($this->elements as $key => $element) {
+          $peek($element);
+          yield $key => $element;
+        }
+      };
     }
-    return new self($p);
+
+    return new self($f());
   }
 
   /**

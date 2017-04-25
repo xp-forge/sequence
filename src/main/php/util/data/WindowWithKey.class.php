@@ -4,6 +4,8 @@
  * A window is an iterator that skips elements from an underlying
  * iterator that match its "skip" closure, then returns elements
  * until its "stop" closure is reached.
+ *
+ * @deprecated
  */
 class WindowWithKey extends AbstractWindow {
 

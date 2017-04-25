@@ -4,6 +4,7 @@
  * A filterable only returns elements which the given accept function
  * returns true for, omitting the others.
  *
+ * @deprecated
  * @see   php://CallbackFilterIterator but only passes one argument
  * @test  xp://util.data.unittest.FilterableTest
  */

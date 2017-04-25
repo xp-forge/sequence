@@ -2,6 +2,7 @@
 
 use util\data\Generator;
 
+/** @deprecated */
 class GeneratorTest extends \unittest\TestCase {
 
   /**

@@ -78,12 +78,13 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @return self
    */
   public static function iterate($seed, $op) {
-    $value= $seed;
     $closure= Functions::$UNARYOP->newInstance($op);
-    return new self(new Generator(
-      function() use($value) { return $value; },
-      function() use(&$value, $closure) { $value= $closure($value); return $value; }
-    ));
+    $f= function() use($seed, $closure) {
+      yield $seed;
+      while (true) { yield $seed= $closure($seed); }
+    };
+
+    return new self($f());
   }
 
   /**
@@ -94,7 +95,11 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    */
   public static function generate($supplier) {
     $closure= Functions::$SUPPLY->newInstance($supplier);
-    return new self(new Generator($closure, $closure));
+    $f= function() use($closure) {
+      while (true) { yield $closure(); }
+    };
+
+    return new self($f());
   }
 
   /**

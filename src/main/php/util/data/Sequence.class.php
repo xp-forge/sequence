@@ -62,20 +62,19 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * @throws lang.IllegalArgumentException if type of elements argument is incorrect
    */
   public static function of(... $enumerables) {
-
-    // Short-circuit this use-case for performance / memory reasons
-    if (1 === sizeof($enumerables)) {
-      return new self(Enumeration::of($enumerables[0]));
+    switch (sizeof($enumerables)) {
+      case 1: return new self(Enumeration::of($enumerables[0]));
+      case 0: throw new IllegalArgumentException('Expecting at least one argument');
+      default:
+        $f= function() use($enumerables) {
+          foreach ($enumerables as $arg) {
+            foreach (Enumeration::of($arg) as $key => $element) {
+              yield $key => $element;
+            }
+          }
+        };
+        return new self($f());
     }
-
-    $f= function() use($enumerables) {
-      foreach ($enumerables as $arg) {
-        foreach (Enumeration::of($arg) as $key => $element) {
-          yield $key => $element;
-        }
-      }
-    };
-    return new self($f());
   }
 
   /**

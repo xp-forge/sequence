@@ -6,6 +6,7 @@ use util\XPIterator;
 /**
  * Represents a list of iterators
  *
+ * @deprecated Use Sequence::of() instead of Sequence::concat()
  * @see   php://AppendIterator
  * @test  xp://util.data.unittest.SequenceResultSetTest
  */

@@ -40,13 +40,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /** @return util.XPIterator */
   public function iterator() { return new SequenceIterator($this); }
 
-  /**
-   * Gets an iterator on this stream. Optimizes the case that the underlying
-   * elements already is an Iterator, and handles both wrappers implementing
-   * the Traversable interfaces as well as primitive arrays.
-   *
-   * @return  php.Iterator
-   */
+  /** @return iterable */
   public function getIterator() {
     foreach ($this->elements as $key => $element) {
       yield $key => $element;
@@ -57,15 +51,23 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Creates a new stream with an enumeration of elements
    *
    * @see    xp://util.data.Enumeration
-   * @param  var $elements an iterator, iterable, generator or array
+   * @param  var... $enumerables an iterator, iterable, generator or array
    * @return self
    * @throws lang.IllegalArgumentException if type of elements argument is incorrect
    */
-  public static function of($elements) {
-    if (null === $elements) {
-      return self::$EMPTY;
-    } else {
-      return new self(Enumeration::of($elements));
+  public static function of(... $enumerables) {
+    switch (sizeof($enumerables)) {
+      case 1: return new self(Enumeration::of($enumerables[0]));
+      case 0: throw new IllegalArgumentException('Expecting at least one argument');
+      default:
+        $f= function() use($enumerables) {
+          foreach ($enumerables as $arg) {
+            foreach (Enumeration::of($arg) as $key => $element) {
+              yield $key => $element;
+            }
+          }
+        };
+        return new self($f());
     }
   }
 
@@ -80,8 +82,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public static function iterate($seed, $op) {
     $closure= Functions::$UNARYOP->newInstance($op);
     $f= function() use($seed, $closure) {
-      yield $seed;
-      while (true) { yield $seed= $closure($seed); }
+      while (true) { yield $seed; $seed= $closure($seed); }
     };
 
     return new self($f());
@@ -105,6 +106,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Concatenates all given iteration sources
    *
+   * @deprecated Use Sequence::of() instead of Sequence::concat()
    * @param  var... $args An iterator, iterable or an array
    * @return self
    */

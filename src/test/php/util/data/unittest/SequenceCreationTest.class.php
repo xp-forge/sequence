@@ -11,6 +11,11 @@ use lang\IllegalArgumentException;
  */
 class SequenceCreationTest extends AbstractSequenceTest {
 
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function missing_argument() {
+    Sequence::of();
+  }
+
   #[@test, @values('util.data.unittest.Enumerables::valid')]
   public function can_create_via_of($input, $name) {
     $this->assertInstanceOf(Sequence::class, Sequence::of($input), $name);
@@ -44,5 +49,22 @@ class SequenceCreationTest extends AbstractSequenceTest {
   #[@test]
   public function passing_null_to_of_yields_an_empty_sequence() {
     $this->assertEquals(Sequence::$EMPTY, Sequence::of(null));
+  }
+
+  #[@test]
+  public function passing_sequence_to_of_yields_itself() {
+    $sequence= Sequence::of([1, 2, 3]);
+    $this->assertSequence([1, 2, 3], Sequence::of($sequence));
+  }
+
+
+  #[@test, @values([
+  #  [[1, 2, 3, 4, 5, 6]],
+  #  [[1, 2, 3], [4, 5, 6]],
+  #  [[1], [2, 3], [4, 5, 6]],
+  #  [[1, 2], null, [3, 4, 5, 6]]
+  #])]
+  public function multiple_arguments_supported_in_of(... $input) {
+    $this->assertSequence([1, 2, 3, 4, 5, 6], Sequence::of(...$input));
   }
 }

@@ -2,6 +2,7 @@
 
 use util\data\Sequence;
 
+/** @deprecated Use Sequence::of() instead of Sequence::concat() */
 class SequenceConcatTest extends AbstractSequenceTest {
 
   #[@test, @values('util.data.unittest.Enumerables::validArrays')]

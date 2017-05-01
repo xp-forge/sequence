@@ -24,7 +24,7 @@ abstract class Enumeration extends \lang\Object {
    * Verifies a given argument is an enumeration
    *
    * @param  var $arg
-   * @return var
+   * @return iterable
    * @throws lang.IllegalArgumentException
    */
   public static function of($arg) {
@@ -41,6 +41,8 @@ abstract class Enumeration extends \lang\Object {
       }
     } else if ($arg instanceof XPIterator) {
       return new XPIteratorAdapter($arg);
+    } else if (null === $arg) {
+      return [];
     } else if (is_array($arg)) {
       return $arg;
     }

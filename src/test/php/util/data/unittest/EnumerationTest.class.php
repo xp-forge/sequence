@@ -1,6 +1,7 @@
 <?php namespace util\data\unittest;
 
 use util\data\Enumeration;
+use util\data\Sequence;
 use lang\IllegalArgumentException;
 
 class EnumerationTest extends \unittest\TestCase {
@@ -23,13 +24,27 @@ class EnumerationTest extends \unittest\TestCase {
     $this->assertEquals(['color' => 'green', 'price' => 12.99], $result, $desc);
   }
 
+  #[@test]
+  public function all_in_sequence() {
+    $result= [];
+    foreach (Enumeration::of(Sequence::of([1, 2, 3])) as $value) {
+      $result[]= $value;
+    }
+    $this->assertEquals([1, 2, 3], $result);
+  }
+
   #[@test, @values('util.data.unittest.Enumerables::invalid'), @expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($value) {
     Enumeration::of($value);
   }
 
+  #[@test]
+  public function returns_empty_enumerable_for_null() {
+    $this->assertEquals([], Enumeration::of(null));
+  }
+
   #[@test, @expect(IllegalArgumentException::class)]
-  public function raises_exception_when_given_null() {
-    Enumeration::of(null);
+  public function returns_empty_enumerable_for_non_iterables() {
+    Enumeration::of('a string');
   }
 }

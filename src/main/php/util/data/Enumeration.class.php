@@ -41,6 +41,8 @@ abstract class Enumeration extends \lang\Object {
       }
     } else if ($arg instanceof XPIterator) {
       return new XPIteratorAdapter($arg);
+    } else if (null === $arg) {
+      return [];
     } else if (is_array($arg)) {
       return $arg;
     }

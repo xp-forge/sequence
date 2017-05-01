@@ -45,4 +45,14 @@ class SequenceCreationTest extends AbstractSequenceTest {
   public function passing_null_to_of_yields_an_empty_sequence() {
     $this->assertEquals(Sequence::$EMPTY, Sequence::of(null));
   }
+
+  #[@test, @values([
+  #  [[1, 2, 3, 4, 5, 6]],
+  #  [[1, 2, 3], [4, 5, 6]],
+  #  [[1], [2, 3], [4, 5, 6]],
+  #  [[1, 2], null, [3, 4, 5, 6]]
+  #])]
+  public function multiple_arguments_supported_in_of(... $input) {
+    $this->assertSequence([1, 2, 3, 4, 5, 6], Sequence::of(...$input));
+  }
 }

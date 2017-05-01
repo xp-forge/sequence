@@ -28,8 +28,13 @@ class EnumerationTest extends \unittest\TestCase {
     Enumeration::of($value);
   }
 
+  #[@test]
+  public function returns_empty_enumerable_for_null() {
+    $this->assertEquals([], Enumeration::of(null));
+  }
+
   #[@test, @expect(IllegalArgumentException::class)]
-  public function raises_exception_when_given_null() {
-    Enumeration::of(null);
+  public function returns_empty_enumerable_for_non_iterables() {
+    Enumeration::of('a string');
   }
 }

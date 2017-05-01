@@ -57,16 +57,25 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
    * Creates a new stream with an enumeration of elements
    *
    * @see    xp://util.data.Enumeration
-   * @param  var $elements an iterator, iterable, generator or array
+   * @param  var... $enumerables an iterator, iterable, generator or array
    * @return self
    * @throws lang.IllegalArgumentException if type of elements argument is incorrect
    */
-  public static function of($elements) {
-    if (null === $elements) {
-      return self::$EMPTY;
-    } else {
-      return new self(Enumeration::of($elements));
+  public static function of(... $enumerables) {
+
+    // Short-circuit this use-case for performance / memory reasons
+    if (1 === sizeof($enumerables)) {
+      return new self(Enumeration::of($enumerables[0]));
     }
+
+    $f= function() use($enumerables) {
+      foreach ($enumerables as $arg) {
+        foreach (Enumeration::of($arg) as $key => $element) {
+          yield $key => $element;
+        }
+      }
+    };
+    return new self($f());
   }
 
   /**

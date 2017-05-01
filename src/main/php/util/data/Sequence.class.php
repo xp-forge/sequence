@@ -114,6 +114,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Concatenates all given iteration sources
    *
+   * @deprecated Use Sequence::of() instead of Sequence::concat()
    * @param  var... $args An iterator, iterable or an array
    * @return self
    */

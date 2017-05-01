@@ -40,13 +40,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /** @return util.XPIterator */
   public function iterator() { return new SequenceIterator($this); }
 
-  /**
-   * Gets an iterator on this stream. Optimizes the case that the underlying
-   * elements already is an Iterator, and handles both wrappers implementing
-   * the Traversable interfaces as well as primitive arrays.
-   *
-   * @return  php.Iterator
-   */
+  /** @return iterable */
   public function getIterator() {
     foreach ($this->elements as $key => $element) {
       yield $key => $element;
@@ -88,8 +82,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   public static function iterate($seed, $op) {
     $closure= Functions::$UNARYOP->newInstance($op);
     $f= function() use($seed, $closure) {
-      yield $seed;
-      while (true) { yield $seed= $closure($seed); }
+      while (true) { yield $seed; $seed= $closure($seed); }
     };
 
     return new self($f());

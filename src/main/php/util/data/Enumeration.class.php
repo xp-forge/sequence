@@ -24,7 +24,7 @@ abstract class Enumeration extends \lang\Object {
    * Verifies a given argument is an enumeration
    *
    * @param  var $arg
-   * @return var
+   * @return iterable
    * @throws lang.IllegalArgumentException
    */
   public static function of($arg) {

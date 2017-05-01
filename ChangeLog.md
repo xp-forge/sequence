@@ -3,6 +3,12 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 6.4.2 / 2017-05-02
+
+* Merged PR #42: Deprecate static concat() in favor of multiple-argument
+  `of()`. Also deprecates `util.data.Iterators` class.
+  (@thekid)
+
 ## 6.4.1 / 2017-04-25
 
 * Merged PR #41: Inline collecting() and counting(). Both methods are

@@ -51,6 +51,13 @@ class SequenceCreationTest extends AbstractSequenceTest {
     $this->assertEquals(Sequence::$EMPTY, Sequence::of(null));
   }
 
+  #[@test]
+  public function passing_sequence_to_of_yields_itself() {
+    $sequence= Sequence::of([1, 2, 3]);
+    $this->assertSequence([1, 2, 3], Sequence::of($sequence));
+  }
+
+
   #[@test, @values([
   #  [[1, 2, 3, 4, 5, 6]],
   #  [[1, 2, 3], [4, 5, 6]],

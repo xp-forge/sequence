@@ -3,7 +3,7 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
-## 6.5.1 / 2017-05-07
+## 6.5.1 / 2017-05-06
 
 * Improved `each()` performance when passing extra arguments - @thekid
 

@@ -5,6 +5,8 @@ Data sequences change log
 
 ## 7.0.0 / ????-??-??
 
+* Added support for closures returning iterables in `Enumeration::of()`
+  (@thekid)
 * Removed `Sequence::concat()` method deprecated in favor of a multi-
   argument version of `Sequence::of()` - see 6.4.2-RELEASE
   (@thekid)

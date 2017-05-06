@@ -3,6 +3,11 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 6.6.0 / 2017-05-06
+
+* Added support for closures returning iterables in `Enumeration::of()`
+  (@thekid)
+
 ## 6.5.1 / 2017-05-06
 
 * Improved `each()` performance when passing extra arguments - @thekid

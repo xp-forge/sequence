@@ -35,10 +35,8 @@ abstract class Enumeration extends \lang\Object {
     } else if ($arg instanceof \Traversable) {
       return new TraversalOf($arg);
     } else if ($arg instanceof \Closure) {
-      $generator= $arg();
-      if ($generator instanceof \Generator) {
-        return new YieldingOf($generator);
-      }
+      $result= $arg();
+      return $result instanceof \Generator ? new YieldingOf($result) : self::of($result);
     } else if ($arg instanceof XPIterator) {
       return new XPIteratorAdapter($arg);
     } else if (null === $arg) {

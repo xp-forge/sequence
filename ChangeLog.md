@@ -11,6 +11,10 @@ Data sequences change log
 * Removed deprecated classes from yield refactoring released in 6.4.1
   (@thekid)
 
+## 6.5.0 / 2017-05-06
+
+* Merged PR #36: Add optional mapper to toArray() and toMap() - @thekid
+
 ## 6.4.2 / 2017-05-02
 
 * Merged PR #42: Deprecate static concat() in favor of multiple-argument

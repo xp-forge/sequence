@@ -121,12 +121,14 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Collects all elements in an array
    *
+   * @param  function(var): var $map An optional mapper
    * @return var[]
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  public function toArray() {
+  public function toArray($map= null) {
+    $instance= $map ? $this->map($map) : $this;
     $return= [];
-    foreach ($this->elements as $element) {
+    foreach ($instance->elements as $element) {
       $return[]= $element;
     }
     return $return;
@@ -135,12 +137,14 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Collects all elements in a map
    *
+   * @param  function(var): var $map An optional mapper
    * @return [:var]
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
-  public function toMap() {
+  public function toMap($map= null) {
+    $instance= $map ? $this->map($map) : $this;
     $return= [];
-    foreach ($this->elements as $key => $element) {
+    foreach ($instance->elements as $key => $element) {
       $return[$key]= $element;
     }
     return $return;

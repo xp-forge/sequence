@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 6.5.1 / 2017-05-07
+
+* Improved `each()` performance when passing extra arguments - @thekid
+
 ## 6.5.0 / 2017-05-06
 
 * Merged PR #36: Add optional mapper to toArray() and toMap() - @thekid

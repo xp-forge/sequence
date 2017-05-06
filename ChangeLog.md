@@ -5,15 +5,18 @@ Data sequences change log
 
 ## 7.0.0 / ????-??-??
 
-* Added support for closures returning iterables in `Enumeration::of()`
-  (@thekid)
 * Removed `Sequence::concat()` method deprecated in favor of a multi-
   argument version of `Sequence::of()` - see 6.4.2-RELEASE
   (@thekid)
 * Removed deprecated classes from yield refactoring released in 6.4.1
   (@thekid)
 
-## 6.5.1 / 2017-05-07
+## 6.6.0 / 2017-05-06
+
+* Added support for closures returning iterables in `Enumeration::of()`
+  (@thekid)
+
+## 6.5.1 / 2017-05-06
 
 * Improved `each()` performance when passing extra arguments - @thekid
 

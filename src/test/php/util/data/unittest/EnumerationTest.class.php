@@ -33,6 +33,15 @@ class EnumerationTest extends \unittest\TestCase {
     $this->assertEquals([1, 2, 3], $result);
   }
 
+  #[@test]
+  public function lazy_init_via_function() {
+    $result= [];
+    foreach (Enumeration::of(function() { return [1, 2, 3]; }) as $value) {
+      $result[]= $value;
+    }
+    $this->assertEquals([1, 2, 3], $result);
+  }
+
   #[@test, @values('util.data.unittest.Enumerables::invalid'), @expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($value) {
     Enumeration::of($value);

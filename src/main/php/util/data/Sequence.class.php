@@ -251,7 +251,7 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
     if (null !== $args) {
       $inv= Functions::$APPLY->newInstance($consumer);
       $i= 0;
-      foreach ($this->elements as $element) { $inv(...array_merge([$element], $args)); $i++; }
+      foreach ($this->elements as $element) { $inv($element, ...$args); $i++; }
       return $i;
     } else if (Functions::$APPLY_WITH_KEY->isInstance($consumer)) {
       $inv= Functions::$APPLY_WITH_KEY->cast($consumer);

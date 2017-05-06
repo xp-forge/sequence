@@ -231,32 +231,26 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   /**
    * Invokes a given consumer on each element
    *
-   * @param  function(var): void $function
-   * @param  var $args Additional args to pass to function
+   * @param  function(var): void $consumer
+   * @param  var[] $args Additional args to pass to function
    * @return int The number of elements
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function each($consumer= null, $args= null) {
+    $i= 0;
     if (null !== $args) {
       $inv= Functions::$APPLY->newInstance($consumer);
-      $i= 0;
-      foreach ($this->elements as $element) { $inv(...array_merge([$element], $args)); $i++; }
-      return $i;
+      foreach ($this->elements as $element) { $inv($element, ...$args); $i++; }
     } else if (Functions::$APPLY_WITH_KEY->isInstance($consumer)) {
       $inv= Functions::$APPLY_WITH_KEY->cast($consumer);
-      $i= 0;
       foreach ($this->elements as $key => $element) { $inv($element, $key); $i++; }
-      return $i;
     } else if (null !== $consumer) {
       $inv= Functions::$APPLY->newInstance($consumer);
-      $i= 0;
       foreach ($this->elements as $element) { $inv($element); $i++; }
-      return $i;
     } else {
-      $i= 0;
       foreach ($this->elements as $element) { $i++; }
-      return $i;
     }
+    return $i;
   }
 
   /**

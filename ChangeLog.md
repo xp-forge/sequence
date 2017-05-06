@@ -13,6 +13,10 @@ Data sequences change log
 * Removed deprecated classes from yield refactoring released in 6.4.1
   (@thekid)
 
+## 6.5.1 / 2017-05-07
+
+* Improved `each()` performance when passing extra arguments - @thekid
+
 ## 6.5.0 / 2017-05-06
 
 * Merged PR #36: Add optional mapper to toArray() and toMap() - @thekid

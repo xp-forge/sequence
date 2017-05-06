@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 6.5.0 / 2017-05-06
+
+* Merged PR #36: Add optional mapper to toArray() and toMap() - @thekid
+
 ## 6.4.2 / 2017-05-02
 
 * Merged PR #42: Deprecate static concat() in favor of multiple-argument

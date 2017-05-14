@@ -35,7 +35,7 @@ class SequenceResultSetTest extends AbstractSequenceTest {
    */
   protected function records($limit= self::PAGE, $page= 0) {
     $records= $this->loadPage($page * $limit, $limit);
-    return Sequence::concat($records, sizeof($records) < $limit ? null : function() use($page, $limit) {
+    return Sequence::of($records, sizeof($records) < $limit ? null : function() use($page, $limit) {
       return $this->records($limit, ++$page);
     });
   }

@@ -104,17 +104,6 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Concatenates all given iteration sources
-   *
-   * @deprecated Use Sequence::of() instead of Sequence::concat()
-   * @param  var... $args An iterator, iterable or an array
-   * @return self
-   */
-  public static function concat(... $args) {
-    return new self(new Iterators($args));
-  }
-
-  /**
    * Returns the first element of this stream, or an empty optional
    *
    * @param  util.Filter|function(var): bool $filter An optional filter

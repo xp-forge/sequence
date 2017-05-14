@@ -5,10 +5,10 @@ Data sequences change log
 
 ## 7.0.0 / ????-??-??
 
-* Removed `Sequence::concat()` method deprecated in favor of a multi-
-  argument version of `Sequence::of()` - see 6.4.2-RELEASE
-  (@thekid)
-* Removed deprecated classes from yield refactoring released in 6.4.1
+* Merged PR #43 ("Remove deprecated functionality"):
+  . Removed `Sequence::concat()` method deprecated in favor of a multi-
+    argument version of `Sequence::of()` - see 6.4.2-RELEASE
+  . Removed deprecated classes from yield refactoring released in 6.4.1
   (@thekid)
 
 ## 6.6.0 / 2017-05-06

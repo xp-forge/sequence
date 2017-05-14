@@ -2,6 +2,8 @@
 
 language: php
 
+dist: trusty
+
 php:
   - 5.6
   - 7.0
@@ -12,9 +14,6 @@ php:
 matrix:
   allow_failures:
     - php: nightly
-  include:
-    - php: hhvm
-      dist: trusty
 
 before_script:
   - curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-master.sh > xp-run

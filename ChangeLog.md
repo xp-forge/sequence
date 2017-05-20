@@ -3,7 +3,13 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
-## 7.0.0 / ????-??-??
+## 7.0.1 / 2017-05-20
+
+* Refactored code to use `typeof()` instead of `xp::typeOf()`, see
+  https://github.com/xp-framework/rfc/issues/323
+  (@thekid)
+
+## 7.0.0 / 2017-05-14
 
 * Merged PR #43 ("Remove deprecated functionality"):
   . Removed `Sequence::concat()` method deprecated in favor of a multi-

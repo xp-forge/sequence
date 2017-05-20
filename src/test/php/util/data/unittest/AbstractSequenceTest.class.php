@@ -35,8 +35,8 @@ abstract class AbstractSequenceTest extends \unittest\TestCase {
     return [
       [function($in) { return $in; }, 'closure'],
       [[$this, 'unaryop'], 'method'],
-      [['xp', 'typeOf'], 'static-method'],
-      ['xp::typeOf', 'static-method-string'],
+      [[Methods::class, 'unaryop'], 'static-method'],
+      ['util.data.unittest.Methods::unaryop', 'static-method-string'],
       ['typeof', 'function']
     ];
   }

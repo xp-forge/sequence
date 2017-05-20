@@ -5,8 +5,8 @@ Data sequences change log
 
 ## 7.0.1 / 2017-05-20
 
-* Refactored code to use `typeof()` instead of `xp::typeOf()`, see
-  https://github.com/xp-framework/rfc/issues/323
+* Refactored code to use dedicated fixture methods instead of using
+  `xp` class methods *typeOf()* and *gc()*, see xp-framework/rfc#323
   (@thekid)
 
 ## 7.0.0 / 2017-05-14

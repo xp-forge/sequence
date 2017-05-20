@@ -57,8 +57,8 @@ abstract class AbstractSequenceTest extends \unittest\TestCase {
     return [
       [function() { return 1; }, 'closure'],
       [[$this, 'supplier'], 'method'],
-      [['xp', 'gc'], 'static-method'],
-      ['xp::gc', 'static-method-string'],
+      [[Methods::class, 'supplier'], 'static-method'],
+      ['util.data.unittest.Methods::supplier', 'static-method-string'],
       ['time', 'function']
     ];
   }

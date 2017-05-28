@@ -9,7 +9,7 @@ use util\Objects;
  *
  * @test  xp://util.data.unittest.OptionalTest
  */
-class Optional extends \lang\Object implements \IteratorAggregate {
+class Optional implements \lang\Value, \IteratorAggregate {
   public static $EMPTY;
 
   protected $value;
@@ -142,13 +142,16 @@ class Optional extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Returns whether this optional equals a given value.
+   * Compares this optional to another given value
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->present === $cmp->present && Objects::equal($this->value, $cmp->value);
+  public function compareTo($value) {
+    return $value instanceof self
+      ? Objects::compare([$this->present, $this->value], [$value->present, $value->value])
+      : 1
+    ;
   }
 
   /**

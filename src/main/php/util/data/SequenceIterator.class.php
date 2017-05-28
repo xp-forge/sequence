@@ -8,7 +8,7 @@ use util\NoSuchElementException;
  * @see  xp://util.data.Sequence#iterator
  * @test xp://util.data.unittest.SequenceIteratorTest
  */
-class SequenceIterator extends \lang\Object implements \util\XPIterator, \IteratorAggregate {
+class SequenceIterator implements \util\XPIterator, \IteratorAggregate {
   private $it;
 
   /**

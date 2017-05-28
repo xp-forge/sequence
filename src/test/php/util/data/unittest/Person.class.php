@@ -1,6 +1,6 @@
 <?php namespace util\data\unittest;
 
-class Person extends \lang\Object {
+class Person implements \lang\Value {
   private $id, $name;
 
   /**
@@ -19,4 +19,24 @@ class Person extends \lang\Object {
 
   /** @return string */
   public function name() { return $this->name; }
+
+  /** Creates a string representation */
+  public function toString() {
+    return nameof($this).'(id= '.$this->id.', name= '.$this->name.')';
+  }
+
+  /** Creates a hashcode */
+  public function hashCode() {
+    return 'P'.$this->id;
+  }
+
+  /**
+   * Compares this employee to another given value
+   *
+   * @param  var $valu
+   * @return int
+   */
+  public function compareTo($value) {
+    return $value instanceof self ? $this->id - $value->id : 1;
+  }
 }

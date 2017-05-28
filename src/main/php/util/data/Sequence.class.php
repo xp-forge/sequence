@@ -23,7 +23,7 @@ use lang\Throwable;
  * @test xp://util.data.unittest.SequenceResultSetTest
  * @test xp://util.data.unittest.SequenceSkipTest
  */
-class Sequence extends \lang\Object implements \IteratorAggregate {
+class Sequence implements \lang\Value, \IteratorAggregate {
   public static $EMPTY;
 
   protected $elements;
@@ -589,13 +589,13 @@ class Sequence extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Returns whether this sequence equals a given value.
+   * Compares this optional to another given value
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && Objects::equal($this->elements, $cmp->elements);
+  public function compareTo($value) {
+    return $value instanceof self ? Objects::compare($this->elements, $value->elements) : 1;
   }
 
   /**

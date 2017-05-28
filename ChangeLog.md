@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 8.0.0 / 2017-05-28
+
+* Merged PR #45: Forward compatibility with XP 9.0.0 - @thekid
+
 ## 7.0.1 / 2017-05-20
 
 * Refactored code to use dedicated fixture methods instead of using

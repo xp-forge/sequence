@@ -6,7 +6,7 @@
  * @see   xp://util.data.Sequence#collect
  * @test  xp://util.data.unittest.CollectorsTest
  */
-class Collector extends \lang\Object implements ICollector {
+class Collector implements ICollector {
   protected $supplier;
   protected $accumulator;
   protected $finisher;

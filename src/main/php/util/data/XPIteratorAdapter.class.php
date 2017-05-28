@@ -4,7 +4,7 @@
  * Adapter class for wrapping an util.XPIterator instance in an iterator
  * useable by PHP.
  */
-class XPIteratorAdapter extends \lang\Object implements \Iterator {
+class XPIteratorAdapter implements \Iterator {
   private $it;
   private $key= -1, $current= null, $valid= false;
 

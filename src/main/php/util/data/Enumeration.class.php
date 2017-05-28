@@ -18,7 +18,7 @@ use lang\IllegalArgumentException;
  * @see   xp://util.XPIterator
  * @test  xp://util.data.unittest.EnumerationTest
  */
-abstract class Enumeration extends \lang\Object {
+abstract class Enumeration {
 
   /**
    * Verifies a given argument is an enumeration

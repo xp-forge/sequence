@@ -1,6 +1,6 @@
 <?php namespace util\data\unittest;
 
-class Employee extends \lang\Object {
+class Employee implements \lang\Value {
   protected $id;
   protected $name;
   protected $department;
@@ -36,24 +36,25 @@ class Employee extends \lang\Object {
   /** @return bool */
   public function isDinosaur() { return $this->years > 10; }
 
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
+  /** Creates a string representation */
   public function toString() {
     return nameof($this).'('.
       'id= '.$this->id.', name= '.$this->name.', department= '.$this->department.', years= '.$this->years.
     ')';
   }
 
+  /** Creates a hashcode */
+  public function hashCode() {
+    return 'E'.$this->id;
+  }
+
   /**
    * Compares this employee to another given value
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $valu
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->id === $cmp->id;
+  public function compareTo($value) {
+    return $value instanceof self ? $this->id - $value->id : 1;
   }
 }

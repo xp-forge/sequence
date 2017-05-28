@@ -11,7 +11,7 @@ use util\collections\HashSet;
  * @see   xp://util.data.ICollector
  * @test  xp://util.data.unittest.CollectorsTest
  */
-final class Collectors extends \lang\Object {
+final class Collectors {
 
   private function __construct() { }
 

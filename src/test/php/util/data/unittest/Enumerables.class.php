@@ -1,7 +1,6 @@
 <?php namespace util\data\unittest;
 
 use util\XPIterator;
-use lang\Object;
 use util\data\Sequence;
 
 /**
@@ -14,7 +13,7 @@ use util\data\Sequence;
  * @see   xp://util.data.unittest.AbstractSequenceTest
  * @see   php://generators
  */
-abstract class Enumerables extends Object {
+abstract class Enumerables {
 
   /**
    * Returns valid arguments for the `of()` method.
@@ -114,7 +113,7 @@ abstract class Enumerables extends Object {
   public static function invalid() {
     return [
       [''], ['...'], [-1], [0], [1], [0.5], [false], [true],
-      [new Object()], [new Name('...')],
+      [new Name('...')],
       [function() { return 1; }]
     ];
   }

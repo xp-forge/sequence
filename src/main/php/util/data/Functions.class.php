@@ -7,7 +7,7 @@ use lang\Primitive;
 /**
  * Function types used throughout library
  */
-abstract class Functions extends \lang\Object {
+abstract class Functions {
   public static $SUPPLY, $CONSUME, $CONSUME_WITH_KEY, $UNARYOP, $BINARYOP, $COMPARATOR, $APPLY, $APPLY_WITH_KEY;
 
   static function __static() {

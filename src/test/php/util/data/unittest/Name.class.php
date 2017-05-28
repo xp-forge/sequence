@@ -1,6 +1,6 @@
 <?php namespace util\data\unittest;
 
-class Name extends \lang\Object {
+class Name implements \lang\Value {
   private $value;
 
   /** @param string $value */
@@ -10,30 +10,26 @@ class Name extends \lang\Object {
   public function value() { return $this->value; }
 
   /**
-   * Returns a hashcode
-   *
-   * @return string
-   */
-  public function hashCode() {
-    return crc32($this->value);
-  }
-
-  /**
-   * Returns whether this name is equal to another
-   *
-   * @param  var $cmp
-   * @return bool
-   */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->value === $cmp->value;
-  }
-
-  /**
    * Returns a string representation
    *
    * @return string
    */
   public function toString() {
     return nameof($this).'('.$this->value.')';
+  }
+
+  /** Creates a string representatio */
+  public function hashCode() {
+    return crc32($this->value);
+  }
+
+  /**
+   * Compares this employee to another given value
+   *
+   * @param  var $valu
+   * @return int
+   */
+  public function compareTo($value) {
+    return $value instanceof self ? strcmp($this->value, $value->value) : 1;
   }
 }

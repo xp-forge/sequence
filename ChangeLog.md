@@ -3,7 +3,7 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
-## 8.0.0 / 2017-05-28
+## 8.0.0 / 2017-05-29
 
 * Merged PR #45: Forward compatibility with XP 9.0.0 - @thekid
 

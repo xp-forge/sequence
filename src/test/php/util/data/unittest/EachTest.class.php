@@ -53,11 +53,14 @@ class EachTest extends AbstractSequenceTest {
   public function writing_to_console_out() {
     $orig= Console::$out->getStream();
     $out= new MemoryOutputStream();
-    Console::$out->setStream($out);
 
-    Sequence::of([1, 2, 3, 4])->each('util.cmd.Console::write', []);
+    try {
+      Console::$out->setStream($out);
+      Sequence::of([1, 2, 3, 4])->each('util.cmd.Console::write', []);
+    } finally {
+      Console::$out->setStream($orig);
+    }
 
-    Console::$out->setStream($orig);    
     $this->assertEquals('1234', $out->getBytes());
   }
 

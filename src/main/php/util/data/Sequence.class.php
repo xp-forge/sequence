@@ -239,13 +239,13 @@ class Sequence implements \lang\Value, \IteratorAggregate {
   public function each($consumer= null, $args= null) {
     $i= 0;
     if (null !== $args) {
-      $inv= Functions::$APPLY->newInstance($consumer);
+      $inv= Functions::$RECV->newInstance($consumer);
       foreach ($this->elements as $element) { $inv($element, ...$args); $i++; }
-    } else if (Functions::$APPLY_WITH_KEY->isInstance($consumer)) {
-      $inv= Functions::$APPLY_WITH_KEY->cast($consumer);
+    } else if (Functions::$RECV_WITH_KEY->isInstance($consumer)) {
+      $inv= Functions::$RECV_WITH_KEY->cast($consumer);
       foreach ($this->elements as $key => $element) { $inv($element, $key); $i++; }
     } else if (null !== $consumer) {
-      $inv= Functions::$APPLY->newInstance($consumer);
+      $inv= Functions::$RECV->newInstance($consumer);
       foreach ($this->elements as $element) { $inv($element); $i++; }
     } else {
       foreach ($this->elements as $element) { $i++; }
@@ -451,15 +451,15 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    */
   public function peek($action, $args= null) {
     if (null !== $args) {
-      $peek= Functions::$APPLY->newInstance($action);
+      $peek= Functions::$RECV->newInstance($action);
       $f= function() use($peek, $args) {
         foreach ($this->elements as $key => $element) {
           $peek($element, ...$args);
           yield $key => $element;
         }
       };
-    } else if (Functions::$APPLY_WITH_KEY->isInstance($action)) {
-      $peek= Functions::$APPLY_WITH_KEY->cast($action);
+    } else if (Functions::$RECV_WITH_KEY->isInstance($action)) {
+      $peek= Functions::$RECV_WITH_KEY->cast($action);
       $f= function() use($peek) {
         foreach ($this->elements as $key => $element) {
           $peek($element, $key);
@@ -467,7 +467,7 @@ class Sequence implements \lang\Value, \IteratorAggregate {
         }
       };
     } else {
-      $peek= Functions::$APPLY->newInstance($action);
+      $peek= Functions::$RECV->newInstance($action);
       $f= function() use($peek) {
         foreach ($this->elements as $key => $element) {
           $peek($element);

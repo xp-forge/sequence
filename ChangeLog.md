@@ -3,6 +3,12 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 8.0.1 / 2017-07-11
+
+* Fixed `each()` and `peek()` not being able to work with functions
+  with `void` return type.
+  (@thekid)
+
 ## 8.0.0 / 2017-05-29
 
 * Merged PR #45: Forward compatibility with XP 9.0.0 - @thekid

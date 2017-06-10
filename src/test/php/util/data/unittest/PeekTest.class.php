@@ -4,6 +4,7 @@ use util\data\Sequence;
 use io\streams\MemoryOutputStream;
 use util\cmd\Console;
 use lang\IllegalArgumentException;
+use unittest\actions\VerifyThat;
 
 class PeekTest extends AbstractSequenceTest {
 
@@ -65,5 +66,12 @@ class PeekTest extends AbstractSequenceTest {
   #[@test, @values('noncallables'), @expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->peek($noncallable);
+  }
+
+  #[@test, @action([new VerifyThat(function() {
+  #  return PHP_VERSION_ID >= 70100 && !defined('HHVM_VERSION_ID');
+  #})])]
+  public function each_with_void() {
+    $this->assertEquals(4, Sequence::of([1, 2, 3, 4])->peek(eval('return function(int $e): void { };'))->each());
   }
 }

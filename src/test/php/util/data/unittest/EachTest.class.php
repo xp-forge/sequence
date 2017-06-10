@@ -4,6 +4,7 @@ use util\data\Sequence;
 use io\streams\MemoryOutputStream;
 use util\cmd\Console;
 use lang\IllegalArgumentException;
+use unittest\actions\VerifyThat;
 
 class EachTest extends AbstractSequenceTest {
 
@@ -83,5 +84,12 @@ class EachTest extends AbstractSequenceTest {
   #[@test, @expect(IllegalArgumentException::class)]
   public function raises_exception_when_given_null_and_args() {
     Sequence::of([])->each(null, []);
+  }
+
+  #[@test, @action([new VerifyThat(function() {
+  #  return PHP_VERSION_ID >= 70100 && !defined('HHVM_VERSION_ID');
+  #})])]
+  public function each_with_void() {
+    $this->assertEquals(4, Sequence::of([1, 2, 3, 4])->each(eval('return function(int $e): void { };')));
   }
 }

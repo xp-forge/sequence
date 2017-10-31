@@ -48,7 +48,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
 
   #[@test]
   public function passing_null_to_of_yields_an_empty_sequence() {
-    $this->assertEquals(Sequence::$EMPTY, Sequence::of(null));
+    $this->assertEquals(Sequence::empty(), Sequence::of(null));
   }
 
   #[@test]

@@ -33,12 +33,12 @@ class SequenceIteratorTest extends AbstractSequenceTest {
 
   #[@test]
   public function hasNext_returns_false_when_at_end_of_sequence() {
-    $this->assertFalse(Sequence::$EMPTY->iterator()->hasNext());
+    $this->assertFalse(Sequence::empty()->iterator()->hasNext());
   }
 
   #[@test, @expect(NoSuchElementException::class)]
   public function next_throws_exception_when_at_end_of_sequence() {
-    Sequence::$EMPTY->iterator()->next();
+    Sequence::empty()->iterator()->next();
   }
 
   #[@test, @values('util.data.unittest.Enumerables::validArrays')]

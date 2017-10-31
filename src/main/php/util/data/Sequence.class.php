@@ -26,7 +26,8 @@ use lang\Throwable;
 class Sequence implements \lang\Value, \IteratorAggregate {
   public static $EMPTY;
 
-  protected $elements;
+  private $elements;
+  private $error= null;
 
   static function __static() {
     self::$EMPTY= new self([]);
@@ -43,9 +44,13 @@ class Sequence implements \lang\Value, \IteratorAggregate {
   /** @return iterable */
   public function getIterator() {
     foreach ($this->elements as $key => $element) {
+      if ($this->error) throw $this->error;
       yield $key => $element;
     }
   }
+
+  /** @return self */
+  public static function empty() { return new self([]); }
 
   /**
    * Creates a new stream with an enumeration of elements
@@ -111,8 +116,8 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    * @throws util.data.CannotReset if streamed and invoked more than once
    */
   public function first($filter= null) {
-    $instance= $filter ? $this->filter($filter) : $this;
-    foreach ($instance->elements as $element) {
+    $filter && $this->filter($filter);
+    foreach ($this->elements as $element) {
       return new Optional($element);
     }
     return Optional::$EMPTY;
@@ -126,9 +131,10 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function toArray($map= null) {
-    $instance= $map ? $this->map($map) : $this;
+    $map && $this->map($map);
     $return= [];
-    foreach ($instance->elements as $element) {
+    foreach ($this->elements as $element) {
+      if ($this->error) throw $this->error;
       $return[]= $element;
     }
     return $return;
@@ -142,9 +148,10 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException if streamed and invoked more than once
    */
   public function toMap($map= null) {
-    $instance= $map ? $this->map($map) : $this;
+    $map && $this->map($map);
     $return= [];
-    foreach ($instance->elements as $key => $element) {
+    foreach ($this->elements as $key => $element) {
+      if ($this->error) throw $this->error;
       $return[$key]= $element;
     }
     return $return;
@@ -159,6 +166,7 @@ class Sequence implements \lang\Value, \IteratorAggregate {
   public function count() {
     $return= 0;
     foreach ($this->elements as $element) {
+      if ($this->error) throw $this->error;
       $return++;
     }
     return $return;
@@ -199,6 +207,7 @@ class Sequence implements \lang\Value, \IteratorAggregate {
     $closure= Functions::$BINARYOP->newInstance($accumulator);
     $return= $identity;
     foreach ($this->elements as $element) {
+      if ($this->error) throw $this->error;
       $return= $closure($return, $element);
     }
     return $return;
@@ -215,13 +224,16 @@ class Sequence implements \lang\Value, \IteratorAggregate {
     $accumulator= $collector->accumulator();
     $finisher= $collector->finisher();
 
+    $elements= $this->elements;
     $return= $collector->supplier()->__invoke();
     if (Functions::$CONSUME_WITH_KEY->isInstance($accumulator)) {
       foreach ($this->elements as $key => $element) {
+        if ($this->error) throw $this->error;
         $accumulator($return, $element, $key);
       }
     } else {
       foreach ($this->elements as $element) {
+        if ($this->error) throw $this->error;
         $accumulator($return, $element);
       }
     }
@@ -240,15 +252,30 @@ class Sequence implements \lang\Value, \IteratorAggregate {
     $i= 0;
     if (null !== $args) {
       $inv= Functions::$RECV->newInstance($consumer);
-      foreach ($this->elements as $element) { $inv($element, ...$args); $i++; }
+      foreach ($this->elements as $element) {
+        if ($this->error) throw $this->error;
+        $inv($element, ...$args);
+        $i++;
+      }
     } else if (Functions::$RECV_WITH_KEY->isInstance($consumer)) {
       $inv= Functions::$RECV_WITH_KEY->cast($consumer);
-      foreach ($this->elements as $key => $element) { $inv($element, $key); $i++; }
+      foreach ($this->elements as $key => $element) {
+        if ($this->error) throw $this->error;
+        $inv($element, $key);
+        $i++;
+      }
     } else if (null !== $consumer) {
       $inv= Functions::$RECV->newInstance($consumer);
-      foreach ($this->elements as $element) { $inv($element); $i++; }
+      foreach ($this->elements as $element) {
+        if ($this->error) throw $this->error;
+        $inv($element);
+        $i++;
+      }
     } else {
-      foreach ($this->elements as $element) { $i++; }
+      foreach ($this->elements as $element) {
+        if ($this->error) throw $this->error;
+        $i++;
+      }
     }
     return $i;
   }
@@ -261,34 +288,36 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function limit($arg) {
+    $elements= $this->elements;
+
     if (is_numeric($arg)) {
       $max= (int)$arg;
-      $f= function() use($max) {
+      $f= function() use($elements, $max) {
         $i= 0;
-        foreach ($this->elements as $key => $element) {
+        foreach ($elements as $key => $element) {
           if (++$i > $max) break;
           yield $key => $element;
         }
       };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($arg)) {
       $limit= Functions::$APPLY_WITH_KEY->cast($arg);
-      $f= function() use($limit) {
-        foreach ($this->elements as $key => $element) {
+      $f= function() use($elements, $limit) {
+        foreach ($elements as $key => $element) {
           if ($limit($element, $key)) break;
           yield $key => $element;
         }
       };
     } else {
       $limit= Functions::$APPLY->newInstance($arg);
-      $f= function() use($limit) {
-        foreach ($this->elements as $key => $element) {
+      $f= function() use($elements, $limit) {
+        foreach ($elements as $key => $element) {
           if ($limit($element)) break;
           yield $key => $element;
         }
       };
     }
-
-    return new self($f());
+    $this->elements= $f();
+    return $this;
   }
 
   /**
@@ -299,19 +328,21 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function skip($arg) {
+    $elements= $this->elements;
+
     if (is_numeric($arg)) {
       $max= (int)$arg;
-      $f= function() use($max) {
+      $f= function() use($elements, $max) {
         $i= 0;
-        foreach ($this->elements as $key => $element) {
+        foreach ($elements as $key => $element) {
           if (++$i > $max) yield $key => $element;
         }
       };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($arg)) {
       $skip= Functions::$APPLY_WITH_KEY->cast($arg);
-      $f= function() use($skip) {
+      $f= function() use($elements, $skip) {
         $skipping= true;
-        foreach ($this->elements as $key => $element) {
+        foreach ($elements as $key => $element) {
           if ($skipping) {
             if ($skip($element, $key)) continue;
             $skipping= false;
@@ -321,9 +352,9 @@ class Sequence implements \lang\Value, \IteratorAggregate {
       };
     } else {
       $skip= Functions::$APPLY->newInstance($arg);
-      $f= function() use($skip) {
+      $f= function() use($elements, $skip) {
         $skipping= true;
-        foreach ($this->elements as $key => $element) {
+        foreach ($elements as $key => $element) {
           if ($skipping) {
             if ($skip($element)) continue;
             $skipping= false;
@@ -332,8 +363,8 @@ class Sequence implements \lang\Value, \IteratorAggregate {
         }
       };
     }
-
-    return new self($f());
+    $this->elements= $f();
+    return $this;
   }
 
   /**
@@ -344,29 +375,53 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function filter($predicate) {
+    $elements= $this->elements;
+
     if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
-      $f= function() use($predicate) {
-        foreach ($this->elements as $key => $element) {
-          if ($predicate->accept($element)) yield $key => $element;
+      $f= function() use($elements, $predicate) {
+        foreach ($elements as $key => $element) {
+          try {
+            if ($predicate->accept($element)) yield $key => $element;
+          } catch (\Throwable $t) {
+            $this->error= $t;
+          } catch (\Exception $e) {
+            $this->error= $e;
+          }
         }
       };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($predicate)) {
       $filter= Functions::$APPLY_WITH_KEY->cast($predicate);
-      $f= function() use($filter) {
-        foreach ($this->elements as $key => $element) {
-          if ($filter($element, $key)) yield $key => $element;
+      $f= function() use($elements, $filter) {
+        foreach ($elements as $key => $element) {
+          $keep= true;
+          try {
+            $keep= $filter($element, $key);
+          } catch (\Throwable $t) {
+            $this->error= $t;
+          } catch (\Exception $e) {
+            $this->error= $e;
+          }
+          $keep && yield $key => $element;
         }
       };
     } else {
       $filter= Functions::$APPLY->newInstance($predicate);
-      $f= function() use($filter) {
-        foreach ($this->elements as $key => $element) {
-          if ($filter($element)) yield $key => $element;
+      $f= function() use($elements, $filter) {
+        foreach ($elements as $key => $element) {
+          $keep= true;
+          try {
+            $keep= $filter($element);
+          } catch (\Throwable $t) {
+            $this->error= $t;
+          } catch (\Exception $e) {
+            $this->error= $e;
+          }
+          $keep && yield $key => $element;
         }
       };
     }
-
-    return new self($f());
+    $this->elements= $f();
+    return $this;
   }
 
   /**
@@ -377,33 +432,49 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function map($function) {
+    $elements= $this->elements;
+
     if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
-      $mapper= Functions::$APPLY_WITH_KEY->cast($function);
-      $f= function() use($mapper) {
-        foreach ($this->elements as $key => $element) {
-          $mapped= $mapper($element, $key);
+      $m= Functions::$APPLY_WITH_KEY->cast($function);
+      $f= function() use($elements, $m) {
+        foreach ($elements as $key => $element) {
+          $mapped= null;
+          try {
+            $mapped= $m($element, $key);
+          } catch (\Throwable $t) {
+            $this->error= $t;
+          } catch (\Exception $e) {
+            $this->error= $e;
+          }
           if ($mapped instanceof \Generator) {
-            foreach ($mapped as $key => $value) { yield $key => $value; }
+            foreach ($mapped as $k => $v) { yield $k => $v; }
           } else {
             yield $key => $mapped;
           }
         }
       };
     } else {
-      $mapper= Functions::$APPLY->newInstance($function);
-      $f= function() use($mapper) {
-        foreach ($this->elements as $key => $element) {
-          $mapped= $mapper($element);
+      $m= Functions::$APPLY->newInstance($function);
+      $f= function() use($elements, $m) {
+        foreach ($elements as $key => $element) {
+          $mapped= null;
+          try {
+            $mapped= $m($element);
+          } catch (\Throwable $t) {
+            $this->error= $t;
+          } catch (\Exception $e) {
+            $this->error= $e;
+          }
           if ($mapped instanceof \Generator) {
-            foreach ($mapped as $key => $value) { yield $key => $value; }
+            foreach ($mapped as $k => $v) { yield $k => $v; }
           } else {
             yield $key => $mapped;
           }
         }
       };
     }
-
-    return new self($f());
+    $this->elements= $f();
+    return $this;
   }
 
   /**
@@ -415,29 +486,31 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function flatten($function= null) {
+    $elements= $this->elements;
+
     if (null === $function) {
-      $f= function() {
-        foreach ($this->elements as $element) {
+      $f= function() use($elements) {
+        foreach ($elements as $element) {
           foreach ($element as $k => $v) { yield $k => $v;  }
         }
       };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
       $mapper= Functions::$APPLY_WITH_KEY->cast($function);
-      $f= function() use($mapper) {
-        foreach ($this->elements as $key => $element) {
+      $f= function() use($elements, $mapper) {
+        foreach ($elements as $key => $element) {
           foreach ($mapper($element, $key) as $k => $v) { yield $k => $v; }
         }
       };
     } else {
       $mapper= Functions::$APPLY->newInstance($function);
-      $f= function() use($mapper) {
-        foreach ($this->elements as $key => $element) {
+      $f= function() use($elements, $mapper) {
+        foreach ($elements as $key => $element) {
           foreach ($mapper($element) as $k => $v) { yield $k => $v; }
         }
       };
     }
-
-    return new self($f());
+    $this->elements= $f();
+    return $this;
   }
 
   /**
@@ -450,33 +523,53 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function peek($action, $args= null) {
+    $elements= $this->elements;
+
     if (null !== $args) {
       $peek= Functions::$RECV->newInstance($action);
-      $f= function() use($peek, $args) {
-        foreach ($this->elements as $key => $element) {
-          $peek($element, ...$args);
+      $f= function() use($elements, $peek, $args) {
+        foreach ($elements as $key => $element) {
+          try {
+            $peek($element, ...$args);
+          } catch (\Throwable $t) {
+            $this->error= $t;
+          } catch (\Exception $e) {
+            $this->error= $e;
+          }
           yield $key => $element;
         }
       };
     } else if (Functions::$RECV_WITH_KEY->isInstance($action)) {
       $peek= Functions::$RECV_WITH_KEY->cast($action);
-      $f= function() use($peek) {
-        foreach ($this->elements as $key => $element) {
-          $peek($element, $key);
+      $f= function() use($elements, $peek) {
+        foreach ($elements as $key => $element) {
+          try {
+            $peek($element, $key);
+          } catch (\Throwable $t) {
+            $this->error= $t;
+          } catch (\Exception $e) {
+            $this->error= $e;
+          }
           yield $key => $element;
         }
       };
     } else {
       $peek= Functions::$RECV->newInstance($action);
-      $f= function() use($peek) {
-        foreach ($this->elements as $key => $element) {
-          $peek($element);
+      $f= function() use($elements, $peek) {
+        foreach ($elements as $key => $element) {
+          try {
+            $peek($element);
+          } catch (\Throwable $t) {
+            $this->error= $t;
+          } catch (\Exception $e) {
+            $this->error= $e;
+          }
           yield $key => $element;
         }
       };
     }
-
-    return new self($f());
+    $this->elements= $f();
+    return $this;
   }
 
   /**
@@ -492,26 +585,39 @@ class Sequence implements \lang\Value, \IteratorAggregate {
     $accumulator= $collector->accumulator();
     $finisher= $collector->finisher();
 
+    $elements= $this->elements;
     $return= $collector->supplier()->__invoke();
     if (Functions::$CONSUME_WITH_KEY->isInstance($accumulator)) {
-      $f= function() use(&$return, $accumulator, $finisher) {
-        foreach ($this->elements as $key => $element) {
-          $accumulator($return, $element, $key);
+      $f= function() use($elements, &$return, $accumulator, $finisher) {
+        foreach ($elements as $key => $element) {
+          try {
+            $accumulator($return, $element, $key);
+          } catch (\Throwable $t) {
+            $this->error= $t;
+          } catch (\Exception $e) {
+            $this->error= $e;
+          }
           yield $key => $element;
         }
         $finisher && $return= $finisher($return);
       };
     } else {
-      $f= function() use(&$return, $accumulator, $finisher) {
-        foreach ($this->elements as $key => $element) {
-          $accumulator($return, $element);
+      $f= function() use($elements, &$return, $accumulator, $finisher) {
+        foreach ($elements as $key => $element) {
+          try {
+            $accumulator($return, $element);
+          } catch (\Throwable $t) {
+            $this->error= $t;
+          } catch (\Exception $e) {
+            $this->error= $e;
+          }
           yield $key => $element;
         }
         $finisher && $return= $finisher($return);
       };
     }
-
-    return new self($f());
+    $this->elements= $f();
+    return $this;
   }
 
   /**
@@ -523,14 +629,15 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    * @return self
    */
   public function counting(&$count) {
-    $f= function() use(&$count) {
-      foreach ($this->elements as $key => $element) {
+    $elements= $this->elements;
+    $f= function() use($elements, &$count) {
+      foreach ($elements as $key => $element) {
         $count++;
         yield $key => $element;
       }
     };
-
-    return new self($f());
+    $this->elements= $f();
+    return $this;
   }
 
   /**
@@ -541,16 +648,44 @@ class Sequence implements \lang\Value, \IteratorAggregate {
    */
   public function distinct($function= null) {
     $hash= Functions::$APPLY->newInstance($function ?: 'util.Objects::hashOf');
-    return self::of(function() use($hash) {
+    $elements= $this->elements;
+    $f= function() use($elements, $hash) {
       $set= [];
-      foreach ($this->elements as $e) {
+      foreach ($elements as $e) {
         $h= $hash($e);
         if (!isset($set[$h])) {
           $set[$h]= true;
           yield $e;
         }
       }
-    });
+    };
+    $this->elements= $f();
+    return $this;
+  }
+
+  /**
+   * Catches an exception
+   *
+   * @param  function(lang.Throwable): var $handler
+   * @return self
+   */
+  public function catch($handler) {
+    $elements= $this->elements;
+    $f= function() use($elements, $handler) {
+      foreach ($elements as $key => $element) {
+        if ($this->error) {
+          $result= $handler($this->error);
+          $this->error= null;
+          if ($result instanceof \Generator) {
+            foreach ($result as $k => $v) { yield $k => $v; }
+          }
+        } else {
+          yield $key => $element;
+        }
+      }
+    };
+    $this->elements= $f();
+    return $this;
   }
 
   /**

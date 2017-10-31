@@ -10,7 +10,7 @@ class PeekTest extends AbstractSequenceTest {
 
   #[@test, @expect(IllegalArgumentException::class), @values(['@non-existant-func@'])]
   public function invalid($arg) {
-    Sequence::$EMPTY->peek($arg);
+    Sequence::empty()->peek($arg);
   }
 
   #[@test]

@@ -28,12 +28,12 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test]
   public function empty_sequence() {
-    $this->assertSequence([], Sequence::$EMPTY);
+    $this->assertSequence([], Sequence::empty());
   }
 
   #[@test]
   public function toArray_for_empty_sequence() {
-    $this->assertEquals([], Sequence::$EMPTY->toArray());
+    $this->assertEquals([], Sequence::empty()->toArray());
   }
 
   #[@test, @values('util.data.unittest.Enumerables::validArrays')]
@@ -51,7 +51,7 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test]
   public function toMap_for_empty_sequence() {
-    $this->assertEquals([], Sequence::$EMPTY->toMap());
+    $this->assertEquals([], Sequence::empty()->toMap());
   }
 
   #[@test, @values('util.data.unittest.Enumerables::validMaps')]
@@ -186,7 +186,7 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test]
   public function toString_for_empty_sequence() {
-    $this->assertEquals('util.data.Sequence<EMPTY>', Sequence::$EMPTY->toString());
+    $this->assertEquals('util.data.Sequence<EMPTY>', Sequence::empty()->toString());
   }
 
   #[@test]

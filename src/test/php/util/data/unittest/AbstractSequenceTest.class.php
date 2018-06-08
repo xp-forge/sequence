@@ -1,6 +1,5 @@
 <?php namespace util\data\unittest;
 
-use lang\Object;
 use util\data\Sequence;
 use util\data\Collector;
 

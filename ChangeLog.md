@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 8.0.2 / 2018-06-08
+
+* Fixed PHP 7.2 compatibility - @thekid
+
 ## 8.0.1 / 2017-07-11
 
 * Fixed `each()` and `peek()` not being able to work with functions

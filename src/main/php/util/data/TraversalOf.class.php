@@ -10,7 +10,7 @@
 class TraversalOf extends Iterator {
 
   /**
-   * Rewind
+   * Rewind. Rethrows PHP7's Throwable and PHP5's Exception base classes.
    *
    * @return void
    * @throws util.data.CannotReset
@@ -18,10 +18,10 @@ class TraversalOf extends Iterator {
   public function rewind() {
     try {
       $this->it->rewind();
-    } catch (\Throwable $e) {   // PHP7
+    } catch (\Throwable $e) {
       throw new CannotReset($e->getMessage(), $e);
-    } catch (\Exception $e) {   // PHP5
-      throw new CannotReset($e->getMessage(), $e);
+    } catch (\Exception $e) {                       // @codeCoverageIgnore
+      throw new CannotReset($e->getMessage(), $e);  // @codeCoverageIgnore
     }
   }
 }

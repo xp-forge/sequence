@@ -1,8 +1,9 @@
 <?php namespace util\data\unittest;
 
-use util\data\Optional;
 use lang\IllegalStateException;
+use util\Filter;
 use util\NoSuchElementException;
+use util\data\Optional;
 
 class OptionalTest extends \unittest\TestCase {
 
@@ -106,6 +107,14 @@ class OptionalTest extends \unittest\TestCase {
   #[@test]
   public function filter_returns_empty_when_predicate_does_not_match() {
     $this->assertEquals(Optional::$EMPTY, Optional::of('test')->filter('is_array'));
+  }
+
+  #[@test]
+  public function filter_with_filter_instance() {
+    $filter= newinstance(Filter::class, [], [
+      'accept' => function($value) { return preg_match('/^www/', $value); }
+    ]);
+    $this->assertEquals('www.example.com', Optional::of('www.example.com')->filter($filter)->get());
   }
 
   #[@test]

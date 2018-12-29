@@ -1,6 +1,7 @@
 <?php namespace util\data;
 
 use util\NoSuchElementException;
+use util\XPIterator;
 
 /**
  * Iterates over Sequence instances
@@ -8,7 +9,7 @@ use util\NoSuchElementException;
  * @see  xp://util.data.Sequence#iterator
  * @test xp://util.data.unittest.SequenceIteratorTest
  */
-class SequenceIterator implements \util\XPIterator, \IteratorAggregate {
+class SequenceIterator implements XPIterator, \IteratorAggregate {
   private $it;
 
   /**

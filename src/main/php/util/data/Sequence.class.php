@@ -1,11 +1,12 @@
 <?php namespace util\data;
 
-use util\Objects;
-use util\Comparator;
-use util\Filter;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 use lang\Throwable;
+use lang\Value;
+use util\Comparator;
+use util\Filter;
+use util\Objects;
 
 /**
  * Sequences API for PHP
@@ -23,7 +24,7 @@ use lang\Throwable;
  * @test xp://util.data.unittest.SequenceResultSetTest
  * @test xp://util.data.unittest.SequenceSkipTest
  */
-class Sequence implements \lang\Value, \IteratorAggregate {
+class Sequence implements Value, \IteratorAggregate {
   public static $EMPTY;
 
   protected $elements;

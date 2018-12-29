@@ -1,7 +1,8 @@
 <?php namespace util\data;
 
-use util\NoSuchElementException;
+use lang\Value;
 use util\Filter;
+use util\NoSuchElementException;
 use util\Objects;
 
 /**
@@ -9,7 +10,7 @@ use util\Objects;
  *
  * @test  xp://util.data.unittest.OptionalTest
  */
-class Optional implements \lang\Value, \IteratorAggregate {
+class Optional implements Value, \IteratorAggregate {
   public static $EMPTY;
 
   protected $value;

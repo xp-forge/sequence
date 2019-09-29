@@ -1,12 +1,12 @@
 <?php namespace util\data\unittest;
 
-use util\data\Sequence;
-use util\data\Collectors;
-use util\data\Collector;
-use util\collections\Vector;
+use lang\XPClass;
 use util\collections\HashSet;
 use util\collections\HashTable;
-use lang\XPClass;
+use util\collections\Vector;
+use util\data\Collector;
+use util\data\Collectors;
+use util\data\Sequence;
 
 class CollectorsTest extends \unittest\TestCase {
   private $people;
@@ -279,5 +279,17 @@ class CollectorsTest extends \unittest\TestCase {
         return stristr($e, 'Test');
       }))
     );
+  }
+
+  #[@test]
+  public function collecting_with_key() {
+    Sequence::of($this->people)
+      ->collecting($result, new Collector(
+        function() { return []; },
+        function(&$return, $element, $key) { $return[$element->department()][]= $key; }
+      ))
+      ->each()
+    ;
+    $this->assertEquals(['B' => [1549], 'I' => [1552, 6100]], $result);
   }
 }

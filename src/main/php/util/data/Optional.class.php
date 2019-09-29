@@ -16,9 +16,7 @@ class Optional implements Value, \IteratorAggregate {
   protected $value;
   protected $present;
 
-  static function __static() {
-    self::$EMPTY= new self(null, false);
-  }
+  static function __static() { self::$EMPTY= new self(null, false); }
 
   /**
    * Create a given Optional instance

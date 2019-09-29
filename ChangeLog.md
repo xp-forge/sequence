@@ -3,6 +3,11 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 8.0.3 / 2019-09-29
+
+* Added PHP 7.4 compatibility - @thekid
+* Increased test coverage to 100% - @thekid
+
 ## 8.0.2 / 2018-06-08
 
 * Fixed PHP 7.2 compatibility - @thekid

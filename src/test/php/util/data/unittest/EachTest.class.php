@@ -1,10 +1,10 @@
 <?php namespace util\data\unittest;
 
-use util\data\Sequence;
 use io\streams\MemoryOutputStream;
-use util\cmd\Console;
 use lang\IllegalArgumentException;
 use unittest\actions\VerifyThat;
+use util\cmd\Console;
+use util\data\Sequence;
 
 class EachTest extends AbstractSequenceTest {
 

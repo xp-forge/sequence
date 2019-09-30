@@ -1,8 +1,8 @@
 <?php namespace util\data\unittest;
 
+use lang\IllegalArgumentException;
 use util\Filter;
 use util\data\Sequence;
-use lang\IllegalArgumentException;
 
 class SequenceFilteringTest extends AbstractSequenceTest {
 

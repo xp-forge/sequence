@@ -1,8 +1,7 @@
 <?php namespace util\data\unittest;
 
-use util\data\TraversalOf;
-use util\data\CannotReset;
 use lang\IllegalStateException;
+use util\data\{CannotReset, TraversalOf};
 
 class TraversalOfTest extends \unittest\TestCase {
 

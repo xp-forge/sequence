@@ -1,8 +1,8 @@
 <?php namespace util\data\unittest;
 
-use util\data\Sequence;
-use unittest\actions\VerifyThat;
 use lang\IllegalArgumentException;
+use unittest\actions\VerifyThat;
+use util\data\Sequence;
 
 class SequenceMappingTest extends AbstractSequenceTest {
 

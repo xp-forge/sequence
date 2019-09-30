@@ -1,12 +1,8 @@
 <?php namespace util\data\unittest;
 
 use lang\XPClass;
-use util\collections\HashSet;
-use util\collections\HashTable;
-use util\collections\Vector;
-use util\data\Collector;
-use util\data\Collectors;
-use util\data\Sequence;
+use util\collections\{HashSet, HashTable, Vector};
+use util\data\{Collector, Collectors, Sequence};
 
 class CollectorsTest extends \unittest\TestCase {
   private $people;

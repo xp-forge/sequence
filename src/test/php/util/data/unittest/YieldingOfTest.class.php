@@ -1,7 +1,6 @@
 <?php namespace util\data\unittest;
 
-use util\data\YieldingOf;
-use util\data\CannotReset;
+use util\data\{CannotReset, YieldingOf};
 
 class YieldingOfTest extends \unittest\TestCase {
 

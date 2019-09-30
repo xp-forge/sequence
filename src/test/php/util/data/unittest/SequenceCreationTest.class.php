@@ -1,7 +1,7 @@
 <?php namespace util\data\unittest;
 
-use util\data\Sequence;
 use lang\IllegalArgumentException;
+use util\data\Sequence;
 
 /**
  * Tests the three Sequence class' creation methods `of()`, `iterate()`

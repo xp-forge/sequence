@@ -1,9 +1,7 @@
 <?php namespace util\data\unittest;
 
-use util\data\Sequence;
-use util\XPIterator;
-use util\NoSuchElementException;
-use util\data\CannotReset;
+use util\{NoSuchElementException, XPIterator};
+use util\data\{CannotReset, Sequence};
 
 class SequenceIteratorTest extends AbstractSequenceTest {
 

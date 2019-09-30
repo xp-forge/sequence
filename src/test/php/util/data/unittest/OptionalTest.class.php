@@ -1,8 +1,7 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalStateException;
-use util\Filter;
-use util\NoSuchElementException;
+use util\{Filter, NoSuchElementException};
 use util\data\Optional;
 
 class OptionalTest extends \unittest\TestCase {

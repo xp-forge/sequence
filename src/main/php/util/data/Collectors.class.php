@@ -1,9 +1,7 @@
 <?php namespace util\data;
 
 use lang\XPClass;
-use util\collections\Vector;
-use util\collections\HashTable;
-use util\collections\HashSet;
+use util\collections\{HashSet, HashTable, Vector};
 
 /**
  * Collector factory

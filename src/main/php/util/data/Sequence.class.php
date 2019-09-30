@@ -1,12 +1,7 @@
 <?php namespace util\data;
 
-use lang\IllegalArgumentException;
-use lang\IllegalStateException;
-use lang\Throwable;
-use lang\Value;
-use util\Comparator;
-use util\Filter;
-use util\Objects;
+use lang\{IllegalArgumentException, IllegalStateException, Throwable, Value};
+use util\{Comparator, Filter, Objects};
 
 /**
  * Sequences API for PHP

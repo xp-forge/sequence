@@ -1,8 +1,7 @@
 <?php namespace util\data\unittest;
 
-use util\data\Enumeration;
-use util\data\Sequence;
 use lang\IllegalArgumentException;
+use util\data\{Enumeration, Sequence};
 
 class EnumerationTest extends \unittest\TestCase {
 

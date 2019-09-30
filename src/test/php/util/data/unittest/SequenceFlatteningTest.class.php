@@ -1,8 +1,7 @@
 <?php namespace util\data\unittest;
 
-use util\data\Sequence;
-use util\data\Optional;
 use lang\IllegalArgumentException;
+use util\data\{Optional, Sequence};
 
 class SequenceFlatteningTest extends AbstractSequenceTest {
 

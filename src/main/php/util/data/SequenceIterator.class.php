@@ -1,7 +1,6 @@
 <?php namespace util\data;
 
-use util\NoSuchElementException;
-use util\XPIterator;
+use util\{NoSuchElementException, XPIterator};
 
 /**
  * Iterates over Sequence instances

@@ -1,7 +1,6 @@
 <?php namespace util\data\unittest;
 
-use util\data\ContinuationOf;
-use util\data\Sequence;
+use util\data\{ContinuationOf, Sequence};
 
 class ContinuationOfTest extends \unittest\TestCase {
 

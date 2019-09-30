@@ -1,9 +1,7 @@
 <?php namespace util\data;
 
 use lang\Value;
-use util\Filter;
-use util\NoSuchElementException;
-use util\Objects;
+use util\{Filter, NoSuchElementException, Objects};
 
 /**
  * An optional

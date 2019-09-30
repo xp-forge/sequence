@@ -1,9 +1,6 @@
 <?php namespace util\data;
 
-use lang\FunctionType;
-use lang\Type;
-use lang\Primitive;
-use lang\Wildcard;
+use lang\{FunctionType, Primitive, Type, Wildcard};
 
 /**
  * Function types used throughout library

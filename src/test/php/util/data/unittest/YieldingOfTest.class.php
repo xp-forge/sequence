@@ -7,6 +7,7 @@ class YieldingOfTest extends \unittest\TestCase {
 
   /** @return iterable */
   private function fixtures() {
+    yield [function() { if (false) yield; }, []];
     yield [function() { yield; }, [null]];
     yield [function() { yield 1; }, [1]];
     yield [function() { yield 1; yield 2; }, [1, 2]];

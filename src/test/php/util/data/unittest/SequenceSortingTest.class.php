@@ -1,8 +1,9 @@
 <?php namespace util\data\unittest;
 
-use util\data\Sequence;
-use util\Date;
+use unittest\Assert;
 use util\Comparator;
+use util\Date;
+use util\data\Sequence;
 
 class SequenceSortingTest extends AbstractSequenceTest {
 

@@ -1,9 +1,10 @@
 <?php namespace util\data\unittest;
 
-use util\data\Sequence;
+use unittest\Assert;
 use util\data\Collector;
+use util\data\Sequence;
 
-abstract class AbstractSequenceTest extends \unittest\TestCase {
+abstract class AbstractSequenceTest {
 
   /**
    * Assertion helper
@@ -14,7 +15,7 @@ abstract class AbstractSequenceTest extends \unittest\TestCase {
    * @throws unittest.AssertionFailedError
    */
   protected function assertSequence($expected, $sequence, $message= '!=') {
-    $this->assertEquals($expected, $sequence->toArray(), $message);
+    Assert::equals($expected, $sequence->toArray(), $message);
   }
 
   /**

@@ -1,5 +1,6 @@
 <?php namespace util\data\unittest;
 
+use unittest\Assert;
 use util\data\Sequence;
 
 class SequenceSkipTest extends AbstractSequenceTest {

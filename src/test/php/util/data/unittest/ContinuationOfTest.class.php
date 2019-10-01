@@ -1,16 +1,17 @@
 <?php namespace util\data\unittest;
 
+use unittest\Assert;
 use util\data\ContinuationOf;
 use util\data\Sequence;
 
-class ContinuationOfTest extends \unittest\TestCase {
+class ContinuationOfTest {
 
   #[@test, @values('util.data.unittest.Enumerables::validArrays')]
   public function at_beginning($input) {
     $it= Sequence::of($input)->getIterator();
     $it->rewind();
 
-    $this->assertEquals([0 => 1, 1 => 2, 2 => 3], iterator_to_array(new ContinuationOf($it)));
+    Assert::equals([0 => 1, 1 => 2, 2 => 3], iterator_to_array(new ContinuationOf($it)));
   }
 
   #[@test, @values('util.data.unittest.Enumerables::validArrays')]
@@ -19,7 +20,7 @@ class ContinuationOfTest extends \unittest\TestCase {
     $it->rewind();
     $it->next();
 
-    $this->assertEquals([1 => 2, 2 => 3], iterator_to_array(new ContinuationOf($it)));
+    Assert::equals([1 => 2, 2 => 3], iterator_to_array(new ContinuationOf($it)));
   }
 
   #[@test, @values('util.data.unittest.Enumerables::validArrays')]
@@ -30,6 +31,6 @@ class ContinuationOfTest extends \unittest\TestCase {
     $it->next();
     $it->next();
 
-    $this->assertEquals([], iterator_to_array(new ContinuationOf($it)));
+    Assert::equals([], iterator_to_array(new ContinuationOf($it)));
   }
 }

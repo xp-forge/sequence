@@ -1,6 +1,8 @@
 <?php namespace util\data\unittest;
 
-class Person implements \lang\Value {
+use lang\Value;
+
+class Person implements Value {
   private $id, $name;
 
   /**

@@ -1,6 +1,8 @@
 <?php namespace util\data\unittest;
 
-class Employee implements \lang\Value {
+use lang\Value;
+
+class Employee implements Value {
   protected $id;
   protected $name;
   protected $department;

@@ -1,8 +1,9 @@
 <?php namespace util\data\unittest;
 
+use unittest\Assert;
 use util\data\{Aggregations, Sequence};
 
-class AggregationsTest extends \unittest\TestCase {
+class AggregationsTest {
 
   #[@test]
   public function min_max_sum_average_and_count_for_empty_sequence() {
@@ -14,11 +15,11 @@ class AggregationsTest extends \unittest\TestCase {
       ->collecting($count, Aggregations::count())
       ->each()
     ;
-    $this->assertNull($min);
-    $this->assertNull($max);
-    $this->assertNull($average);
-    $this->assertNull($sum);
-    $this->assertEquals(0, $count);
+    Assert::null($min);
+    Assert::null($max);
+    Assert::null($average);
+    Assert::null($sum);
+    Assert::equals(0, $count);
   }
 
   #[@test]
@@ -31,10 +32,10 @@ class AggregationsTest extends \unittest\TestCase {
       ->collecting($count, Aggregations::count())
       ->each()
     ;
-    $this->assertEquals(1, $min);
-    $this->assertEquals(4, $max);
-    $this->assertEquals(2.5, $average);
-    $this->assertEquals(10, $sum);
-    $this->assertEquals(4, $count);
+    Assert::equals(1, $min);
+    Assert::equals(4, $max);
+    Assert::equals(2.5, $average);
+    Assert::equals(10, $sum);
+    Assert::equals(4, $count);
   }
 }

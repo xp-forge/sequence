@@ -1,5 +1,6 @@
 <?php namespace util\data\unittest;
 
+use unittest\Assert;
 use util\data\{Collector, Sequence};
 
 class SequenceCollectionTest extends AbstractSequenceTest {
@@ -10,7 +11,7 @@ class SequenceCollectionTest extends AbstractSequenceTest {
       function() { return ['total' => 0, 'sum' => 0]; },
       function(&$result, $arg) { $result['total']++; $result['sum']+= $arg; }
     ));
-    $this->assertEquals(2.5, $result['sum'] / $result['total']);
+    Assert::equals(2.5, $result['sum'] / $result['total']);
   }
 
   #[@test]
@@ -20,6 +21,6 @@ class SequenceCollectionTest extends AbstractSequenceTest {
       function(&$result, $arg) { $result.= ', '.$arg; },
       function($result) { return substr($result, 2); }
     ));
-    $this->assertEquals('a, b, c', $result);
+    Assert::equals('a, b, c', $result);
   }
 }

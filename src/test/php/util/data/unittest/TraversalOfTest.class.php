@@ -1,9 +1,10 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalStateException;
+use unittest\Assert;
 use util\data\{CannotReset, TraversalOf};
 
-class TraversalOfTest extends \unittest\TestCase {
+class TraversalOfTest {
 
   #[@test, @values([
   #  [[]],
@@ -11,7 +12,7 @@ class TraversalOfTest extends \unittest\TestCase {
   #  [['key' => 'value']]
   #])]
   public function iteration($input) {
-    $this->assertEquals($input, iterator_to_array(new TraversalOf(new \ArrayIterator($input))));
+    Assert::equals($input, iterator_to_array(new TraversalOf(new \ArrayIterator($input))));
   }
 
   #[@test, @values([

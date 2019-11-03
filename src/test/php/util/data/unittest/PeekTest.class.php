@@ -2,6 +2,7 @@
 
 use io\streams\MemoryOutputStream;
 use lang\IllegalArgumentException;
+use unittest\Assert;
 use unittest\actions\VerifyThat;
 use util\cmd\Console;
 use util\data\Sequence;
@@ -21,7 +22,7 @@ class PeekTest extends AbstractSequenceTest {
       ->peek(function($e) use(&$debug) { $debug[]= $e; })
       ->each()
     ;
-    $this->assertEquals([1, 3], $debug);
+    Assert::equals([1, 3], $debug);
   }
 
   #[@test]
@@ -32,7 +33,7 @@ class PeekTest extends AbstractSequenceTest {
       ->peek(function($e, $key) use(&$debug) { $debug[]= $key; })
       ->each()
     ;
-    $this->assertEquals([0, 2], $debug);
+    Assert::equals([0, 2], $debug);
   }
 
   #[@test]
@@ -49,7 +50,7 @@ class PeekTest extends AbstractSequenceTest {
     }
 
     Console::$out->setStream($orig);    
-    $this->assertEquals('1234', $out->getBytes());
+    Assert::equals('1234', $out->getBytes());
   }
 
   #[@test]
@@ -60,7 +61,7 @@ class PeekTest extends AbstractSequenceTest {
 
     $bytes= ob_get_contents();
     ob_end_clean();
-    $this->assertEquals('1234', $bytes);
+    Assert::equals('1234', $bytes);
   }
 
   #[@test, @values('noncallables'), @expect(IllegalArgumentException::class)]
@@ -72,6 +73,6 @@ class PeekTest extends AbstractSequenceTest {
   #  return PHP_VERSION_ID >= 70100 && !defined('HHVM_VERSION_ID');
   #})])]
   public function each_with_void() {
-    $this->assertEquals(4, Sequence::of([1, 2, 3, 4])->peek(eval('return function(int $e): void { };'))->each());
+    Assert::equals(4, Sequence::of([1, 2, 3, 4])->peek(eval('return function(int $e): void { };'))->each());
   }
 }

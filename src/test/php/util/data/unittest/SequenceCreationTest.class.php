@@ -1,6 +1,7 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalArgumentException;
+use unittest\Assert;
 use util\data\Sequence;
 
 /**
@@ -18,7 +19,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
 
   #[@test, @values('util.data.unittest.Enumerables::valid')]
   public function can_create_via_of($input, $name) {
-    $this->assertInstanceOf(Sequence::class, Sequence::of($input), $name);
+    Assert::instance(Sequence::class, Sequence::of($input), $name);
   }
 
   #[@test, @expect(IllegalArgumentException::class), @values('util.data.unittest.Enumerables::invalid')]
@@ -28,7 +29,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
 
   #[@test, @values('unaryops')]
   public function can_create_via_iterate($input, $name) {
-    $this->assertInstanceOf(Sequence::class, Sequence::iterate(0, $input), $name);
+    Assert::instance(Sequence::class, Sequence::iterate(0, $input), $name);
   }
 
   #[@test, @expect(IllegalArgumentException::class), @values('noncallables')]
@@ -38,7 +39,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
 
   #[@test, @values('suppliers')]
   public function can_create_via_generate($input) {
-    $this->assertInstanceOf(Sequence::class, Sequence::generate($input));
+    Assert::instance(Sequence::class, Sequence::generate($input));
   }
 
   #[@test, @expect(IllegalArgumentException::class), @values('noncallables')]
@@ -48,7 +49,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
 
   #[@test]
   public function passing_null_to_of_yields_an_empty_sequence() {
-    $this->assertEquals(Sequence::$EMPTY, Sequence::of(null));
+    Assert::equals(Sequence::$EMPTY, Sequence::of(null));
   }
 
   #[@test]

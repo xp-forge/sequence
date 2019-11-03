@@ -1,8 +1,9 @@
 <?php namespace util\data\unittest;
 
+use unittest\Assert;
 use util\data\{CannotReset, YieldingOf};
 
-class YieldingOfTest extends \unittest\TestCase {
+class YieldingOfTest {
 
   /** @return iterable */
   private function fixtures() {
@@ -15,7 +16,7 @@ class YieldingOfTest extends \unittest\TestCase {
 
   #[@test, @values('fixtures')]
   public function iteration($generator, $expected) {
-    $this->assertEquals($expected, iterator_to_array(new YieldingOf($generator())));
+    Assert::equals($expected, iterator_to_array(new YieldingOf($generator())));
   }
 
   #[@test, @values('fixtures')]

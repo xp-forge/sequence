@@ -1,8 +1,9 @@
 <?php namespace util\data\unittest;
 
-use util\data\Sequence;
-use unittest\actions\VerifyThat;
 use lang\IllegalArgumentException;
+use unittest\Assert;
+use unittest\actions\VerifyThat;
+use util\data\Sequence;
 
 class SequenceMappingTest extends AbstractSequenceTest {
 
@@ -25,14 +26,14 @@ class SequenceMappingTest extends AbstractSequenceTest {
   public function array_index_is_passed_to_function() {
     $keys= [];
     Sequence::of([1, 2, 3])->map(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->each();
-    $this->assertEquals([0, 1, 2], $keys);
+    Assert::equals([0, 1, 2], $keys);
   }
 
   #[@test]
   public function map_key_is_passed_to_function() {
     $keys= [];
     Sequence::of(['one' => 1, 'two' => 2, 'three' => 3])->map(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->each();
-    $this->assertEquals(['one', 'two', 'three'], $keys);
+    Assert::equals(['one', 'two', 'three'], $keys);
   }
 
   #[@test]
@@ -48,13 +49,13 @@ class SequenceMappingTest extends AbstractSequenceTest {
   public function with_generator() {
     $records= Sequence::of([['unit' => 'yellow', 'amount' => 20], ['unit' => 'blue', 'amount' => 19]]);
     $generator= function($record) { yield $record['unit'] => $record['amount']; };
-    $this->assertEquals(['yellow' => 20, 'blue' => 19], $records->map($generator)->toMap());
+    Assert::equals(['yellow' => 20, 'blue' => 19], $records->map($generator)->toMap());
   }
 
   #[@test]
   public function with_generator_and_key() {
     $records= Sequence::of(['color' => 'green', 'price' => 12.99]);
     $generator= function($value, $key) { yield strtoupper($key) => $value; };
-    $this->assertEquals(['COLOR' => 'green', 'PRICE' => 12.99], $records->map($generator)->toMap());
+    Assert::equals(['COLOR' => 'green', 'PRICE' => 12.99], $records->map($generator)->toMap());
   }
 }

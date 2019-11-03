@@ -1,9 +1,10 @@
 <?php namespace util\data\unittest;
 
-use util\data\Sequence;
-use util\XPIterator;
+use unittest\Assert;
 use util\NoSuchElementException;
+use util\XPIterator;
 use util\data\CannotReset;
+use util\data\Sequence;
 
 class SequenceIteratorTest extends AbstractSequenceTest {
 
@@ -23,17 +24,17 @@ class SequenceIteratorTest extends AbstractSequenceTest {
 
   #[@test]
   public function hasNext() {
-    $this->assertTrue(Sequence::of([1])->iterator()->hasNext());
+    Assert::true(Sequence::of([1])->iterator()->hasNext());
   }
 
   #[@test]
   public function next() {
-    $this->assertEquals(1, Sequence::of([1])->iterator()->next());
+    Assert::equals(1, Sequence::of([1])->iterator()->next());
   }
 
   #[@test]
   public function hasNext_returns_false_when_at_end_of_sequence() {
-    $this->assertFalse(Sequence::$EMPTY->iterator()->hasNext());
+    Assert::false(Sequence::$EMPTY->iterator()->hasNext());
   }
 
   #[@test, @expect(NoSuchElementException::class)]
@@ -43,7 +44,7 @@ class SequenceIteratorTest extends AbstractSequenceTest {
 
   #[@test, @values('util.data.unittest.Enumerables::validArrays')]
   public function iterator($input) {
-    $this->assertEquals([1, 2, 3], $this->iterated(Sequence::of($input)->iterator()));
+    Assert::equals([1, 2, 3], $this->iterated(Sequence::of($input)->iterator()));
   }
 
   #[@test, @values('util.data.unittest.Enumerables::fixedArrays')]

@@ -1,8 +1,9 @@
 <?php namespace util\data\unittest;
 
-use util\data\Sequence;
-use util\data\Optional;
 use lang\IllegalArgumentException;
+use unittest\Assert;
+use util\data\Optional;
+use util\data\Sequence;
 
 class SequenceFlatteningTest extends AbstractSequenceTest {
 
@@ -35,14 +36,14 @@ class SequenceFlatteningTest extends AbstractSequenceTest {
   public function array_index_is_passed_to_function() {
     $keys= [];
     Sequence::of([['a', 'b'], ['c', 'd']])->flatten(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->each();
-    $this->assertEquals([0, 1], $keys);
+    Assert::equals([0, 1], $keys);
   }
 
   #[@test]
   public function map_key_is_passed_to_function() {
     $keys= [];
     Sequence::of(['one' => [1], 'two' => [2], 'three' => [3]])->flatten(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->each();
-    $this->assertEquals(['one', 'two', 'three'], $keys);
+    Assert::equals(['one', 'two', 'three'], $keys);
   }
 
   #[@test]

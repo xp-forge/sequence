@@ -1,6 +1,7 @@
 <?php namespace util\data\unittest;
 
 use lang\XPClass;
+use unittest\Assert;
 use util\collections\HashSet;
 use util\collections\HashTable;
 use util\collections\Vector;
@@ -8,12 +9,13 @@ use util\data\Collector;
 use util\data\Collectors;
 use util\data\Sequence;
 
-class CollectorsTest extends \unittest\TestCase {
+class CollectorsTest {
   private $people;
 
   /**
    * Sets up test, initializing people member
    */
+  #[@before]
   public function setUp() {
     $this->people= [
       1549 => new Employee(1549, 'Timm', 'B', 15),
@@ -30,12 +32,12 @@ class CollectorsTest extends \unittest\TestCase {
    * @throws unittest.AssertionFailedError
    */
   private function assertHashTable($expected, $actual) {
-    $this->assertInstanceOf(HashTable::class, $actual);
+    Assert::instance(HashTable::class, $actual);
     $compare= [];
     foreach ($actual as $pair) {
       $compare[$pair->key]= $pair->value;
     }
-    return $this->assertEquals($expected, $compare);
+    return Assert::equals($expected, $compare);
   }
 
   /** @return var[][] */
@@ -72,7 +74,7 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test, @values('employeesName')]
   public function toList($nameOf) {
-    $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
+    Assert::equals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->map($nameOf)
       ->collect(Collectors::toList())
       ->elements()
@@ -81,7 +83,7 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test, @values('employeesName')]
   public function toList_with_extraction($nameOf) {
-    $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
+    Assert::equals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->collect(Collectors::toList($nameOf))
       ->elements()
     );
@@ -89,7 +91,7 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test, @values('employeesName')]
   public function toSet($nameOf) {
-    $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
+    Assert::equals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->map($nameOf)
       ->collect(Collectors::toSet())
       ->toArray()
@@ -98,7 +100,7 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test, @values('employeesName')]
   public function toSet_with_extraction($nameOf) {
-    $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
+    Assert::equals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->collect(Collectors::toSet($nameOf))
       ->toArray()
     );
@@ -106,7 +108,7 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test, @values('employeesName')]
   public function toCollection_with_HashSet_class($nameOf) {
-    $this->assertEquals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
+    Assert::equals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->map($nameOf)
       ->collect(Collectors::toCollection(XPClass::forName('util.collections.HashSet')))
       ->toArray()
@@ -120,7 +122,7 @@ class CollectorsTest extends \unittest\TestCase {
     $map[1552]= 'Alex';
     $map[6100]= 'Dude';
 
-    $this->assertEquals($map, Sequence::of($this->people)->collect(Collectors::toMap(
+    Assert::equals($map, Sequence::of($this->people)->collect(Collectors::toMap(
       function($e) { return $e->id(); },
       $nameOf
     )));
@@ -133,7 +135,7 @@ class CollectorsTest extends \unittest\TestCase {
     $map['Alex']= $this->people[1552];
     $map['Dude']= $this->people[6100];
 
-    $this->assertEquals($map, Sequence::of($this->people)->collect(Collectors::toMap(
+    Assert::equals($map, Sequence::of($this->people)->collect(Collectors::toMap(
       $nameOf,
       null
     )));
@@ -144,7 +146,7 @@ class CollectorsTest extends \unittest\TestCase {
     $map= new HashTable();
     $map['color']= 'green';
 
-    $this->assertEquals($map, Sequence::of(['color' => 'green'])->collect(Collectors::toMap()));
+    Assert::equals($map, Sequence::of(['color' => 'green'])->collect(Collectors::toMap()));
   }
 
   #[@test]
@@ -152,7 +154,7 @@ class CollectorsTest extends \unittest\TestCase {
     $map= new HashTable();
     $map['color']= 'GREEN';
 
-    $this->assertEquals($map, Sequence::of(['color' => 'green'])->collect(Collectors::toMap(
+    Assert::equals($map, Sequence::of(['color' => 'green'])->collect(Collectors::toMap(
       null,
       'strtoupper'
     )));
@@ -164,19 +166,19 @@ class CollectorsTest extends \unittest\TestCase {
       function() { return []; },
       function(&$result, $arg, $key) { $result[strtoupper($key)]= $arg; }
     ));
-    $this->assertEquals(['COLOR' => 'green', 'PRICE' => 12.99], $result);
+    Assert::equals(['COLOR' => 'green', 'PRICE' => 12.99], $result);
   }
 
   #[@test, @values('employeesYears')]
   public function summing_years($yearsOf) {
-    $this->assertEquals(33, Sequence::of($this->people)
+    Assert::equals(33, Sequence::of($this->people)
       ->collect(Collectors::summing($yearsOf))
     );
   }
 
   #[@test, @values('employeesYears')]
   public function summing_elements($yearsOf) {
-    $this->assertEquals(33, Sequence::of($this->people)
+    Assert::equals(33, Sequence::of($this->people)
       ->map($yearsOf)
       ->collect(Collectors::summing())
     );
@@ -184,14 +186,14 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test, @values('employeesYears')]
   public function averaging_years($yearsOf) {
-    $this->assertEquals(11, Sequence::of($this->people)
+    Assert::equals(11, Sequence::of($this->people)
       ->collect(Collectors::averaging($yearsOf))
     );
   }
 
   #[@test, @values('employeesYears')]
   public function averaging_elements($yearsOf) {
-    $this->assertEquals(11, Sequence::of($this->people)
+    Assert::equals(11, Sequence::of($this->people)
       ->map($yearsOf)
       ->collect(Collectors::averaging())
     );
@@ -199,21 +201,21 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test]
   public function counting() {
-    $this->assertEquals(3, Sequence::of($this->people)
+    Assert::equals(3, Sequence::of($this->people)
       ->collect(Collectors::counting())
     );
   }
 
   #[@test, @values('employeesDepartment')]
   public function mapping_by_department($departmentOf) {
-    $this->assertEquals(new Vector(['B', 'I', 'I']), Sequence::of($this->people)
+    Assert::equals(new Vector(['B', 'I', 'I']), Sequence::of($this->people)
       ->collect(Collectors::mapping($departmentOf))
     );
   }
 
   #[@test]
   public function joining_names() {
-    $this->assertEquals('Timm, Alex, Dude', Sequence::of($this->people)
+    Assert::equals('Timm, Alex, Dude', Sequence::of($this->people)
       ->map(function($e) { return $e->name(); })
       ->collect(Collectors::joining())
     );
@@ -221,7 +223,7 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test]
   public function joining_names_with_semicolon() {
-    $this->assertEquals('Timm;Alex;Dude', Sequence::of($this->people)
+    Assert::equals('Timm;Alex;Dude', Sequence::of($this->people)
       ->map(function($e) { return $e->name(); })
       ->collect(Collectors::joining(';'))
     );
@@ -229,7 +231,7 @@ class CollectorsTest extends \unittest\TestCase {
 
   #[@test]
   public function joining_names_with_prefix_and_suffix() {
-    $this->assertEquals('(Timm, Alex, Dude)', Sequence::of($this->people)
+    Assert::equals('(Timm, Alex, Dude)', Sequence::of($this->people)
       ->map(function($e) { return $e->name(); })
       ->collect(Collectors::joining(', ', '(', ')'))
     );
@@ -290,6 +292,6 @@ class CollectorsTest extends \unittest\TestCase {
       ))
       ->each()
     ;
-    $this->assertEquals(['B' => [1549], 'I' => [1552, 6100]], $result);
+    Assert::equals(['B' => [1549], 'I' => [1552, 6100]], $result);
   }
 }

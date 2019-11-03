@@ -1,30 +1,31 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalStateException;
+use unittest\Assert;
 use util\Filter;
 use util\NoSuchElementException;
 use util\data\Optional;
 
-class OptionalTest extends \unittest\TestCase {
+class OptionalTest {
 
   #[@test]
   public function optional_created_via_of_is_present() {
-    $this->assertTrue(Optional::of('Test')->present());
+    Assert::true(Optional::of('Test')->present());
   }
 
   #[@test]
   public function optional_created_via_of_with_null_is_not_present() {
-    $this->assertFalse(Optional::of(null)->present());
+    Assert::false(Optional::of(null)->present());
   }
 
   #[@test]
   public function empty_optional_is_not_present() {
-    $this->assertFalse(Optional::$EMPTY->present());
+    Assert::false(Optional::$EMPTY->present());
   }
 
   #[@test]
   public function get_returns_value_passed_to_of() {
-    $this->assertEquals('Test', Optional::of('Test')->get());
+    Assert::equals('Test', Optional::of('Test')->get());
   }
 
   #[@test, @expect(NoSuchElementException::class)]
@@ -34,44 +35,44 @@ class OptionalTest extends \unittest\TestCase {
 
   #[@test]
   public function orElse_returns_value_passed_to_of() {
-    $this->assertEquals('Test', Optional::of('Test')->orElse('Failed'));
+    Assert::equals('Test', Optional::of('Test')->orElse('Failed'));
   }
 
   #[@test]
   public function orElse_returns_default_when_no_value_is_present() {
-    $this->assertEquals('Succeeded', Optional::$EMPTY->orElse('Succeeded'));
+    Assert::equals('Succeeded', Optional::$EMPTY->orElse('Succeeded'));
   }
 
   #[@test]
   public function orUse_returns_value_passed_to_of() {
-    $this->assertEquals('Test', Optional::of('Test')->orUse(function() {
+    Assert::equals('Test', Optional::of('Test')->orUse(function() {
       throw new IllegalStateException('Not reached');
     }));
   }
 
   #[@test]
   public function orUse_invokes_supplier_when_no_value_is_present() {
-    $this->assertEquals('Succeeded', Optional::$EMPTY->orUse(function() { return 'Succeeded'; }));
+    Assert::equals('Succeeded', Optional::$EMPTY->orUse(function() { return 'Succeeded'; }));
   }
 
   #[@test]
   public function whenAbsent_returns_value_passed_to_of() {
-    $this->assertEquals('Test', Optional::of('Test')->whenAbsent('Failed')->get());
+    Assert::equals('Test', Optional::of('Test')->whenAbsent('Failed')->get());
   }
 
   #[@test]
   public function whenAbsent_returns_value_when_no_value_is_present() {
-    $this->assertEquals('Succeeded', Optional::$EMPTY->whenAbsent('Succeeded')->get());
+    Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent('Succeeded')->get());
   }
 
   #[@test]
   public function whenAbsent_returns_optionals_value_when_no_value_is_present() {
-    $this->assertEquals('Succeeded', Optional::$EMPTY->whenAbsent(Optional::of('Succeeded'))->get());
+    Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent(Optional::of('Succeeded'))->get());
   }
 
   #[@test]
   public function whenAbsent_returns_functions_return_value_when_no_value_is_present() {
-    $this->assertEquals('Succeeded', Optional::$EMPTY->whenAbsent(function() { return 'Succeeded'; })->get());
+    Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent(function() { return 'Succeeded'; })->get());
   }
 
   #[@test, @values([
@@ -81,32 +82,32 @@ class OptionalTest extends \unittest\TestCase {
   #  [function() { return \util\data\Optional::$EMPTY; }]
   #])]
   public function whenAbsent_chaining($value) {
-    $this->assertEquals('Succeeded', Optional::$EMPTY->whenAbsent($value)->whenAbsent('Succeeded')->get());
+    Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent($value)->whenAbsent('Succeeded')->get());
   }
 
   #[@test]
   public function can_be_used_in_foreach() {
-    $this->assertEquals(['Test'], iterator_to_array(Optional::of('Test')));
+    Assert::equals(['Test'], iterator_to_array(Optional::of('Test')));
   }
 
   #[@test]
   public function empty_can_be_used_in_foreach() {
-    $this->assertEquals([], iterator_to_array(Optional::$EMPTY));
+    Assert::equals([], iterator_to_array(Optional::$EMPTY));
   }
 
   #[@test]
   public function filter_returns_empty_when_no_value_present() {
-    $this->assertEquals(Optional::$EMPTY, Optional::$EMPTY->filter('is_array'));
+    Assert::equals(Optional::$EMPTY, Optional::$EMPTY->filter('is_array'));
   }
 
   #[@test]
   public function filter_returns_self_when_predicate_matches() {
-    $this->assertEquals([1, 2, 3], Optional::of([1, 2, 3])->filter('is_array')->get());
+    Assert::equals([1, 2, 3], Optional::of([1, 2, 3])->filter('is_array')->get());
   }
 
   #[@test]
   public function filter_returns_empty_when_predicate_does_not_match() {
-    $this->assertEquals(Optional::$EMPTY, Optional::of('test')->filter('is_array'));
+    Assert::equals(Optional::$EMPTY, Optional::of('test')->filter('is_array'));
   }
 
   #[@test]
@@ -114,26 +115,26 @@ class OptionalTest extends \unittest\TestCase {
     $filter= newinstance(Filter::class, [], [
       'accept' => function($value) { return preg_match('/^www/', $value); }
     ]);
-    $this->assertEquals('www.example.com', Optional::of('www.example.com')->filter($filter)->get());
+    Assert::equals('www.example.com', Optional::of('www.example.com')->filter($filter)->get());
   }
 
   #[@test]
   public function map_applies_function_when_value_present() {
-    $this->assertEquals('123', Optional::of([1, 2, 3])->map('implode')->get());
+    Assert::equals('123', Optional::of([1, 2, 3])->map('implode')->get());
   }
 
   #[@test]
   public function map_returns_empty_when_no_value_present() {
-    $this->assertEquals(Optional::$EMPTY, Optional::$EMPTY->map('implode'));
+    Assert::equals(Optional::$EMPTY, Optional::$EMPTY->map('implode'));
   }
 
   #[@test]
   public function toString_for_empty_optional() {
-    $this->assertEquals('util.data.Optional<EMPTY>', Optional::$EMPTY->toString());
+    Assert::equals('util.data.Optional<EMPTY>', Optional::$EMPTY->toString());
   }
 
   #[@test]
   public function toString_for_sequence_of_array() {
-    $this->assertEquals('util.data.Optional@[1, 2, 3]', Optional::of([1, 2, 3])->toString());
+    Assert::equals('util.data.Optional@[1, 2, 3]', Optional::of([1, 2, 3])->toString());
   }
 }

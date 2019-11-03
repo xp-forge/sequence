@@ -1,10 +1,11 @@
 <?php namespace util\data\unittest;
 
+use unittest\Assert;
 use util\cmd\Console;
-use util\data\Sequence;
-use util\data\Optional;
-use util\data\Collector;
 use util\data\CannotReset;
+use util\data\Collector;
+use util\data\Optional;
+use util\data\Sequence;
 
 class SequenceTest extends AbstractSequenceTest {
 
@@ -33,17 +34,17 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test]
   public function toArray_for_empty_sequence() {
-    $this->assertEquals([], Sequence::$EMPTY->toArray());
+    Assert::equals([], Sequence::$EMPTY->toArray());
   }
 
   #[@test, @values('util.data.unittest.Enumerables::validArrays')]
   public function toArray_returns_elements_as_array($input, $name) {
-    $this->assertEquals([1, 2, 3], Sequence::of($input)->toArray(), $name);
+    Assert::equals([1, 2, 3], Sequence::of($input)->toArray(), $name);
   }
 
   #[@test]
   public function toArray_optionally_accepts_mapper() {
-    $this->assertEquals(
+    Assert::equals(
       [2, 4],
       Sequence::of([1, 2])->toArray(function($v) { return $v * 2; })
     );
@@ -51,17 +52,17 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test]
   public function toMap_for_empty_sequence() {
-    $this->assertEquals([], Sequence::$EMPTY->toMap());
+    Assert::equals([], Sequence::$EMPTY->toMap());
   }
 
   #[@test, @values('util.data.unittest.Enumerables::validMaps')]
   public function toMap_returns_elements_as_map($input) {
-    $this->assertEquals(['color' => 'green', 'price' => 12.99], Sequence::of($input)->toMap());
+    Assert::equals(['color' => 'green', 'price' => 12.99], Sequence::of($input)->toMap());
   }
 
   #[@test]
   public function toMap_optionally_accepts_mapper() {
-    $this->assertEquals(
+    Assert::equals(
       ['a' => 2, 'b' => 4],
       Sequence::of(['a' => 1, 'b' => 2])->toMap(function($v) { return $v * 2; })
     );
@@ -73,32 +74,32 @@ class SequenceTest extends AbstractSequenceTest {
   #  [4, [1, 2, 3, 4]]
   #])]
   public function count($length, $values) {
-    $this->assertEquals($length, Sequence::of($values)->count());
+    Assert::equals($length, Sequence::of($values)->count());
   }
 
   #[@test]
   public function first_returns_non_present_optional_for_empty_input() {
-    $this->assertFalse(Sequence::of([])->first()->present());
+    Assert::false(Sequence::of([])->first()->present());
   }
 
   #[@test]
   public function first_returns_present_optional_even_for_null() {
-    $this->assertTrue(Sequence::of([null])->first()->present());
+    Assert::true(Sequence::of([null])->first()->present());
   }
 
   #[@test]
   public function first_returns_first_array_element() {
-    $this->assertEquals(1, Sequence::of([1, 2, 3])->first()->get());
+    Assert::equals(1, Sequence::of([1, 2, 3])->first()->get());
   }
 
   #[@test]
   public function first_returns_first_element_to_match_its_filter() {
-    $this->assertEquals(2, Sequence::of([1, 2, 3])->first(function($i) { return 0 === $i % 2; })->get());
+    Assert::equals(2, Sequence::of([1, 2, 3])->first(function($i) { return 0 === $i % 2; })->get());
   }
 
   #[@test]
   public function first_returns_non_present_optional_if_no_element_matches_its_filter() {
-    $this->assertFalse(Sequence::of([1, 3])->first(function($i) { return 0 === $i % 2; })->present());
+    Assert::false(Sequence::of([1, 3])->first(function($i) { return 0 === $i % 2; })->present());
   }
 
   #[@test, @values([
@@ -121,14 +122,14 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test]
   public function is_useable_inside_foreach() {
-    $this->assertEquals([1, 2, 3], iterator_to_array(Sequence::of([1, 2, 3])));
+    Assert::equals([1, 2, 3], iterator_to_array(Sequence::of([1, 2, 3])));
   }
 
   #[@test, @values([[['a', 'b', 'c', 'd']], [[]]])]
   public function counting($input) {
     $i= 0;
     Sequence::of($input)->counting($i)->each();
-    $this->assertEquals(sizeof($input), $i);
+    Assert::equals(sizeof($input), $i);
   }
 
   #[@test, @values('util.data.unittest.Enumerables::fixedArrays')]
@@ -186,11 +187,11 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[@test]
   public function toString_for_empty_sequence() {
-    $this->assertEquals('util.data.Sequence<EMPTY>', Sequence::$EMPTY->toString());
+    Assert::equals('util.data.Sequence<EMPTY>', Sequence::$EMPTY->toString());
   }
 
   #[@test]
   public function toString_for_sequence_of_array() {
-    $this->assertEquals('util.data.Sequence@[1, 2, 3]', Sequence::of([1, 2, 3])->toString());
+    Assert::equals('util.data.Sequence@[1, 2, 3]', Sequence::of([1, 2, 3])->toString());
   }
 }

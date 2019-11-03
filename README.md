@@ -19,13 +19,13 @@ Instances of the `util.data.Sequence` class can be created from iterable input, 
 use util\data\{Sequence, Collectors, Aggregations};
 
 $return= Sequence::of([1, 2, 3, 4])
-  ->filter(function($e) { return 0 === $e % 2; })
+  ->filter(fn($e) => 0 === $e % 2)
   ->toArray()
 ;
 // $return= [2, 4]
 
 $return= Sequence::of([1, 2, 3, 4])
-  ->map(function($e) { return $e * 2; })
+  ->map(fn($e) => $e * 2)
   ->toArray()
 ;
 // $return= [2, 4, 6, 8]
@@ -33,7 +33,7 @@ $return= Sequence::of([1, 2, 3, 4])
 $i= 0;
 $return= Sequence::of([1, 2, 3, 4])
   ->counting($i)
-  ->reduce(0, function($a, $b) { return $a + $b; }))
+  ->reduce(0, fn($a, $b) => $a + $b)
 ;
 // $i= 4, $return= 10
 
@@ -45,8 +45,8 @@ $names= Sequence::of($this->people)
 
 $experience= Sequence::of($this->employees)
   ->collect(Collectors::groupingBy(
-    function($e) { return $e->department(); },
-    Aggregations::average(function($e) { return $e->years(); })
+    fn($e) => $e->department(),
+    Aggregations::average(fn($e) => $e->years())
   ))
 ;
 // $experience= util.collections.HashTable[2] {
@@ -67,12 +67,12 @@ if ($first->present()) {
 }
 
 $user= $first->orElse($this->currentUser);
-$user= $first->orUse(function() { return $this->currentUser(); });
+$user= $first->orUse(fn() => $this->currentUser());
 
 $name= $first
-  ->filter(function($user) { return $user->isActive(); })
+  ->filter(fn($user) => $user->isActive())
   ->whenAbsent($this->currentUser)
-  ->whenAbsent(function() { return $this->guestUser(); })
+  ->whenAbsent(fn() => $this->guestUser())
   ->map('com.example.User::name')
   ->get()
 ;

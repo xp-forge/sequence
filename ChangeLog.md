@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 8.0.4 / 2019-12-01
+
+* Made compatible with XP 10 - @thekid
+
 ## 8.0.3 / 2019-09-29
 
 * Added PHP 7.4 compatibility - @thekid

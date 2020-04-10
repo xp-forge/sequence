@@ -2,9 +2,8 @@
 
 use lang\IllegalStateException;
 use unittest\Assert;
-use util\Filter;
-use util\NoSuchElementException;
 use util\data\Optional;
+use util\{Filter, NoSuchElementException};
 
 class OptionalTest {
 

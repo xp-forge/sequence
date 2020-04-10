@@ -1,9 +1,7 @@
 <?php namespace util\data;
 
 use lang\Value;
-use util\Filter;
-use util\NoSuchElementException;
-use util\Objects;
+use util\{Filter, NoSuchElementException, Objects};
 
 /**
  * An optional
@@ -39,10 +37,8 @@ class Optional implements Value, \IteratorAggregate {
     return null === $value ? self::$EMPTY : new self($value, true);
   }
 
-  /** @return php.Iterator */
-  public function getIterator() {
-    return new \ArrayIterator($this->present ? [$this->value] : []);
-  }
+  /** @return iterable */
+  public function getIterator() { if ($this->present) yield $this->value; }
 
   /** @return bool */
   public function present() { return $this->present; }

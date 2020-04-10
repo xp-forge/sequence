@@ -1,8 +1,7 @@
 <?php namespace util\data\unittest;
 
 use unittest\Assert;
-use util\data\CannotReset;
-use util\data\YieldingOf;
+use util\data\{CannotReset, YieldingOf};
 
 class YieldingOfTest {
 

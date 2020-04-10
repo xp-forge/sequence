@@ -2,8 +2,7 @@
 
 use lang\IllegalArgumentException;
 use unittest\Assert;
-use util\data\Optional;
-use util\data\Sequence;
+use util\data\{Optional, Sequence};
 
 class SequenceFlatteningTest extends AbstractSequenceTest {
 

@@ -1,7 +1,7 @@
 <?php namespace util\data;
 
-use util\XPIterator;
 use lang\IllegalArgumentException;
+use util\XPIterator;
 
 /**
  * Enumeration support for iterables, iterators, generators and arrays.

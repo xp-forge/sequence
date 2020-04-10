@@ -2,8 +2,7 @@
 
 use lang\IllegalArgumentException;
 use unittest\Assert;
-use util\data\Enumeration;
-use util\data\Sequence;
+use util\data\{Enumeration, Sequence};
 
 class EnumerationTest {
 

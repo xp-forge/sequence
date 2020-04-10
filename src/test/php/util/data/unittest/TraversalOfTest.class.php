@@ -2,8 +2,7 @@
 
 use lang\IllegalStateException;
 use unittest\Assert;
-use util\data\CannotReset;
-use util\data\TraversalOf;
+use util\data\{CannotReset, TraversalOf};
 
 class TraversalOfTest {
 

@@ -1,6 +1,8 @@
 <?php namespace util\data\unittest;
 
-class Name implements \lang\Value {
+use lang\Value;
+
+class Name implements Value {
   private $value;
 
   /** @param string $value */

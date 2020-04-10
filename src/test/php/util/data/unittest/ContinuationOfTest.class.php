@@ -1,8 +1,7 @@
 <?php namespace util\data\unittest;
 
 use unittest\Assert;
-use util\data\ContinuationOf;
-use util\data\Sequence;
+use util\data\{ContinuationOf, Sequence};
 
 class ContinuationOfTest {
 

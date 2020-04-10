@@ -1,12 +1,7 @@
 <?php namespace util\data;
 
-use lang\IllegalArgumentException;
-use lang\IllegalStateException;
-use lang\Throwable;
-use lang\Value;
-use util\Comparator;
-use util\Filter;
-use util\Objects;
+use lang\{IllegalArgumentException, IllegalStateException, Throwable, Value};
+use util\{Comparator, Filter, Objects};
 
 /**
  * Sequences API for PHP
@@ -42,11 +37,7 @@ class Sequence implements Value, \IteratorAggregate {
   public function iterator() { return new SequenceIterator($this); }
 
   /** @return iterable */
-  public function getIterator() {
-    foreach ($this->elements as $key => $element) {
-      yield $key => $element;
-    }
-  }
+  public function getIterator() { yield from $this->elements; }
 
   /**
    * Creates a new stream with an enumeration of elements
@@ -63,9 +54,7 @@ class Sequence implements Value, \IteratorAggregate {
       default:
         $f= function() use($enumerables) {
           foreach ($enumerables as $arg) {
-            foreach (Enumeration::of($arg) as $key => $element) {
-              yield $key => $element;
-            }
+            yield from Enumeration::of($arg);
           }
         };
         return new self($f());
@@ -419,21 +408,21 @@ class Sequence implements Value, \IteratorAggregate {
     if (null === $function) {
       $f= function() {
         foreach ($this->elements as $element) {
-          foreach ($element as $k => $v) { yield $k => $v;  }
+          yield from $element;
         }
       };
     } else if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
       $mapper= Functions::$APPLY_WITH_KEY->cast($function);
       $f= function() use($mapper) {
         foreach ($this->elements as $key => $element) {
-          foreach ($mapper($element, $key) as $k => $v) { yield $k => $v; }
+          yield from $mapper($element, $key);
         }
       };
     } else {
       $mapper= Functions::$APPLY->newInstance($function);
       $f= function() use($mapper) {
         foreach ($this->elements as $key => $element) {
-          foreach ($mapper($element) as $k => $v) { yield $k => $v; }
+          yield from $mapper($element, $key);
         }
       };
     }

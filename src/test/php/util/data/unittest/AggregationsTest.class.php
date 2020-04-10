@@ -1,8 +1,7 @@
 <?php namespace util\data\unittest;
 
 use unittest\Assert;
-use util\data\Aggregations;
-use util\data\Sequence;
+use util\data\{Aggregations, Sequence};
 
 class AggregationsTest {
 

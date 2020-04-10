@@ -2,10 +2,7 @@
 
 use unittest\Assert;
 use util\cmd\Console;
-use util\data\CannotReset;
-use util\data\Collector;
-use util\data\Optional;
-use util\data\Sequence;
+use util\data\{CannotReset, Collector, Optional, Sequence};
 
 class SequenceTest extends AbstractSequenceTest {
 

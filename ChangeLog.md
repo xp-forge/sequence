@@ -3,7 +3,7 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
-## 9.0.0 / ????-??-??
+## 9.0.0 / 2020-04-10
 
 * Implemented xp-framework/rfc#334: Drop PHP 5.6. The minimum required
   PHP version is now 7.0.0!

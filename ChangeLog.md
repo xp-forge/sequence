@@ -5,11 +5,13 @@ Data sequences change log
 
 ## 9.0.0 / ????-??-??
 
-* Added support for XP 10 and newer versions of library dependencies
-  (@thekid)
 * Implemented xp-framework/rfc#334: Drop PHP 5.6. The minimum required
   PHP version is now 7.0.0!
   (@thekid)
+
+## 8.0.4 / 2019-12-01
+
+* Made compatible with XP 10 - @thekid
 
 ## 8.0.3 / 2019-09-29
 

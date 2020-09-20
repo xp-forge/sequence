@@ -3,7 +3,7 @@
 use io\streams\MemoryOutputStream;
 use lang\IllegalArgumentException;
 use unittest\Assert;
-use unittest\actions\VerifyThat;
+use unittest\actions\RuntimeVersion;
 use util\cmd\Console;
 use util\data\Sequence;
 
@@ -69,9 +69,7 @@ class PeekTest extends AbstractSequenceTest {
     Sequence::of([])->peek($noncallable);
   }
 
-  #[@test, @action([new VerifyThat(function() {
-  #  return PHP_VERSION_ID >= 70100 && !defined('HHVM_VERSION_ID');
-  #})])]
+  #[@test, @action([new RuntimeVersion('>=7.1.0')])]
   public function each_with_void() {
     Assert::equals(4, Sequence::of([1, 2, 3, 4])->peek(eval('return function(int $e): void { };'))->each());
   }

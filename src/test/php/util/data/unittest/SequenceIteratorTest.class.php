@@ -56,12 +56,10 @@ class SequenceIteratorTest extends AbstractSequenceTest {
   public function cannot_iterate_sequence_based_on_a_streamed_enumerable_more_than_once($input) {
     $seq= Sequence::of($input);
     $this->iterated($seq->iterator());
-    try {
+
+    Assert::throws(CannotReset::class, function() use($seq) {
       $this->iterated($seq->iterator());
-      $this->fail('No exception raised', null, 'util.data.CannotReset');
-    } catch (CannotReset $expected) {
-      // OK
-    }
+    });
   }
 
   #[@test, @values('util.data.unittest.Enumerables::validArrays')]

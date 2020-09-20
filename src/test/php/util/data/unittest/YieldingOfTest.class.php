@@ -24,12 +24,9 @@ class YieldingOfTest {
     $fixture= new YieldingOf($generator());
     $fixture->rewind();
 
-    try {
+    Assert::throws(CannotReset::class, function() use($fixture) {
       $fixture->rewind();
-      $this->fail('Expected exception not caught', null, CannotReset::class);
-    } catch (CannotReset $expected) {
-      // OK
-    }
+    });
   }
 
   #[@test, @values('fixtures')]
@@ -37,11 +34,8 @@ class YieldingOfTest {
     $fixture= new YieldingOf($generator());
     iterator_to_array($fixture);
 
-    try {
+    Assert::throws(CannotReset::class, function() use($fixture) {
       $fixture->rewind();
-      $this->fail('Expected exception not caught', null, CannotReset::class);
-    } catch (CannotReset $expected) {
-      // OK
-    }
+    });
   }
 }

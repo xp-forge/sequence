@@ -9,9 +9,9 @@ use util\data\Sequence;
 
 class PeekTest extends AbstractSequenceTest {
 
-  #[@test, @expect(IllegalArgumentException::class), @values(['@non-existant-func@'])]
-  public function invalid($arg) {
-    Sequence::$EMPTY->peek($arg);
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function invalid() {
+    Sequence::$EMPTY->peek('@non-existant-func@');
   }
 
   #[@test]

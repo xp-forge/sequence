@@ -16,12 +16,9 @@ class SequenceTest extends AbstractSequenceTest {
    */
   protected function assertNotTwice($seq, $func) {
     $func($seq);
-    try {
+    Assert::throws(CannotReset::class, function() use($seq, $func) {
       $func($seq);
-      $this->fail('No exception raised', null, CannotReset::class);
-    } catch (CannotReset $expected) {
-      // OK
-    }
+    });
   }
 
   #[@test]

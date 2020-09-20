@@ -36,12 +36,9 @@ class TraversalOfTest {
     ]));
     $fixture->rewind();
 
-    try {
+    Assert::throws(CannotReset::class, function() use($fixture) {
       $fixture->rewind();
-      $this->fail('Expected exception not caught', null, CannotReset::class);
-    } catch (CannotReset $expected) {
-      // OK
-    }
+    });
   }
 
   #[@test]
@@ -55,11 +52,8 @@ class TraversalOfTest {
     ]));
     $fixture->rewind();
 
-    try {
+    Assert::throws(IllegalStateException::class, function() use($fixture) {
       $fixture->current();
-      $this->fail('Expected exception not caught', null, IllegalStateException::class);
-    } catch (IllegalStateException $expected) {
-      // OK
-    }
+    });
   }
 }

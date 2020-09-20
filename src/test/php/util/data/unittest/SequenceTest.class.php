@@ -107,10 +107,9 @@ class SequenceTest extends AbstractSequenceTest {
     $this->assertSequence($result, Sequence::of($input)->distinct());
   }
 
-  #[@test, @values([
-  #  function($record) { return $record['id']; }
-  #])]
-  public function distinct_with($function) {
+  #[@test]
+  public function distinct_with_function() {
+    $function= function($record) { return $record['id']; };
     $this->assertSequence(
       [['id' => 1, 'name' => 'Timm']],
       Sequence::of([['id' => 1, 'name' => 'Timm'], ['id' => 1]])->distinct($function)

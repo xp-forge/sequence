@@ -6,61 +6,42 @@ use util\{Comparator, Date};
 
 class BoundariesTest extends AbstractSequenceTest {
 
-  #[@test, @values([
-  #  [null, []],
-  #  [1, [1]],
-  #  [2, [10, 7, 2]]
-  #])]
-  public function min($result, $values) {
-    Assert::equals($result, Sequence::of($values)->min());
+  /** @return iterable */
+  private function values() {
+    yield [null, null, []];
+    yield [1, 1, [1]];
+    yield [2, 10, [10, 7, 2]];
   }
 
-  #[@test]
-  public function min_using_comparator() {
+  /** @return iterable */
+  private function comparators() {
+    yield [newinstance(Comparator::class, [], ['compare' => function($a, $b) { return $b->compareTo($a); }])];
+    yield [function($a, $b) { return $b->compareTo($a); }];
+  }
+
+  #[@test, @values('values')]
+  public function min($min, $max, $values) {
+    Assert::equals($min, Sequence::of($values)->min());
+  }
+
+  #[@test, @values('comparators')]
+  public function min_using($comparator) {
     Assert::equals(
       new Date('1977-12-14'),
-      Sequence::of([new Date('1977-12-14'), new Date('2014-07-17'), new Date('1979-12-29')])->min(newinstance(Comparator::class, [], [
-        'compare' => function($a, $b) { return $b->compareTo($a); }
-      ]))
+      Sequence::of([new Date('1977-12-14'), new Date('2014-07-17'), new Date('1979-12-29')])->min($comparator)
     );
   }
 
-  #[@test]
-  public function min_using_closure() {
-    Assert::equals(
-      new Date('1977-12-14'),
-      Sequence::of([new Date('1977-12-14'), new Date('2014-07-17'), new Date('1979-12-29')])->min(function($a, $b) {
-        return $b->compareTo($a);
-      })
-    );
+  #[@test, @values('values')]
+  public function max($min, $max, $values) {
+    Assert::equals($max, Sequence::of($values)->max());
   }
 
-  #[@test, @values([
-  #  [null, []],
-  #  [1, [1]],
-  #  [10, [2, 10, 7]]
-  #])]
-  public function max($result, $values) {
-    Assert::equals($result, Sequence::of($values)->max());
-  }
-
-  #[@test]
-  public function max_using_comparator() {
+  #[@test, @values('comparators')]
+  public function max_using($comparator) {
     Assert::equals(
       new Date('2014-07-17'),
-      Sequence::of([new Date('1977-12-14'), new Date('2014-07-17'), new Date('1979-12-29')])->max(newinstance(Comparator::class, [], [
-        'compare' => function($a, $b) { return $b->compareTo($a); }
-      ]))
-    );
-  }
-
-  #[@test]
-  public function max_using_closure() {
-    Assert::equals(
-      new Date('2014-07-17'),
-      Sequence::of([new Date('1977-12-14'), new Date('2014-07-17'), new Date('1979-12-29')])->max(function($a, $b) {
-        return $b->compareTo($a);
-      })
+      Sequence::of([new Date('1977-12-14'), new Date('2014-07-17'), new Date('1979-12-29')])->max($comparator)
     );
   }
 }

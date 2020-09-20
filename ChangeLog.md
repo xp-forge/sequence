@@ -6,7 +6,7 @@ Data sequences change log
 ## 9.0.1 / 2020-09-20
 
 * Simplified test code, making use of anonymous classes, the RuntimeVersion
-  action and `Assert::throws()`
+  action and `Assert::throws()`, see pull request #50
   (@thekid)
 
 ## 9.0.0 / 2020-04-10

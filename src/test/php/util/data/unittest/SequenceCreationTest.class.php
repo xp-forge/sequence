@@ -58,7 +58,6 @@ class SequenceCreationTest extends AbstractSequenceTest {
     $this->assertSequence([1, 2, 3], Sequence::of($sequence));
   }
 
-
   #[@test, @values([
   #  [[1, 2, 3, 4, 5, 6]],
   #  [[1, 2, 3], [4, 5, 6]],

@@ -7,6 +7,14 @@ use util\{Filter, NoSuchElementException};
 
 class OptionalTest {
 
+  /** @return iterable */
+  private function emptyValues() {
+    yield [null];
+    yield [Optional::$EMPTY];
+    yield [function() { return null; }];
+    yield [function() { return Optional::$EMPTY; }];
+  }
+
   #[@test]
   public function optional_created_via_of_is_present() {
     Assert::true(Optional::of('Test')->present());
@@ -74,12 +82,7 @@ class OptionalTest {
     Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent(function() { return 'Succeeded'; })->get());
   }
 
-  #[@test, @values([
-  #  [null],
-  #  [Optional::$EMPTY],
-  #  [function() { return null; }],
-  #  [function() { return \util\data\Optional::$EMPTY; }]
-  #])]
+  #[@test, @values('emptyValues')]
   public function whenAbsent_chaining($value) {
     Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent($value)->whenAbsent('Succeeded')->get());
   }
@@ -111,9 +114,9 @@ class OptionalTest {
 
   #[@test]
   public function filter_with_filter_instance() {
-    $filter= newinstance(Filter::class, [], [
-      'accept' => function($value) { return preg_match('/^www/', $value); }
-    ]);
+    $filter= new class() implements Filter {
+      public function accept($value) { return preg_match('/^www/', $value); }
+    };
     Assert::equals('www.example.com', Optional::of('www.example.com')->filter($filter)->get());
   }
 

@@ -1,6 +1,6 @@
 <?php namespace util\data\unittest;
 
-use unittest\Assert;
+use unittest\{Assert, Expect, Test, Values};
 use util\data\{CannotReset, Sequence};
 use util\{NoSuchElementException, XPIterator};
 
@@ -20,39 +20,39 @@ class SequenceIteratorTest extends AbstractSequenceTest {
     return $elements;
   }
 
-  #[@test]
+  #[Test]
   public function hasNext() {
     Assert::true(Sequence::of([1])->iterator()->hasNext());
   }
 
-  #[@test]
+  #[Test]
   public function next() {
     Assert::equals(1, Sequence::of([1])->iterator()->next());
   }
 
-  #[@test]
+  #[Test]
   public function hasNext_returns_false_when_at_end_of_sequence() {
     Assert::false(Sequence::$EMPTY->iterator()->hasNext());
   }
 
-  #[@test, @expect(NoSuchElementException::class)]
+  #[Test, Expect(NoSuchElementException::class)]
   public function next_throws_exception_when_at_end_of_sequence() {
     Sequence::$EMPTY->iterator()->next();
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::validArrays')]
+  #[Test, Values('util.data.unittest.Enumerables::validArrays')]
   public function iterator($input) {
     Assert::equals([1, 2, 3], $this->iterated(Sequence::of($input)->iterator()));
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::fixedArrays')]
+  #[Test, Values('util.data.unittest.Enumerables::fixedArrays')]
   public function may_iterate_sequence_based_on_a_fixed_enumerable_more_than_once($input) {
     $seq= Sequence::of($input);
     $this->iterated($seq->iterator());
     $this->iterated($seq->iterator());
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::streamedArrays')]
+  #[Test, Values('util.data.unittest.Enumerables::streamedArrays')]
   public function cannot_iterate_sequence_based_on_a_streamed_enumerable_more_than_once($input) {
     $seq= Sequence::of($input);
     $this->iterated($seq->iterator());
@@ -62,7 +62,7 @@ class SequenceIteratorTest extends AbstractSequenceTest {
     });
   }
 
-  #[@test, @values('util.data.unittest.Enumerables::validArrays')]
+  #[Test, Values('util.data.unittest.Enumerables::validArrays')]
   public function sequence_of_iterator($input) {
     $this->assertSequence([1, 2, 3], Sequence::of(Sequence::of($input)->iterator()));
   }

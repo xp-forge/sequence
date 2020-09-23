@@ -2,19 +2,19 @@
 
 use io\streams\MemoryOutputStream;
 use lang\IllegalArgumentException;
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
+use unittest\{Action, Assert, Expect, Test, Values};
 use util\cmd\Console;
 use util\data\Sequence;
 
 class PeekTest extends AbstractSequenceTest {
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function invalid() {
     Sequence::$EMPTY->peek('@non-existant-func@');
   }
 
-  #[@test]
+  #[Test]
   public function values() {
     $debug= [];
     Sequence::of([1, 2, 3, 4])
@@ -25,7 +25,7 @@ class PeekTest extends AbstractSequenceTest {
     Assert::equals([1, 3], $debug);
   }
 
-  #[@test]
+  #[Test]
   public function keys() {
     $debug= [];
     Sequence::of([1, 2, 3, 4])
@@ -36,7 +36,7 @@ class PeekTest extends AbstractSequenceTest {
     Assert::equals([0, 2], $debug);
   }
 
-  #[@test]
+  #[Test]
   public function writing_to_console_out() {
     $orig= Console::$out->getStream();
     $out= new MemoryOutputStream();
@@ -53,7 +53,7 @@ class PeekTest extends AbstractSequenceTest {
     Assert::equals('1234', $out->getBytes());
   }
 
-  #[@test]
+  #[Test]
   public function with_var_export() {
     ob_start();
 
@@ -64,12 +64,12 @@ class PeekTest extends AbstractSequenceTest {
     Assert::equals('1234', $bytes);
   }
 
-  #[@test, @values('noncallables'), @expect(IllegalArgumentException::class)]
+  #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->peek($noncallable);
   }
 
-  #[@test, @action([new RuntimeVersion('>=7.1.0')])]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.1.0")')]
   public function each_with_void() {
     Assert::equals(4, Sequence::of([1, 2, 3, 4])->peek(eval('return function(int $e): void { };'))->each());
   }

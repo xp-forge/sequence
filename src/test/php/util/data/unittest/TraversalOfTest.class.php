@@ -1,25 +1,17 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalStateException;
-use unittest\Assert;
+use unittest\{Assert, Test, Values};
 use util\data\{CannotReset, TraversalOf};
 
 class TraversalOfTest {
 
-  #[@test, @values([
-  #  [[]],
-  #  [[1, 2, 3]],
-  #  [['key' => 'value']]
-  #])]
+  #[Test, Values([[[]], [[1, 2, 3]], [['key' => 'value']]])]
   public function iteration($input) {
     Assert::equals($input, iterator_to_array(new TraversalOf(new \ArrayIterator($input))));
   }
 
-  #[@test, @values([
-  #  [\Exception::class],
-  #  [CannotReset::class],
-  #  [IllegalStateException::class]
-  #])]
+  #[Test, Values([[\Exception::class], [CannotReset::class], [IllegalStateException::class]])]
   public function exceptions_from_rewind_are_wrapped_in_cannot_reset($class) {
     $fixture= new TraversalOf(newinstance(\Iterator::class, [], [
       'started' => false,
@@ -41,7 +33,7 @@ class TraversalOfTest {
     });
   }
 
-  #[@test]
+  #[Test]
   public function exceptions_during_iteration_are_left_untouched() {
     $fixture= new TraversalOf(newinstance(\Iterator::class, [], [
       'rewind'  => function() { },

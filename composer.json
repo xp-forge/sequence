@@ -6,7 +6,7 @@
   "description" : "Data sequences",
   "keywords": ["module", "xp"],
   "require" : {
-    "xp-framework/core": "dev-feature/yield-attributes-as-annotations as 10.2.0",
+    "xp-framework/core": "^10.2",
     "xp-framework/collections": "^9.0 | ^8.0 | ^7.0",
     "php" : ">=7.0.0"
   },

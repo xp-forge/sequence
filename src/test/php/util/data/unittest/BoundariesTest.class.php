@@ -1,6 +1,6 @@
 <?php namespace util\data\unittest;
 
-use unittest\Assert;
+use unittest\{Assert, Test, Values};
 use util\data\Sequence;
 use util\{Comparator, Date};
 
@@ -19,12 +19,12 @@ class BoundariesTest extends AbstractSequenceTest {
     yield [function($a, $b) { return $b->compareTo($a); }];
   }
 
-  #[@test, @values('values')]
+  #[Test, Values('values')]
   public function min($min, $max, $values) {
     Assert::equals($min, Sequence::of($values)->min());
   }
 
-  #[@test, @values('comparators')]
+  #[Test, Values('comparators')]
   public function min_using($comparator) {
     Assert::equals(
       new Date('1977-12-14'),
@@ -32,12 +32,12 @@ class BoundariesTest extends AbstractSequenceTest {
     );
   }
 
-  #[@test, @values('values')]
+  #[Test, Values('values')]
   public function max($min, $max, $values) {
     Assert::equals($max, Sequence::of($values)->max());
   }
 
-  #[@test, @values('comparators')]
+  #[Test, Values('comparators')]
   public function max_using($comparator) {
     Assert::equals(
       new Date('2014-07-17'),

@@ -1,11 +1,11 @@
 <?php namespace util\data\unittest;
 
-use unittest\Assert;
+use unittest\{Assert, Test};
 use util\data\{Collector, Sequence};
 
 class SequenceCollectionTest extends AbstractSequenceTest {
 
-  #[@test]
+  #[Test]
   public function used_for_averaging() {
     $result= Sequence::of([1, 2, 3, 4])->collect(new Collector(
       function() { return ['total' => 0, 'sum' => 0]; },
@@ -14,7 +14,7 @@ class SequenceCollectionTest extends AbstractSequenceTest {
     Assert::equals(2.5, $result['sum'] / $result['total']);
   }
 
-  #[@test]
+  #[Test]
   public function used_for_joining() {
     $result= Sequence::of(['a', 'b', 'c'])->collect(new Collector(
       function() { return ''; },

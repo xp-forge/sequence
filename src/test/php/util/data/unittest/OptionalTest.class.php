@@ -1,7 +1,7 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalStateException;
-use unittest\Assert;
+use unittest\{Assert, Expect, Test, Values};
 use util\data\Optional;
 use util\{Filter, NoSuchElementException};
 
@@ -15,104 +15,104 @@ class OptionalTest {
     yield [function() { return Optional::$EMPTY; }];
   }
 
-  #[@test]
+  #[Test]
   public function optional_created_via_of_is_present() {
     Assert::true(Optional::of('Test')->present());
   }
 
-  #[@test]
+  #[Test]
   public function optional_created_via_of_with_null_is_not_present() {
     Assert::false(Optional::of(null)->present());
   }
 
-  #[@test]
+  #[Test]
   public function empty_optional_is_not_present() {
     Assert::false(Optional::$EMPTY->present());
   }
 
-  #[@test]
+  #[Test]
   public function get_returns_value_passed_to_of() {
     Assert::equals('Test', Optional::of('Test')->get());
   }
 
-  #[@test, @expect(NoSuchElementException::class)]
+  #[Test, Expect(NoSuchElementException::class)]
   public function get_throws_exception_when_no_value_is_present() {
     Optional::$EMPTY->get();
   }
 
-  #[@test]
+  #[Test]
   public function orElse_returns_value_passed_to_of() {
     Assert::equals('Test', Optional::of('Test')->orElse('Failed'));
   }
 
-  #[@test]
+  #[Test]
   public function orElse_returns_default_when_no_value_is_present() {
     Assert::equals('Succeeded', Optional::$EMPTY->orElse('Succeeded'));
   }
 
-  #[@test]
+  #[Test]
   public function orUse_returns_value_passed_to_of() {
     Assert::equals('Test', Optional::of('Test')->orUse(function() {
       throw new IllegalStateException('Not reached');
     }));
   }
 
-  #[@test]
+  #[Test]
   public function orUse_invokes_supplier_when_no_value_is_present() {
     Assert::equals('Succeeded', Optional::$EMPTY->orUse(function() { return 'Succeeded'; }));
   }
 
-  #[@test]
+  #[Test]
   public function whenAbsent_returns_value_passed_to_of() {
     Assert::equals('Test', Optional::of('Test')->whenAbsent('Failed')->get());
   }
 
-  #[@test]
+  #[Test]
   public function whenAbsent_returns_value_when_no_value_is_present() {
     Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent('Succeeded')->get());
   }
 
-  #[@test]
+  #[Test]
   public function whenAbsent_returns_optionals_value_when_no_value_is_present() {
     Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent(Optional::of('Succeeded'))->get());
   }
 
-  #[@test]
+  #[Test]
   public function whenAbsent_returns_functions_return_value_when_no_value_is_present() {
     Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent(function() { return 'Succeeded'; })->get());
   }
 
-  #[@test, @values('emptyValues')]
+  #[Test, Values('emptyValues')]
   public function whenAbsent_chaining($value) {
     Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent($value)->whenAbsent('Succeeded')->get());
   }
 
-  #[@test]
+  #[Test]
   public function can_be_used_in_foreach() {
     Assert::equals(['Test'], iterator_to_array(Optional::of('Test')));
   }
 
-  #[@test]
+  #[Test]
   public function empty_can_be_used_in_foreach() {
     Assert::equals([], iterator_to_array(Optional::$EMPTY));
   }
 
-  #[@test]
+  #[Test]
   public function filter_returns_empty_when_no_value_present() {
     Assert::equals(Optional::$EMPTY, Optional::$EMPTY->filter('is_array'));
   }
 
-  #[@test]
+  #[Test]
   public function filter_returns_self_when_predicate_matches() {
     Assert::equals([1, 2, 3], Optional::of([1, 2, 3])->filter('is_array')->get());
   }
 
-  #[@test]
+  #[Test]
   public function filter_returns_empty_when_predicate_does_not_match() {
     Assert::equals(Optional::$EMPTY, Optional::of('test')->filter('is_array'));
   }
 
-  #[@test]
+  #[Test]
   public function filter_with_filter_instance() {
     $filter= new class() implements Filter {
       public function accept($value) { return preg_match('/^www/', $value); }
@@ -120,22 +120,22 @@ class OptionalTest {
     Assert::equals('www.example.com', Optional::of('www.example.com')->filter($filter)->get());
   }
 
-  #[@test]
+  #[Test]
   public function map_applies_function_when_value_present() {
     Assert::equals('123', Optional::of([1, 2, 3])->map('implode')->get());
   }
 
-  #[@test]
+  #[Test]
   public function map_returns_empty_when_no_value_present() {
     Assert::equals(Optional::$EMPTY, Optional::$EMPTY->map('implode'));
   }
 
-  #[@test]
+  #[Test]
   public function toString_for_empty_optional() {
     Assert::equals('util.data.Optional<EMPTY>', Optional::$EMPTY->toString());
   }
 
-  #[@test]
+  #[Test]
   public function toString_for_sequence_of_array() {
     Assert::equals('util.data.Optional@[1, 2, 3]', Optional::of([1, 2, 3])->toString());
   }

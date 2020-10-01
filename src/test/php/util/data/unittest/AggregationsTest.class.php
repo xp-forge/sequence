@@ -1,11 +1,11 @@
 <?php namespace util\data\unittest;
 
-use unittest\Assert;
+use unittest\{Assert, Test};
 use util\data\{Aggregations, Sequence};
 
 class AggregationsTest {
 
-  #[@test]
+  #[Test]
   public function min_max_sum_average_and_count_for_empty_sequence() {
     Sequence::$EMPTY
       ->collecting($min, Aggregations::min())
@@ -22,7 +22,7 @@ class AggregationsTest {
     Assert::equals(0, $count);
   }
 
-  #[@test]
+  #[Test]
   public function min_max_sum_average_and_count_for_non_empty() {
     Sequence::of([1, 2, 3, 4])
       ->collecting($min, Aggregations::min())

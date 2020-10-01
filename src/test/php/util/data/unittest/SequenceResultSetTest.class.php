@@ -1,6 +1,6 @@
 <?php namespace util\data\unittest;
 
-use unittest\Assert;
+use unittest\{Assert, Test};
 use util\data\Sequence;
 
 class SequenceResultSetTest extends AbstractSequenceTest {
@@ -41,7 +41,7 @@ class SequenceResultSetTest extends AbstractSequenceTest {
     });
   }
 
-  #[@test]
+  #[Test]
   public function three_records() {
     $this->fetched= [];
     $values= $this->records(3)->map(function($e) { return $e['name']; })->toArray();
@@ -51,7 +51,7 @@ class SequenceResultSetTest extends AbstractSequenceTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function two_records() {
     $this->fetched= [];
     $values= $this->records(2)->map(function($e) { return $e['name']; })->toArray();

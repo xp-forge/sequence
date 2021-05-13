@@ -3,6 +3,11 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 9.1.0 / 2021-05-13
+
+* Added compatibility with `xp-framework/collections` version 10.0.0
+  (@thekid)
+
 ## 9.0.1 / 2020-09-20
 
 * Simplified test code, making use of anonymous classes, the RuntimeVersion

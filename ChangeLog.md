@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 9.1.1 / 2021-09-06
+
+* Fixed PHP 8.1 compatibility for `Traversable` subtypes - @thekid
+
 ## 9.1.0 / 2021-05-13
 
 * Added compatibility with `xp-framework/collections` version 10.0.0

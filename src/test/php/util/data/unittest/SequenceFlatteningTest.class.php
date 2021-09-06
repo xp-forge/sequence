@@ -25,9 +25,6 @@ class SequenceFlatteningTest extends AbstractSequenceTest {
 
   #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
   public function flatten_raises_exception_when_given($noncallable) {
-    if (null === $noncallable) {
-      throw new IllegalArgumentException('Valid use-case');
-    }
     Sequence::of([])->flatten($noncallable);
   }
 

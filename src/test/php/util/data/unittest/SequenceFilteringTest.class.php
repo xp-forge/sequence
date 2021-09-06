@@ -31,6 +31,12 @@ class SequenceFilteringTest extends AbstractSequenceTest {
     ])));
   }
 
+  #[Test]
+  public function with_null_is_noop() {
+    $sequence= Sequence::of([1, 2, 3, 4]);
+    Assert::true($sequence === $sequence->filter(null));
+  }
+
   #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->filter($noncallable);

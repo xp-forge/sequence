@@ -64,6 +64,12 @@ class PeekTest extends AbstractSequenceTest {
     Assert::equals('1234', $bytes);
   }
 
+  #[Test]
+  public function peek_is_noop_when_given_null() {
+    $sequence= Sequence::of([]);
+    Assert::true($sequence === $sequence->peek(null));
+  }
+
   #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->peek($noncallable);

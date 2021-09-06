@@ -17,6 +17,12 @@ class SequenceMappingTest extends AbstractSequenceTest {
     $this->assertSequence([1.0, 2.0, 3.0], Sequence::of([1.9, 2.5, 3.1])->map('floor'));
   }
 
+  #[Test]
+  public function with_null_is_noop() {
+    $sequence= Sequence::of([1, 2, 3, 4]);
+    Assert::true($sequence === $sequence->map(null));
+  }
+
   #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
   public function map_raises_exception_when_given($noncallable) {
     Sequence::of([])->map($noncallable);

@@ -104,6 +104,7 @@ class Optional implements Value, IteratorAggregate {
    */
   public function filter($predicate) {
     if (!$this->present) return self::$EMPTY;
+    if (null === $predicate) return $this;
 
     if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
       $filter= Functions::$APPLY->cast([$predicate, 'accept']);
@@ -124,6 +125,7 @@ class Optional implements Value, IteratorAggregate {
    */
   public function map($function) {
     if (!$this->present) return self::$EMPTY;
+    if (null === $function) return $this;
 
     return self::of(Functions::$APPLY->newInstance($function)->__invoke($this->value));
   }

@@ -19,4 +19,10 @@ class SequenceSkipTest extends AbstractSequenceTest {
   public function receives_offset() {
     $this->assertSequence([3, 4], Sequence::of([1, 2, 3, 4])->skip(function($e, $offset) { return $offset < 2; }));
   }
+
+  #[Test]
+  public function no_skipping() {
+    $sequence= Sequence::of([1, 2, 3, 4]);
+    Assert::true($sequence === $sequence->skip(null));
+  }
 }

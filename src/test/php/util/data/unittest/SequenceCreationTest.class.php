@@ -37,6 +37,11 @@ class SequenceCreationTest extends AbstractSequenceTest {
     Sequence::iterate(0, $input);
   }
 
+  #[Test, Expect(IllegalArgumentException::class)]
+  public function null_for_iterate() {
+    Sequence::iterate(0, null);
+  }
+
   #[Test, Values('suppliers')]
   public function can_create_via_generate($input) {
     Assert::instance(Sequence::class, Sequence::generate($input));
@@ -45,6 +50,11 @@ class SequenceCreationTest extends AbstractSequenceTest {
   #[Test, Expect(IllegalArgumentException::class), Values('noncallables')]
   public function invalid_type_for_generate($input) {
     Sequence::generate($input);
+  }
+
+  #[Test, Expect(IllegalArgumentException::class)]
+  public function null_for_generate() {
+    Sequence::generate(null);
   }
 
   #[Test]

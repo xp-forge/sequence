@@ -30,4 +30,10 @@ class LimitTest extends AbstractSequenceTest {
   public function receives_offset() {
     $this->assertSequence([1, 2], Sequence::of([1, 2, 3, 4])->limit(function($e, $offset) { return $offset >= 2; }));
   }
+
+  #[Test]
+  public function no_skipping() {
+    $sequence= Sequence::of([1, 2, 3, 4]);
+    Assert::true($sequence === $sequence->limit(null));
+  }
 }

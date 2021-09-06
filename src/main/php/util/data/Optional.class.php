@@ -1,5 +1,6 @@
 <?php namespace util\data;
 
+use Traversable, IteratorAggregate;
 use lang\Value;
 use util\{Filter, NoSuchElementException, Objects};
 
@@ -8,7 +9,7 @@ use util\{Filter, NoSuchElementException, Objects};
  *
  * @test  xp://util.data.unittest.OptionalTest
  */
-class Optional implements Value, \IteratorAggregate {
+class Optional implements Value, IteratorAggregate {
   public static $EMPTY;
 
   protected $value;
@@ -38,7 +39,7 @@ class Optional implements Value, \IteratorAggregate {
   }
 
   /** @return iterable */
-  public function getIterator() { if ($this->present) yield $this->value; }
+  public function getIterator(): Traversable { if ($this->present) yield $this->value; }
 
   /** @return bool */
   public function present() { return $this->present; }

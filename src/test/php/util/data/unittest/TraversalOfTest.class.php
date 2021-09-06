@@ -15,16 +15,16 @@ class TraversalOfTest {
   public function exceptions_from_rewind_are_wrapped_in_cannot_reset($class) {
     $fixture= new TraversalOf(newinstance(\Iterator::class, [], [
       'started' => false,
-      'rewind' => function() use($class) {
+      '#[ReturnTypeWillChange] rewind' => function() use($class) {
         if ($this->started) {
           throw new $class('Cannot reset');
         }
         $this->started= true;
       },
-      'current' => function() { return null; },
-      'key'     => function() { return null; },
-      'valid'   => function() { return false; },
-      'next'    => function() { }
+      '#[ReturnTypeWillChange] current' => function() { return null; },
+      '#[ReturnTypeWillChange] key'     => function() { return null; },
+      '#[ReturnTypeWillChange] valid'   => function() { return false; },
+      '#[ReturnTypeWillChange] next'    => function() { }
     ]));
     $fixture->rewind();
 
@@ -36,11 +36,11 @@ class TraversalOfTest {
   #[Test]
   public function exceptions_during_iteration_are_left_untouched() {
     $fixture= new TraversalOf(newinstance(\Iterator::class, [], [
-      'rewind'  => function() { },
-      'current' => function() { throw new IllegalStateException('Test'); },
-      'key'     => function() { return null; },
-      'valid'   => function() { return true; },
-      'next'    => function() { }
+      '#[ReturnTypeWillChange] rewind'  => function() { },
+      '#[ReturnTypeWillChange] current' => function() { throw new IllegalStateException('Test'); },
+      '#[ReturnTypeWillChange] key'     => function() { return null; },
+      '#[ReturnTypeWillChange] valid'   => function() { return true; },
+      '#[ReturnTypeWillChange] next'    => function() { }
     ]));
     $fixture->rewind();
 

@@ -1,5 +1,6 @@
 <?php namespace util\data;
 
+use Traversable, IteratorAggregate;
 use util\{NoSuchElementException, XPIterator};
 
 /**
@@ -8,7 +9,7 @@ use util\{NoSuchElementException, XPIterator};
  * @see  xp://util.data.Sequence#iterator
  * @test xp://util.data.unittest.SequenceIteratorTest
  */
-class SequenceIterator implements XPIterator, \IteratorAggregate {
+class SequenceIterator implements XPIterator, IteratorAggregate {
   private $it;
 
   /**
@@ -22,12 +23,8 @@ class SequenceIterator implements XPIterator, \IteratorAggregate {
     $this->it->rewind();
   }
 
-  /**
-   * Optimizes case when this iterator is wrapped in a PHP iterator.
-   *
-   * @return  php.Iterator
-   */
-  public function getIterator() {
+  /** Optimizes case when this iterator is wrapped in a PHP iterator */
+  public function getIterator(): Traversable {
     return new ContinuationOf($this->it);
   }
 

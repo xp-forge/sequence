@@ -9,11 +9,6 @@ use util\data\Sequence;
 
 class EachTest extends AbstractSequenceTest {
 
-  /** @return var[][] */
-  protected function invalidArguments() {
-    return array_filter($this->noncallables(), function($args) { return null !== $args[0]; });
-  }
-
   #[Test]
   public function each() {
     $collect= [];
@@ -77,7 +72,7 @@ class EachTest extends AbstractSequenceTest {
     Assert::equals('1234', $bytes);
   }
 
-  #[Test, Values('invalidArguments'), Expect(IllegalArgumentException::class)]
+  #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->each($noncallable);
   }

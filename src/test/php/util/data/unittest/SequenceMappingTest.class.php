@@ -7,13 +7,6 @@ use util\data\Sequence;
 
 class SequenceMappingTest extends AbstractSequenceTest {
 
-  /** @return iterable */
-  private function nonmappers() {
-    foreach ($this->noncallables() as $value) {
-      if ([null] !== $value) yield $value;
-    }
-  }
-
   #[Test]
   public function with_function() {
     $this->assertSequence([2, 4, 6, 8], Sequence::of([1, 2, 3, 4])->map(function($e) { return $e * 2; }));
@@ -30,7 +23,7 @@ class SequenceMappingTest extends AbstractSequenceTest {
     Assert::true($sequence === $sequence->map(null));
   }
 
-  #[Test, Values('nonmappers'), Expect(IllegalArgumentException::class)]
+  #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
   public function map_raises_exception_when_given($noncallable) {
     Sequence::of([])->map($noncallable);
   }

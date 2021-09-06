@@ -11,11 +11,6 @@ class LimitTest extends AbstractSequenceTest {
   }
 
   #[Test]
-  public function no_limit() {
-    $this->assertSequence([1, 2, 3], Sequence::of([1, 2, 3])->limit(null));
-  }
-
-  #[Test]
   public function stops_at_nth_iterator_element() {
     $this->assertSequence([1, 2], Sequence::iterate(1, function($i) { return ++$i; })->limit(2));
   }
@@ -34,5 +29,11 @@ class LimitTest extends AbstractSequenceTest {
   #[Test]
   public function receives_offset() {
     $this->assertSequence([1, 2], Sequence::of([1, 2, 3, 4])->limit(function($e, $offset) { return $offset >= 2; }));
+  }
+
+  #[Test]
+  public function no_skipping() {
+    $sequence= Sequence::of([1, 2, 3, 4]);
+    Assert::true($sequence === $sequence->limit(null));
   }
 }

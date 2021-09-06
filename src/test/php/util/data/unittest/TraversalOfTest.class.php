@@ -15,7 +15,7 @@ class TraversalOfTest {
   public function exceptions_from_rewind_are_wrapped_in_cannot_reset($class) {
     $fixture= new TraversalOf(newinstance(\Iterator::class, [], [
       'started' => false,
-      '#[\ReturnTypeWillChange] rewind' => function() use($class) {
+      '#[ReturnTypeWillChange] rewind' => function() use($class) {
         if ($this->started) {
           throw new $class('Cannot reset');
         }

@@ -39,8 +39,9 @@ class SequenceFilteringTest extends AbstractSequenceTest {
   }
 
   #[Test]
-  public function with_null() {
-    $this->assertSequence([1, 2, 3, 4], Sequence::of([1, 2, 3, 4])->filter(null));
+  public function with_null_is_noop() {
+    $sequence= Sequence::of([1, 2, 3, 4]);
+    Assert::true($sequence === $sequence->filter(null));
   }
 
   #[Test, Values('nonfilters'), Expect(IllegalArgumentException::class)]

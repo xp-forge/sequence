@@ -25,8 +25,9 @@ class SequenceMappingTest extends AbstractSequenceTest {
   }
 
   #[Test]
-  public function with_null() {
-    $this->assertSequence([1, 2, 3, 4], Sequence::of([1, 2, 3, 4])->map(null));
+  public function with_null_is_noop() {
+    $sequence= Sequence::of([1, 2, 3, 4]);
+    Assert::true($sequence === $sequence->map(null));
   }
 
   #[Test, Values('nonmappers'), Expect(IllegalArgumentException::class)]

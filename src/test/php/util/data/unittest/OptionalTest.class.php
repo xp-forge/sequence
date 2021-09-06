@@ -113,6 +113,12 @@ class OptionalTest {
   }
 
   #[Test]
+  public function filter_returns_optional_instance_with_null() {
+    $optional= Optional::of('test')->filter(null);
+    Assert::true($optional === $optional);
+  }
+
+  #[Test]
   public function filter_with_filter_instance() {
     $filter= new class() implements Filter {
       public function accept($value) { return preg_match('/^www/', $value); }
@@ -128,6 +134,12 @@ class OptionalTest {
   #[Test]
   public function map_returns_empty_when_no_value_present() {
     Assert::equals(Optional::$EMPTY, Optional::$EMPTY->map('implode'));
+  }
+
+  #[Test]
+  public function map_returns_optional_instance_with_null() {
+    $optional= Optional::of('test')->map(null);
+    Assert::true($optional === $optional);
   }
 
   #[Test]

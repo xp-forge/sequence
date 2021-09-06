@@ -114,8 +114,8 @@ class OptionalTest {
 
   #[Test]
   public function filter_returns_optional_instance_with_null() {
-    $optional= Optional::of('test')->filter(null);
-    Assert::true($optional === $optional);
+    $optional= Optional::of('test');
+    Assert::true($optional === $optional->filter(null));
   }
 
   #[Test]
@@ -138,8 +138,8 @@ class OptionalTest {
 
   #[Test]
   public function map_returns_optional_instance_with_null() {
-    $optional= Optional::of('test')->map(null);
-    Assert::true($optional === $optional);
+    $optional= Optional::of('test');
+    Assert::true($optional === $optional->map(null));
   }
 
   #[Test]

@@ -449,7 +449,9 @@ class Sequence implements Value, IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function peek($action, $args= null) {
-    if (null !== $args) {
+    if (null === $action) {
+      return $this;
+    } else if (null !== $args) {
       $peek= Functions::$RECV->newInstance($action);
       $f= function() use($peek, $args) {
         foreach ($this->elements as $key => $element) {

@@ -9,6 +9,13 @@ use util\data\Sequence;
 
 class PeekTest extends AbstractSequenceTest {
 
+  /** @return iterable */
+  private function nonpeekers() {
+    foreach ($this->noncallables() as $value) {
+      if ([null] !== $value) yield $value;
+    }
+  }
+
   #[Test, Expect(IllegalArgumentException::class)]
   public function invalid() {
     Sequence::$EMPTY->peek('@non-existant-func@');
@@ -64,7 +71,13 @@ class PeekTest extends AbstractSequenceTest {
     Assert::equals('1234', $bytes);
   }
 
-  #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
+  #[Test]
+  public function peek_is_noop_when_given_null() {
+    $sequence= Sequence::of([]);
+    Assert::true($sequence === $sequence->peek(null));
+  }
+
+  #[Test, Values('nonpeekers'), Expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->peek($noncallable);
   }

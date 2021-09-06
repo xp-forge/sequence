@@ -1,5 +1,6 @@
 <?php namespace util\data;
 
+use Traversable, IteratorAggregate;
 use lang\{IllegalArgumentException, IllegalStateException, Throwable, Value};
 use util\{Comparator, Filter, Objects};
 
@@ -19,7 +20,7 @@ use util\{Comparator, Filter, Objects};
  * @test xp://util.data.unittest.SequenceResultSetTest
  * @test xp://util.data.unittest.SequenceSkipTest
  */
-class Sequence implements Value, \IteratorAggregate {
+class Sequence implements Value, IteratorAggregate {
   public static $EMPTY;
 
   protected $elements;
@@ -37,7 +38,7 @@ class Sequence implements Value, \IteratorAggregate {
   public function iterator() { return new SequenceIterator($this); }
 
   /** @return iterable */
-  public function getIterator() { yield from $this->elements; }
+  public function getIterator(): Traversable { yield from $this->elements; }
 
   /**
    * Creates a new stream with an enumeration of elements

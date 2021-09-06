@@ -7,6 +7,13 @@ use util\data\Sequence;
 
 class SequenceFilteringTest extends AbstractSequenceTest {
 
+  /** @return iterable */
+  private function nonfilters() {
+    foreach ($this->noncallables() as $value) {
+      if ([null] !== $value) yield $value;
+    }
+  }
+
   #[Test]
   public function with_function() {
     $this->assertSequence([2, 4], Sequence::of([1, 2, 3, 4])->filter(function($e) { return 0 === $e % 2; }));
@@ -31,7 +38,12 @@ class SequenceFilteringTest extends AbstractSequenceTest {
     ])));
   }
 
-  #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
+  #[Test]
+  public function with_null() {
+    $this->assertSequence([1, 2, 3, 4], Sequence::of([1, 2, 3, 4])->filter(null));
+  }
+
+  #[Test, Values('nonfilters'), Expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->filter($noncallable);
   }

@@ -251,7 +251,9 @@ class Sequence implements Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function limit($arg) {
-    if (is_numeric($arg)) {
+    if (null === $arg) {
+      return $this;
+    } else if (is_numeric($arg)) {
       $max= (int)$arg;
       $f= function() use($max) {
         $i= 0;
@@ -289,7 +291,9 @@ class Sequence implements Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function skip($arg) {
-    if (is_numeric($arg)) {
+    if (null === $arg) {
+      return $this;
+    } else if (is_numeric($arg)) {
       $max= (int)$arg;
       $f= function() use($max) {
         $i= 0;
@@ -334,7 +338,9 @@ class Sequence implements Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function filter($predicate) {
-    if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
+    if (null === $predicate) {
+      return $this;
+    } else if ($predicate instanceof Filter || is('util.Filter<?>', $predicate)) {
       $f= function() use($predicate) {
         foreach ($this->elements as $key => $element) {
           if ($predicate->accept($element)) yield $key => $element;
@@ -367,7 +373,9 @@ class Sequence implements Value, \IteratorAggregate {
    * @throws lang.IllegalArgumentException
    */
   public function map($function) {
-    if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
+    if (null === $function) {
+      return $this;
+    } else if (Functions::$APPLY_WITH_KEY->isInstance($function)) {
       $mapper= Functions::$APPLY_WITH_KEY->cast($function);
       $f= function() use($mapper) {
         foreach ($this->elements as $key => $element) {
@@ -530,7 +538,7 @@ class Sequence implements Value, \IteratorAggregate {
    * @return self
    */
   public function distinct($function= null) {
-    $hash= Functions::$APPLY->newInstance($function ?: 'util.Objects::hashOf');
+    $hash= Functions::$APPLY->newInstance($function ?? 'util.Objects::hashOf');
     return self::of(function() use($hash) {
       $set= [];
       foreach ($this->elements as $e) {

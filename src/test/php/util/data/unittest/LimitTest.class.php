@@ -11,6 +11,11 @@ class LimitTest extends AbstractSequenceTest {
   }
 
   #[Test]
+  public function no_limit() {
+    $this->assertSequence([1, 2, 3], Sequence::of([1, 2, 3])->limit(null));
+  }
+
+  #[Test]
   public function stops_at_nth_iterator_element() {
     $this->assertSequence([1, 2], Sequence::iterate(1, function($i) { return ++$i; })->limit(2));
   }

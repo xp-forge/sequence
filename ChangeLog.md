@@ -3,6 +3,12 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 9.2.0 / 2021-09-06
+
+* Merged PR #52: Allow NULL for Sequence methods peek(), map(), filter(),
+  skip(), limit() as well as Optional methods map() and filter()
+  (@thekid)
+
 ## 9.1.1 / 2021-09-06
 
 * Fixed PHP 8.1 compatibility for `Traversable` subtypes - @thekid

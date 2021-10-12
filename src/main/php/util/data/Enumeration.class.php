@@ -23,7 +23,7 @@ abstract class Enumeration {
   /**
    * Verifies a given argument is an enumeration
    *
-   * @param  var $arg
+   * @param  ?iterable|util.XPIterator|function(): iterable $arg
    * @return iterable
    * @throws lang.IllegalArgumentException
    */

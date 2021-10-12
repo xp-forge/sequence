@@ -44,7 +44,7 @@ class Sequence implements Value, IteratorAggregate {
    * Creates a new stream with an enumeration of elements
    *
    * @see    xp://util.data.Enumeration
-   * @param  var... $enumerables an iterator, iterable, generator or array
+   * @param  ?iterable|util.XPIterator|function(): iterable... $enumerables
    * @return self
    * @throws lang.IllegalArgumentException if type of elements argument is incorrect
    */
@@ -409,7 +409,7 @@ class Sequence implements Value, IteratorAggregate {
    * Combines values from this sequence with a given enumerable value,
    * optionally using a given transformation function.
    *
-   * @param  var $enumerable an iterator, iterable, generator or array
+   * @param  ?iterable|util.XPIterator|function(): iterable $enumerable
    * @param  ?function(var, var): var $transform
    * @return self
    * @throws lang.IllegalArgumentException

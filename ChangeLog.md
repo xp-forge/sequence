@@ -3,6 +3,11 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 9.3.0 / 2021-10-15
+
+* Merged PR #53: Implement `Sequence::zip()` intermediate operation
+  (@thekid)
+
 ## 9.2.0 / 2021-09-06
 
 * Merged PR #52: Allow NULL for Sequence methods peek(), map(), filter(),

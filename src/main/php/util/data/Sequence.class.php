@@ -44,7 +44,7 @@ class Sequence implements Value, IteratorAggregate {
    * Creates a new stream with an enumeration of elements
    *
    * @see    xp://util.data.Enumeration
-   * @param  var... $enumerables an iterator, iterable, generator or array
+   * @param  ?iterable|util.XPIterator|function(): iterable... $enumerables
    * @return self
    * @throws lang.IllegalArgumentException if type of elements argument is incorrect
    */
@@ -402,6 +402,43 @@ class Sequence implements Value, IteratorAggregate {
       };
     }
 
+    return new self($f());
+  }
+
+  /**
+   * Combines values from this sequence with a given enumerable value,
+   * optionally using a given transformation function.
+   *
+   * @param  ?iterable|util.XPIterator|function(): iterable $enumerable
+   * @param  ?function(var, var): var $transform
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
+  public function zip($enumerable, $transform= null) {
+    $it= self::of($enumerable)->getIterator();
+    if (null === $transform) {
+      $f= function() use($it) {
+        foreach ($this->elements as $key => $element) {
+          yield $key => [$element, $it->current()];
+          $it->next();
+          if (!$it->valid()) break;
+        }
+      };
+    } else {
+      $op= Functions::$BINARYOP->newInstance($transform);
+      $f= function() use($it, $op) {
+        foreach ($this->elements as $key => $element) {
+          $r= $op($element, $it->current());
+          if ($r instanceof \Generator) {
+            yield from $r;
+          } else {
+            yield $key => $r;
+          }
+          $it->next();
+          if (!$it->valid()) break;
+        }
+      };
+    }
     return new self($f());
   }
 

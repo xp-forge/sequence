@@ -99,6 +99,7 @@ The following operations return a new `Sequence` instance on which more intermed
 * **collecting** - Collects elements in this sequence to a `util.data.ICollector` instance. Unlike the terminal operation below, passes the elements on.
 * **flatten** - Flattens sequences inside the sequence and returns a new list containing all values from all sequences.
 * **distinct** - Returns a new sequence which only consists of unique elements. Uniqueness is calculated using the `util.Objects::hashOf()` method by default (*but can be passed another function*).
+* **zip** - Combines values from this sequence with a given enumerable value, optionally using a given transformation function.
 * **sorted** - Returns a sorted collection. Can be invoked with a comparator function, a `util.Comparator` instance or the sort flags from PHP's sort() function (e.g. `SORT_NUMERIC | SORT_DESC`).
 
 Terminal operations

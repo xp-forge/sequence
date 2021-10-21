@@ -3,6 +3,11 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 10.0.0 / 2021-10-21
+
+* Implemented xp-framework/rfc#341, dropping compatibility with XP 9
+  (@thekid)
+
 ## 9.3.0 / 2021-10-15
 
 * Merged PR #53: Implement `Sequence::zip()` intermediate operation

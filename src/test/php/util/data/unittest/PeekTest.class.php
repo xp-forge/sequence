@@ -38,19 +38,17 @@ class PeekTest extends AbstractSequenceTest {
 
   #[Test]
   public function writing_to_console_out() {
-    $orig= Console::$out->getStream();
+    $orig= Console::$out->stream();
     $out= new MemoryOutputStream();
-    Console::$out->setStream($out);
 
     try {
-      Console::$out->setStream($out);
+      Console::$out->redirect($out);
       Sequence::of([1, 2, 3, 4])->peek('util.cmd.Console::write', [])->each();
     } finally {
-      Console::$out->setStream($orig);
+      Console::$out->redirect($orig);
     }
 
-    Console::$out->setStream($orig);    
-    Assert::equals('1234', $out->getBytes());
+    Assert::equals('1234', $out->bytes());
   }
 
   #[Test]

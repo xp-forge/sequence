@@ -32,4 +32,11 @@ class SequenceReductionTest extends AbstractSequenceTest {
       return $a.$b;
     }));
   }
+
+  #[Test, Values([[[1, null, 2], 1], [[1, 2], 1], [[null, 1], 1], [[null], null], [[], null]])]
+  public function used_for_first_nonnull_element($input, $expect) {
+    Assert::equals($expect, Sequence::of($input)->reduce(null, function($a, $b) {
+      return $a ?? $b;
+    }));
+  }
 }

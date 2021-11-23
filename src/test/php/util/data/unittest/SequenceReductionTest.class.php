@@ -1,6 +1,7 @@
 <?php namespace util\data\unittest;
 
 use unittest\{Assert, Test};
+use util\Date;
 use util\data\Sequence;
 
 class SequenceReductionTest extends AbstractSequenceTest {
@@ -37,6 +38,24 @@ class SequenceReductionTest extends AbstractSequenceTest {
   public function used_for_first_nonnull_element($input, $expect) {
     Assert::equals($expect, Sequence::of($input)->reduce(null, function($a, $b) {
       return $a ?? $b;
+    }));
+  }
+
+  #[Test]
+  public function used_for_date_longest_ago() {
+    $dates= [new Date('2021-11-23'), new Date('2021-10-02'), new Date('2021-12-14'), new Date('2021-02-10')];
+
+    Assert::equals(new Date('2021-02-10'), Sequence::of($dates)->reduce(null, function($a, $b) {
+      return null === $a || $b->isBefore($a) ? $b : $a;
+    }));
+  }
+
+  #[Test]
+  public function used_for_most_recent_date() {
+    $dates= [new Date('2021-11-23'), new Date('2021-10-02'), new Date('2021-12-14'), new Date('2021-02-10')];
+
+    Assert::equals(new Date('2021-12-14'), Sequence::of($dates)->reduce(null, function($a, $b) {
+      return null === $a || $b->isAfter($a) ? $b : $a;
     }));
   }
 }

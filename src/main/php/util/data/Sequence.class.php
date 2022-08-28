@@ -110,6 +110,27 @@ class Sequence implements Value, IteratorAggregate {
   }
 
   /**
+   * Returns the first element of this stream, or an empty optional
+   *
+   * @param  util.Filter|function(var): bool $filter An optional filter
+   * @return util.data.Optional
+   * @throws util.data.TooManyElements
+   */
+  public function single($filter= null) {
+    $it= ($filter ? $this->filter($filter) : $this)->getIterator();
+
+    // If no elements are found, return an empty optional
+    if (!$it->valid()) return Optional::$EMPTY;
+
+    // If a single element is found, return an optional of it.
+    $single= $it->current();
+    $it->next();
+    if (!$it->valid()) return new Optional($single);
+
+    throw new TooManyElements('More than one element in sequence');
+  }
+
+  /**
    * Collects all elements in an array
    *
    * @param  function(var): var $map An optional mapper

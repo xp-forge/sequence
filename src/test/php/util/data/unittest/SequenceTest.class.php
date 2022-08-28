@@ -1,8 +1,9 @@
 <?php namespace util\data\unittest;
 
+use lang\IllegalStateException;
 use unittest\{Assert, Test, Values};
 use util\cmd\Console;
-use util\data\{CannotReset, Collector, Optional, Sequence};
+use util\data\{CannotReset, Collector, Optional, Sequence, NoSuchElement, TooManyElements};
 
 class SequenceTest extends AbstractSequenceTest {
 
@@ -90,6 +91,35 @@ class SequenceTest extends AbstractSequenceTest {
   #[Test]
   public function first_returns_non_present_optional_if_no_element_matches_its_filter() {
     Assert::false(Sequence::of([1, 3])->first(function($i) { return 0 === $i % 2; })->present());
+  }
+
+  #[Test]
+  public function single_returns_non_present_optional_for_empty_input() {
+    Assert::false(Sequence::of([])->single()->present());
+  }
+
+  #[Test]
+  public function single_returns_first_array_element() {
+    Assert::equals(1, Sequence::of([1])->first()->get());
+  }
+
+  #[Test]
+  public function single_returns_present_optional_even_for_null() {
+    Assert::true(Sequence::of([null])->single()->present());
+  }
+
+  #[Test]
+  public function single_throws_if_more_than_one_element_is_contained() {
+    Assert::throws(TooManyElements::class, function() {
+      Sequence::of([1, 2])->single();
+    });
+  }
+
+  #[Test]
+  public function get_single_throws_if_empty() {
+    Assert::throws(NoSuchElement::class, function() {
+      Sequence::of([])->single()->get();
+    });
   }
 
   #[Test]

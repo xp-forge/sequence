@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 10.1.0 / 2022-08-28
+
 * Introduce dedicated `util.data.NoSuchElement` exception. It's thrown
   from `Optional::get()` if no element is present instead of the generic
   `util.NoSuchElementException`. For BC reasons, it extends the latter.

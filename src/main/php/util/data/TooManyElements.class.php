@@ -7,6 +7,6 @@ use lang\XPException;
  *
  * @see  util.data.Sequence::single()
  */
-class TooManyElements extends XPException implements UnexpectedNumberOfElements {
+class TooManyElements extends XPException {
   
 }

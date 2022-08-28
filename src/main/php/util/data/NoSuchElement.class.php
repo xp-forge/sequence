@@ -7,6 +7,6 @@ use util\NoSuchElementException;
  *
  * @see  util.data.Optional::get()
  */
-class NoSuchElement extends NoSuchElementException implements UnexpectedNumberOfElements {
+class NoSuchElement extends NoSuchElementException {
   
 }

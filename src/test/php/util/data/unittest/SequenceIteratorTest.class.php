@@ -1,8 +1,8 @@
 <?php namespace util\data\unittest;
 
 use unittest\{Assert, Expect, Test, Values};
-use util\data\{CannotReset, Sequence};
-use util\{NoSuchElementException, XPIterator};
+use util\XPIterator;
+use util\data\{CannotReset, Sequence, NoSuchElement};
 
 class SequenceIteratorTest extends AbstractSequenceTest {
 
@@ -35,7 +35,7 @@ class SequenceIteratorTest extends AbstractSequenceTest {
     Assert::false(Sequence::$EMPTY->iterator()->hasNext());
   }
 
-  #[Test, Expect(NoSuchElementException::class)]
+  #[Test, Expect(NoSuchElement::class)]
   public function next_throws_exception_when_at_end_of_sequence() {
     Sequence::$EMPTY->iterator()->next();
   }

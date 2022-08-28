@@ -114,7 +114,7 @@ class Sequence implements Value, IteratorAggregate {
    *
    * @param  util.Filter|function(var): bool $filter An optional filter
    * @return util.data.Optional
-   * @throws lang.IllegalStateException
+   * @throws util.data.TooManyElements
    */
   public function single($filter= null) {
     $it= ($filter ? $this->filter($filter) : $this)->getIterator();
@@ -127,7 +127,7 @@ class Sequence implements Value, IteratorAggregate {
     $it->next();
     if (!$it->valid()) return new Optional($single);
 
-    throw new IllegalStateException('More than one element in sequence');
+    throw new TooManyElements('More than one element in sequence');
   }
 
   /**

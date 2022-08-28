@@ -1,7 +1,7 @@
 <?php namespace util\data;
 
 use Traversable, IteratorAggregate;
-use util\{NoSuchElementException, XPIterator};
+use util\XPIterator;
 
 /**
  * Iterates over Sequence instances
@@ -41,7 +41,7 @@ class SequenceIterator implements XPIterator, IteratorAggregate {
    * Returns next element
    *
    * @return var
-   * @throws util.NoSuchElementException If there are no more elements
+   * @throws util.data.NoSuchElement If there are no more elements
    */
   public function next() {
     if ($this->it->valid()) {
@@ -50,6 +50,6 @@ class SequenceIterator implements XPIterator, IteratorAggregate {
       return $return;
     }
 
-    throw new NoSuchElementException('No more elements');
+    throw new NoSuchElement('No more elements');
   }
 }

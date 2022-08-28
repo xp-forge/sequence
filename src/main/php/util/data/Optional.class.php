@@ -2,7 +2,7 @@
 
 use Traversable, IteratorAggregate;
 use lang\Value;
-use util\{Filter, NoSuchElementException, Objects};
+use util\{Filter, Objects};
 
 /**
  * An optional
@@ -48,12 +48,12 @@ class Optional implements Value, IteratorAggregate {
    * Gets this optional's value
    *
    * @return var
-   * @throws util.NoSuchElementException if no value is present.
+   * @throws util.data.NoSuchElement if no value is present.
    */
   public function get() {
     if ($this->present) return $this->value;
 
-    throw new NoSuchElementException('Optional value not present');
+    throw new NoSuchElement('Optional value not present');
   }
 
   /**

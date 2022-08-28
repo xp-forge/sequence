@@ -2,8 +2,8 @@
 
 use lang\IllegalStateException;
 use unittest\{Assert, Expect, Test, Values};
-use util\data\Optional;
-use util\{Filter, NoSuchElementException};
+use util\Filter;
+use util\data\{Optional, NoSuchElement};
 
 class OptionalTest {
 
@@ -35,7 +35,7 @@ class OptionalTest {
     Assert::equals('Test', Optional::of('Test')->get());
   }
 
-  #[Test, Expect(NoSuchElementException::class)]
+  #[Test, Expect(NoSuchElement::class)]
   public function get_throws_exception_when_no_value_is_present() {
     Optional::$EMPTY->get();
   }

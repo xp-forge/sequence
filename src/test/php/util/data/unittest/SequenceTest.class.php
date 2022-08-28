@@ -3,7 +3,7 @@
 use lang\IllegalStateException;
 use unittest\{Assert, Test, Values};
 use util\cmd\Console;
-use util\data\{CannotReset, Collector, Optional, Sequence};
+use util\data\{CannotReset, Collector, Optional, Sequence, NoSuchElement, TooManyElements};
 
 class SequenceTest extends AbstractSequenceTest {
 
@@ -110,8 +110,15 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[Test]
   public function single_throws_if_more_than_one_element_is_contained() {
-    Assert::throws(IllegalStateException::class, function() {
+    Assert::throws(TooManyElements::class, function() {
       Sequence::of([1, 2])->single();
+    });
+  }
+
+  #[Test]
+  public function get_single_throws_if_empty() {
+    Assert::throws(NoSuchElement::class, function() {
+      Sequence::of([])->single()->get();
     });
   }
 

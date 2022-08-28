@@ -109,6 +109,7 @@ The following operations return a single value by consuming all of the sequence:
 * **toArray** - will return a PHP array with zero-based keys
 * **toMap** - will return a PHP associative array
 * **first** - will return the first element as an `util.data.Optional` instance. A value will be present if the sequence was not empty.
+* **single** - like `first()`, but raises an exception if more than one element is contained in the sequence.
 * **count** - will return the number of elements in the sequence
 * **min** - returns the smalles element. Compares numbers by default but may be given a comparator function or a `util.Comparator` instance.
 * **max** - same as `min()`, but returns the largest element instead.

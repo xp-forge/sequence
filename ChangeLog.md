@@ -3,6 +3,15 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Introduce dedicated `util.data.NoSuchElement` exception. It's thrown
+  from `Optional::get()` if no element is present instead of the generic
+  `util.NoSuchElementException`. For BC reasons, it extends the latter.
+  (@thekid)
+* Implemented PR #54: Implement `Sequence::single()` - which is similar
+  to `first()` but raises an exception if there are more than 1 element
+  in the sequence.
+  (@thekid)
+
 ## 10.0.0 / 2021-10-21
 
 * Implemented xp-framework/rfc#341, dropping compatibility with XP 9

@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #55: Migrate test suite - @thekid
+
 ## 10.1.0 / 2022-08-28
 
 * Introduce dedicated `util.data.NoSuchElement` exception. It's thrown

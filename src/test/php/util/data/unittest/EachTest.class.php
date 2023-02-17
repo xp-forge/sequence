@@ -2,8 +2,8 @@
 
 use io\streams\MemoryOutputStream;
 use lang\IllegalArgumentException;
-use unittest\actions\RuntimeVersion;
-use unittest\{Action, Assert, Expect, Test, Values};
+use test\verify\Runtime;
+use test\{Action, Assert, Expect, Test, Values};
 use util\cmd\Console;
 use util\data\Sequence;
 
@@ -72,7 +72,7 @@ class EachTest extends AbstractSequenceTest {
     Assert::equals('1234', $bytes);
   }
 
-  #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
+  #[Test, Values(from: 'noncallables'), Expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->each($noncallable);
   }
@@ -82,7 +82,7 @@ class EachTest extends AbstractSequenceTest {
     Sequence::of([])->each(null, []);
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.1.0")')]
+  #[Test, Runtime(php: '>=7.1.0')]
   public function each_with_void() {
     Assert::equals(4, Sequence::of([1, 2, 3, 4])->each(eval('return function(int $e): void { };')));
   }

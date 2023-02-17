@@ -1,7 +1,7 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\data\Sequence;
 
 /**
@@ -11,28 +11,29 @@ use util\data\Sequence;
  * @see  xp://util.data.Sequence
  */
 class SequenceCreationTest extends AbstractSequenceTest {
+  use Enumerables;
 
   #[Test, Expect(IllegalArgumentException::class)]
   public function missing_argument() {
     Sequence::of();
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::valid')]
+  #[Test, Values(from: 'valid')]
   public function can_create_via_of($input, $name) {
     Assert::instance(Sequence::class, Sequence::of($input), $name);
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values('util.data.unittest.Enumerables::invalid')]
+  #[Test, Expect(IllegalArgumentException::class), Values(from: 'invalid')]
   public function invalid_type_for_of($input) {
     Sequence::of($input);
   }
 
-  #[Test, Values('unaryops')]
+  #[Test, Values(from: 'unaryops')]
   public function can_create_via_iterate($input, $name) {
     Assert::instance(Sequence::class, Sequence::iterate(0, $input), $name);
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values('noncallables')]
+  #[Test, Expect(IllegalArgumentException::class), Values(from: 'noncallables')]
   public function invalid_type_for_iterate($input) {
     Sequence::iterate(0, $input);
   }
@@ -42,12 +43,12 @@ class SequenceCreationTest extends AbstractSequenceTest {
     Sequence::iterate(0, null);
   }
 
-  #[Test, Values('suppliers')]
+  #[Test, Values(from: 'suppliers')]
   public function can_create_via_generate($input) {
     Assert::instance(Sequence::class, Sequence::generate($input));
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values('noncallables')]
+  #[Test, Expect(IllegalArgumentException::class), Values(from: 'noncallables')]
   public function invalid_type_for_generate($input) {
     Sequence::generate($input);
   }

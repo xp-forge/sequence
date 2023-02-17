@@ -1,6 +1,6 @@
 <?php namespace util\data\unittest;
 
-use unittest\Assert;
+use test\Assert;
 use util\data\{Collector, Sequence};
 
 abstract class AbstractSequenceTest {

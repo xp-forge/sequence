@@ -1,6 +1,6 @@
 <?php namespace util\data\unittest;
 
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 use util\data\{CannotReset, YieldingOf};
 
 class YieldingOfTest {
@@ -14,12 +14,12 @@ class YieldingOfTest {
     yield [function() { yield 'key' => 'value'; }, ['key' => 'value']];
   }
 
-  #[Test, Values('fixtures')]
+  #[Test, Values(from: 'fixtures')]
   public function iteration($generator, $expected) {
     Assert::equals($expected, iterator_to_array(new YieldingOf($generator())));
   }
 
-  #[Test, Values('fixtures')]
+  #[Test, Values(from: 'fixtures')]
   public function cannot_rewind_after_rewind($generator) {
     $fixture= new YieldingOf($generator());
     $fixture->rewind();
@@ -29,7 +29,7 @@ class YieldingOfTest {
     });
   }
 
-  #[Test, Values('fixtures')]
+  #[Test, Values(from: 'fixtures')]
   public function cannot_rewind_after_complete_iteration($generator) {
     $fixture= new YieldingOf($generator());
     iterator_to_array($fixture);

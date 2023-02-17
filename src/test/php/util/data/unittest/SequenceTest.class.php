@@ -1,11 +1,12 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalStateException;
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 use util\cmd\Console;
-use util\data\{CannotReset, Collector, Optional, Sequence, NoSuchElement, TooManyElements};
+use util\data\{CannotReset, Collector, NoSuchElement, Optional, Sequence, TooManyElements};
 
 class SequenceTest extends AbstractSequenceTest {
+  use Enumerables;
 
   /**
    * Assertion helper
@@ -17,9 +18,8 @@ class SequenceTest extends AbstractSequenceTest {
    */
   protected function assertNotTwice($seq, $func) {
     $func($seq);
-    Assert::throws(CannotReset::class, function() use($seq, $func) {
-      $func($seq);
-    });
+
+    Assert::that(function() use($seq, $func) { $func($seq); })->throws(CannotReset::class);
   }
 
   #[Test]
@@ -32,7 +32,7 @@ class SequenceTest extends AbstractSequenceTest {
     Assert::equals([], Sequence::$EMPTY->toArray());
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::validArrays')]
+  #[Test, Values(from: 'validArrays')]
   public function toArray_returns_elements_as_array($input, $name) {
     Assert::equals([1, 2, 3], Sequence::of($input)->toArray(), $name);
   }
@@ -50,7 +50,7 @@ class SequenceTest extends AbstractSequenceTest {
     Assert::equals([], Sequence::$EMPTY->toMap());
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::validMaps')]
+  #[Test, Values(from: 'validMaps')]
   public function toMap_returns_elements_as_map($input) {
     Assert::equals(['color' => 'green', 'price' => 12.99], Sequence::of($input)->toMap());
   }
@@ -156,44 +156,44 @@ class SequenceTest extends AbstractSequenceTest {
     Assert::equals(sizeof($input), $i);
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::fixedArrays')]
+  #[Test, Values(from: 'fixedArrays')]
   public function may_use_sequence_based_on_a_fixed_enumerable_more_than_once($input) {
     $seq= Sequence::of($input);
     $seq->each();
     $seq->each();
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::streamedArrays')]
+  #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_toArray_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
     $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->toArray(); });
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::streamedArrays')]
+  #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_each_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
     $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->each(); });
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::streamedArrays')]
+  #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_first_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
     $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->first(); });
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::streamedArrays')]
+  #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_count_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
     $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->count(); });
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::streamedArrays')]
+  #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_min_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
     $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->min(); });
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::streamedArrays')]
+  #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_max_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
     $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->max(); });
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::streamedArrays')]
+  #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_collect_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
     $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->collect(new Collector(
       function() { return 0; },
@@ -201,7 +201,7 @@ class SequenceTest extends AbstractSequenceTest {
     )); });
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::streamedArrays')]
+  #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_reduce_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
     $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->reduce(
       0,

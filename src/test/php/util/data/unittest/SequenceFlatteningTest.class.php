@@ -1,7 +1,7 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\data\{Optional, Sequence};
 
 class SequenceFlatteningTest extends AbstractSequenceTest {
@@ -23,7 +23,7 @@ class SequenceFlatteningTest extends AbstractSequenceTest {
     $this->assertSequence(['a', 'b'], Sequence::of([Optional::of('a'), Optional::$EMPTY, Optional::of('b')])->flatten());
   }
 
-  #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
+  #[Test, Values(from: 'noncallables'), Expect(IllegalArgumentException::class)]
   public function flatten_raises_exception_when_given($noncallable) {
     Sequence::of([])->flatten($noncallable);
   }

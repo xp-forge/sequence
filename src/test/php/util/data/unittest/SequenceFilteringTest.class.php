@@ -1,7 +1,7 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\Filter;
 use util\data\Sequence;
 
@@ -37,7 +37,7 @@ class SequenceFilteringTest extends AbstractSequenceTest {
     Assert::true($sequence === $sequence->filter(null));
   }
 
-  #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
+  #[Test, Values(from: 'noncallables'), Expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($noncallable) {
     Sequence::of([])->filter($noncallable);
   }

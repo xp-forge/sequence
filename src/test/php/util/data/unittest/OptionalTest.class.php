@@ -1,9 +1,9 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalStateException;
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\Filter;
-use util\data\{Optional, NoSuchElement};
+use util\data\{NoSuchElement, Optional};
 
 class OptionalTest {
 
@@ -82,7 +82,7 @@ class OptionalTest {
     Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent(function() { return 'Succeeded'; })->get());
   }
 
-  #[Test, Values('emptyValues')]
+  #[Test, Values(from: 'emptyValues')]
   public function whenAbsent_chaining($value) {
     Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent($value)->whenAbsent('Succeeded')->get());
   }

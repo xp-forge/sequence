@@ -9,11 +9,10 @@ use util\data\Sequence;
  * their definition involves new syntax unparseable with previous PHP versions, 
  * wrapped in eval() statements.
  *
- * @see   xp://util.data.unittest.EnumerationTest
- * @see   xp://util.data.unittest.AbstractSequenceTest
- * @see   php://generators
+ * @see   util.data.unittest.EnumerationTest
+ * @see   util.data.unittest.AbstractSequenceTest
  */
-abstract class Enumerables {
+trait Enumerables {
 
   /**
    * Returns valid arguments for the `of()` method.

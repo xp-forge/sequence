@@ -1,12 +1,13 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\data\{Enumeration, Sequence};
 
 class EnumerationTest {
+  use Enumerables;
 
-  #[Test, Values('util.data.unittest.Enumerables::validArrays')]
+  #[Test, Values(from: 'validArrays')]
   public function all_in_array($enumerable, $desc) {
     $result= [];
     foreach (Enumeration::of($enumerable) as $value) {
@@ -15,7 +16,7 @@ class EnumerationTest {
     Assert::equals([1, 2, 3], $result, $desc);
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::validMaps')]
+  #[Test, Values(from: 'validMaps')]
   public function all_in_map($enumerable, $desc) {
     $result= [];
     foreach (Enumeration::of($enumerable) as $key => $value) {
@@ -42,7 +43,7 @@ class EnumerationTest {
     Assert::equals([1, 2, 3], $result);
   }
 
-  #[Test, Values('util.data.unittest.Enumerables::invalid'), Expect(IllegalArgumentException::class)]
+  #[Test, Values(from: 'invalid'), Expect(IllegalArgumentException::class)]
   public function raises_exception_when_given($value) {
     Enumeration::of($value);
   }

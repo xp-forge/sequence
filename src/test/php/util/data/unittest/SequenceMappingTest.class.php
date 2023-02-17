@@ -1,8 +1,8 @@
 <?php namespace util\data\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\actions\VerifyThat;
-use unittest\{Assert, Expect, Test, Values};
+use test\verify\Condition;
+use test\{Assert, Expect, Test, Values};
 use util\data\Sequence;
 
 class SequenceMappingTest extends AbstractSequenceTest {
@@ -23,7 +23,7 @@ class SequenceMappingTest extends AbstractSequenceTest {
     Assert::true($sequence === $sequence->map(null));
   }
 
-  #[Test, Values('noncallables'), Expect(IllegalArgumentException::class)]
+  #[Test, Values(from: 'noncallables'), Expect(IllegalArgumentException::class)]
   public function map_raises_exception_when_given($noncallable) {
     Sequence::of([])->map($noncallable);
   }

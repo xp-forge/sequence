@@ -1,16 +1,13 @@
 <?php namespace util\data\unittest;
 
 use lang\XPClass;
-use unittest\{Assert, Before, Test, Values};
+use test\{Assert, Before, Test, Values};
 use util\collections\{HashSet, HashTable, Vector};
 use util\data\{Collector, Collectors, Sequence};
 
 class CollectorsTest {
   private $people;
 
-  /**
-   * Sets up test, initializing people member
-   */
   #[Before]
   public function setUp() {
     $this->people= [
@@ -20,20 +17,9 @@ class CollectorsTest {
     ];
   }
 
-  /**
-   * Compares a hashtable against an expected map.
-   *
-   * @param  [:var] $expected
-   * @param  util.collections.HashTable $actual
-   * @throws unittest.AssertionFailedError
-   */
-  private function assertHashTable($expected, $actual) {
-    Assert::instance(HashTable::class, $actual);
-    $compare= [];
-    foreach ($actual as $pair) {
-      $compare[$pair->key]= $pair->value;
-    }
-    return Assert::equals($expected, $compare);
+  /** Destructure map pairs */
+  private function map($pair) {
+    yield $pair->key => $pair->value;
   }
 
   /** @return var[][] */
@@ -68,7 +54,7 @@ class CollectorsTest {
     ];
   }
 
-  #[Test, Values('employeesName')]
+  #[Test, Values(from: 'employeesName')]
   public function toList($nameOf) {
     Assert::equals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->map($nameOf)
@@ -77,7 +63,7 @@ class CollectorsTest {
     );
   }
 
-  #[Test, Values('employeesName')]
+  #[Test, Values(from: 'employeesName')]
   public function toList_with_extraction($nameOf) {
     Assert::equals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->collect(Collectors::toList($nameOf))
@@ -85,7 +71,7 @@ class CollectorsTest {
     );
   }
 
-  #[Test, Values('employeesName')]
+  #[Test, Values(from: 'employeesName')]
   public function toSet($nameOf) {
     Assert::equals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->map($nameOf)
@@ -94,7 +80,7 @@ class CollectorsTest {
     );
   }
 
-  #[Test, Values('employeesName')]
+  #[Test, Values(from: 'employeesName')]
   public function toSet_with_extraction($nameOf) {
     Assert::equals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->collect(Collectors::toSet($nameOf))
@@ -102,7 +88,7 @@ class CollectorsTest {
     );
   }
 
-  #[Test, Values('employeesName')]
+  #[Test, Values(from: 'employeesName')]
   public function toCollection_with_HashSet_class($nameOf) {
     Assert::equals(['Timm', 'Alex', 'Dude'], Sequence::of($this->people)
       ->map($nameOf)
@@ -111,7 +97,7 @@ class CollectorsTest {
     );
   }
 
-  #[Test, Values('employeesName')]
+  #[Test, Values(from: 'employeesName')]
   public function toMap($nameOf) {
     $map= new HashTable();
     $map[1549]= 'Timm';
@@ -124,7 +110,7 @@ class CollectorsTest {
     )));
   }
 
-  #[Test, Values('employeesName')]
+  #[Test, Values(from: 'employeesName')]
   public function toMap_uses_complete_value_if_value_function_omitted($nameOf) {
     $map= new HashTable();
     $map['Timm']= $this->people[1549];
@@ -165,14 +151,14 @@ class CollectorsTest {
     Assert::equals(['COLOR' => 'green', 'PRICE' => 12.99], $result);
   }
 
-  #[Test, Values('employeesYears')]
+  #[Test, Values(from: 'employeesYears')]
   public function summing_years($yearsOf) {
     Assert::equals(33, Sequence::of($this->people)
       ->collect(Collectors::summing($yearsOf))
     );
   }
 
-  #[Test, Values('employeesYears')]
+  #[Test, Values(from: 'employeesYears')]
   public function summing_elements($yearsOf) {
     Assert::equals(33, Sequence::of($this->people)
       ->map($yearsOf)
@@ -180,14 +166,14 @@ class CollectorsTest {
     );
   }
 
-  #[Test, Values('employeesYears')]
+  #[Test, Values(from: 'employeesYears')]
   public function averaging_years($yearsOf) {
     Assert::equals(11, Sequence::of($this->people)
       ->collect(Collectors::averaging($yearsOf))
     );
   }
 
-  #[Test, Values('employeesYears')]
+  #[Test, Values(from: 'employeesYears')]
   public function averaging_elements($yearsOf) {
     Assert::equals(11, Sequence::of($this->people)
       ->map($yearsOf)
@@ -202,7 +188,7 @@ class CollectorsTest {
     );
   }
 
-  #[Test, Values('employeesDepartment')]
+  #[Test, Values(from: 'employeesDepartment')]
   public function mapping_by_department($departmentOf) {
     Assert::equals(new Vector(['B', 'I', 'I']), Sequence::of($this->people)
       ->collect(Collectors::mapping($departmentOf))
@@ -233,50 +219,64 @@ class CollectorsTest {
     );
   }
 
-  #[Test, Values('employeesDepartment')]
+  #[Test, Values(from: 'employeesDepartment')]
   public function groupingBy($departmentOf) {
-    $this->assertHashTable(
-      ['B' => new Vector([$this->people[1549]]), 'I' => new Vector([$this->people[1552], $this->people[6100]])],
-      Sequence::of($this->people)->collect(Collectors::groupingBy($departmentOf))
-    );
+    $collector= Collectors::groupingBy($departmentOf);
+    Assert::that(Sequence::of($this->people)->collect($collector))
+      ->mappedBy([$this, 'map'])
+      ->isEqualTo([
+        'B' => new Vector([$this->people[1549]]),
+        'I' => new Vector([$this->people[1552], $this->people[6100]])
+      ])
+    ;
   }
 
   #[Test]
   public function groupingBy_with_summing_of_years() {
-    $this->assertHashTable(['B' => 15, 'I' => 18], Sequence::of($this->people)
-      ->collect(Collectors::groupingBy(
-        function($e) { return $e->department(); },
-        Collectors::summing(function($e) { return $e->years(); })
-      ))
+    $collector= Collectors::groupingBy(
+      function($e) { return $e->department(); },
+      Collectors::summing(function($e) { return $e->years(); })
     );
+    Assert::that(Sequence::of($this->people)->collect($collector))
+      ->mappedBy([$this, 'map'])
+      ->isEqualTo(['B' => 15, 'I' => 18])
+    ;
   }
 
   #[Test]
   public function groupingBy_with_averaging_of_years() {
-    $this->assertHashTable(['B' => 15, 'I' => 9], Sequence::of($this->people)
-      ->collect(Collectors::groupingBy(
-        function($e) { return $e->department(); },
-        Collectors::averaging(function($e) { return $e->years(); })
-      ))
+    $collector= Collectors::groupingBy(
+      function($e) { return $e->department(); },
+      Collectors::averaging(function($e) { return $e->years(); })
     );
+    Assert::that(Sequence::of($this->people)->collect($collector))
+      ->mappedBy([$this, 'map'])
+      ->isEqualTo(['B' => 15, 'I' => 9])
+    ;
   }
 
-  #[Test, Values('dinosaurEmployees')]
+  #[Test, Values(from: 'dinosaurEmployees')]
   public function partitioningBy($moreThanTen) {
-    $this->assertHashTable(
-      [true => new Vector([$this->people[1549], $this->people[1552]]), false => new Vector([$this->people[6100]])],
-      Sequence::of($this->people)->collect(Collectors::partitioningBy($moreThanTen))
-    );
+    $collector= Collectors::partitioningBy($moreThanTen);
+    Assert::that(Sequence::of($this->people)->collect($collector))
+      ->mappedBy([$this, 'map'])
+      ->isEqualTo([
+        true  => new Vector([$this->people[1549], $this->people[1552]]),
+        false => new Vector([$this->people[6100]])
+      ])
+    ;
   }
 
   #[Test]
   public function partitioningBy_handles_non_booleans() {
-    $this->assertHashTable(
-      [true => new Vector(['Test', 'Unittest']), false => new Vector(['Trial & Error'])],
-      Sequence::of(['Test', 'Unittest', 'Trial & Error'])->collect(Collectors::partitioningBy(function($e) {
-        return stristr($e, 'Test');
-      }))
-    );
+    $collector= Collectors::partitioningBy(function($e) { return stristr($e, 'Test'); });
+    Assert::that(Sequence::of(['Test', 'Unittest', 'Trial & Error'])->collect($collector))
+      ->mappedBy([$this, 'map'])
+      ->isEqualTo([
+        true  => new Vector(['Test', 'Unittest']),
+        false => new Vector(['Trial & Error'])
+      ])
+    ;
   }
 
   #[Test]

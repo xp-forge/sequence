@@ -1,6 +1,6 @@
 <?php namespace util\data\unittest;
 
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 use util\data\Sequence;
 use util\{Comparator, Date};
 

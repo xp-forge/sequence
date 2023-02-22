@@ -642,6 +642,76 @@ class Sequence implements Value, IteratorAggregate {
     return new self($sort);
   }
 
+  /**
+   * Returns a chunked stream with chunks not exceeding the given size.
+   *  The last chunk may have a smaller size.
+   *
+   * @param  int $size
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
+  public function chunked($size) {
+    if ($size <= 0) {
+      throw new IllegalArgumentException('Size must be greater than zero');
+    }
+
+    $f= function() use($size) {
+      $chunk= [];
+      foreach ($this->elements as $element) {
+        $chunk[]= $element;
+        if (sizeof($chunk) < $size) continue;
+
+        yield $chunk;
+        $chunk= [];
+      }
+      if ($chunk) yield $chunk;
+    };
+    return new self($f());
+  }
+
+  /**
+   * Returns a sliding window stream - a list of element ranges that you
+   * would see if you were looking at the collection through a sliding
+   * window of the given size. 
+   *
+   * @param  int $size
+   * @param  int $step
+   * @param  bool $partial
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
+  public function windowed($size, $step= 1, $partial= false) {
+    if ($size <= 0 || $step <= 0) {
+      throw new IllegalArgumentException('Both size and step must be greater than zero');
+    }
+
+    $f= function() use($size, $step, $partial) {
+      $it= $this->getIterator();
+      $chunk= [];
+      do {
+
+        // Fetch $size elements and yield them as a chunk
+        while (sizeof($chunk) < $size && $it->valid()) {
+          $chunk[]= $it->current();
+          $it->next();
+        }
+        if ($chunk && $partial || $size === sizeof($chunk)) yield $chunk;
+
+        // Step forward, potentially skipping some elements
+        $s= $step - sizeof($chunk);
+        if ($s > 0) {
+          while ($s-- > 0 && $it->valid()) $it->next();
+          $chunk= [];
+        } else {
+          $chunk= array_slice($chunk, $step);
+        }
+      } while ($it->valid());
+
+      if ($chunk && $partial) yield $chunk;
+    };
+    return new self($f());
+  }
+
   /** @return string */
   public function hashCode() {
     return 'S'.Objects::hashOf($this->elements);

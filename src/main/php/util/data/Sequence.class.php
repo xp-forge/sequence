@@ -647,6 +647,9 @@ class Sequence implements Value, IteratorAggregate {
    * Returns a chunked stream with chunks not exceeding the given size.
    * The last chunk may have a smaller size.
    *
+   * Calling `chunked($n)` is the same as `windowed($n, $n, true)` but
+   * uses a much simpler algorithm internally.
+   *
    * @param  int $size
    * @return self
    * @throws lang.IllegalArgumentException

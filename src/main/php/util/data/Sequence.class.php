@@ -7,18 +7,19 @@ use util\{Comparator, Filter, Objects};
 /**
  * Sequences API for PHP
  *
- * @test xp://util.data.unittest.SequenceTest
- * @test xp://util.data.unittest.SequenceCreationTest
- * @test xp://util.data.unittest.SequenceSortingTest
- * @test xp://util.data.unittest.SequenceCollectionTest
- * @test xp://util.data.unittest.SequenceConcatTest
- * @test xp://util.data.unittest.SequenceFilteringTest
- * @test xp://util.data.unittest.SequenceFlatteningTest
- * @test xp://util.data.unittest.SequenceIteratorTest
- * @test xp://util.data.unittest.SequenceMappingTest
- * @test xp://util.data.unittest.SequenceReductionTest
- * @test xp://util.data.unittest.SequenceResultSetTest
- * @test xp://util.data.unittest.SequenceSkipTest
+ * @test  util.data.unittest.SequenceTest
+ * @test  util.data.unittest.SequenceCreationTest
+ * @test  util.data.unittest.SequenceSortingTest
+ * @test  util.data.unittest.SequenceCollectionTest
+ * @test  util.data.unittest.SequenceConcatTest
+ * @test  util.data.unittest.SequenceFilteringTest
+ * @test  util.data.unittest.SequenceFlatteningTest
+ * @test  util.data.unittest.SequenceIteratorTest
+ * @test  util.data.unittest.SequenceMappingTest
+ * @test  util.data.unittest.SequenceReductionTest
+ * @test  util.data.unittest.SequenceResultSetTest
+ * @test  util.data.unittest.SequenceSkipTest
+ * @test  util.data.unittest.SequenceWindowTest
  */
 class Sequence implements Value, IteratorAggregate {
   public static $EMPTY;
@@ -644,7 +645,7 @@ class Sequence implements Value, IteratorAggregate {
 
   /**
    * Returns a chunked stream with chunks not exceeding the given size.
-   *  The last chunk may have a smaller size.
+   * The last chunk may have a smaller size.
    *
    * @param  int $size
    * @return self

@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 10.2.0 / 2023-02-23
+
 * Merged PR #57: Retrieve collection parts - @thekid
 * Merged PR #55: Migrate test suite - @thekid
 

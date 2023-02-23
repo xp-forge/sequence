@@ -7,18 +7,19 @@ use util\{Comparator, Filter, Objects};
 /**
  * Sequences API for PHP
  *
- * @test xp://util.data.unittest.SequenceTest
- * @test xp://util.data.unittest.SequenceCreationTest
- * @test xp://util.data.unittest.SequenceSortingTest
- * @test xp://util.data.unittest.SequenceCollectionTest
- * @test xp://util.data.unittest.SequenceConcatTest
- * @test xp://util.data.unittest.SequenceFilteringTest
- * @test xp://util.data.unittest.SequenceFlatteningTest
- * @test xp://util.data.unittest.SequenceIteratorTest
- * @test xp://util.data.unittest.SequenceMappingTest
- * @test xp://util.data.unittest.SequenceReductionTest
- * @test xp://util.data.unittest.SequenceResultSetTest
- * @test xp://util.data.unittest.SequenceSkipTest
+ * @test  util.data.unittest.SequenceTest
+ * @test  util.data.unittest.SequenceCreationTest
+ * @test  util.data.unittest.SequenceSortingTest
+ * @test  util.data.unittest.SequenceCollectionTest
+ * @test  util.data.unittest.SequenceConcatTest
+ * @test  util.data.unittest.SequenceFilteringTest
+ * @test  util.data.unittest.SequenceFlatteningTest
+ * @test  util.data.unittest.SequenceIteratorTest
+ * @test  util.data.unittest.SequenceMappingTest
+ * @test  util.data.unittest.SequenceReductionTest
+ * @test  util.data.unittest.SequenceResultSetTest
+ * @test  util.data.unittest.SequenceSkipTest
+ * @test  util.data.unittest.SequenceWindowTest
  */
 class Sequence implements Value, IteratorAggregate {
   public static $EMPTY;
@@ -640,6 +641,79 @@ class Sequence implements Value, IteratorAggregate {
       sort($sort);
     }
     return new self($sort);
+  }
+
+  /**
+   * Returns a chunked stream with chunks not exceeding the given size.
+   * The last chunk may have a smaller size.
+   *
+   * Calling `chunked($n)` is the same as `windowed($n, $n, true)` but
+   * uses a much simpler algorithm internally.
+   *
+   * @param  int $size
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
+  public function chunked($size) {
+    if ($size <= 0) {
+      throw new IllegalArgumentException('Size must be greater than zero');
+    }
+
+    $f= function() use($size) {
+      $chunk= [];
+      foreach ($this->elements as $element) {
+        $chunk[]= $element;
+        if (sizeof($chunk) < $size) continue;
+
+        yield $chunk;
+        $chunk= [];
+      }
+      if ($chunk) yield $chunk;
+    };
+    return new self($f());
+  }
+
+  /**
+   * Returns a sliding window stream - a list of element ranges that you
+   * would see if you were looking at the collection through a sliding
+   * window of the given size. 
+   *
+   * @param  int $size
+   * @param  int $step
+   * @param  bool $partial
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
+  public function windowed($size, $step= 1, $partial= false) {
+    if ($size <= 0 || $step <= 0) {
+      throw new IllegalArgumentException('Both size and step must be greater than zero');
+    }
+
+    $f= function() use($size, $step, $partial) {
+      $it= $this->getIterator();
+      $chunk= [];
+      do {
+
+        // Fetch $size elements and yield them as a chunk
+        while (sizeof($chunk) < $size && $it->valid()) {
+          $chunk[]= $it->current();
+          $it->next();
+        }
+        if ($chunk && $partial || $size === sizeof($chunk)) yield $chunk;
+
+        // Step forward, potentially skipping some elements
+        $s= $step - sizeof($chunk);
+        if ($s > 0) {
+          while ($s-- > 0 && $it->valid()) $it->next();
+          $chunk= [];
+        } else {
+          $chunk= array_slice($chunk, $step);
+        }
+      } while ($it->valid());
+
+      if ($chunk && $partial) yield $chunk;
+    };
+    return new self($f());
   }
 
   /** @return string */

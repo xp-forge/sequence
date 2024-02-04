@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Added PHP 8.3 and 8.4 to the test matrix - @thekid
+
 ## 10.2.0 / 2023-02-23
 
 * Merged PR #57: Retrieve collection parts - @thekid

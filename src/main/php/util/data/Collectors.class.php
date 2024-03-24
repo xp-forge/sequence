@@ -97,10 +97,10 @@ final class Collectors {
    * Creates a new collector gathering the elements in a map.
    *
    * @param  function(var): var $classifier
-   * @param  util.data.ICollector $collector
+   * @param  ?util.data.ICollector $collector
    * @return util.data.ICollector
    */
-  public static function groupingBy($classifier, ICollector $collector= null) {
+  public static function groupingBy($classifier, $collector= null) {
     if (null === $collector) $collector= self::toList();
     $func= Functions::$APPLY->cast($classifier);
     $supplier= $collector->supplier();
@@ -155,9 +155,10 @@ final class Collectors {
    * Creates a new collector gathering the elements in a map.
    *
    * @param  function(var): var $predicate
+   * @param  ?util.data.ICollector $collector
    * @return util.data.ICollector
    */
-  public static function partitioningBy($predicate, ICollector $collector= null) {
+  public static function partitioningBy($predicate, $collector= null) {
     if (null === $collector) $collector= self::toList();
     $func= Functions::$APPLY->cast($predicate);
     $supplier= $collector->supplier();
@@ -181,10 +182,10 @@ final class Collectors {
    * prior to accumulation by the collector.
    *
    * @param  function(var): var $mapper
-   * @param  util.data.ICollector $collector
+   * @param  ?util.data.ICollector $collector
    * @return util.data.ICollector
    */
-  public static function mapping($mapper, ICollector $collector= null) {
+  public static function mapping($mapper, $collector= null) {
     if (null === $collector) $collector= self::toList();
     $func= Functions::$APPLY->newInstance($mapper);
     $accumulator= $collector->accumulator();

@@ -3,10 +3,12 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Fix *Increment on non-numeric string is deprecated* warning in PHP 8.5+
+  (@thekid)
+
 ## 10.3.0 / 2024-03-24
 
 * Made compatible with XP 12 - @thekid
-
 * Added PHP 8.3 and 8.4 to the test matrix - @thekid
 
 ## 10.2.0 / 2023-02-23

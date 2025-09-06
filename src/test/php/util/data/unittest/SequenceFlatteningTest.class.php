@@ -14,7 +14,7 @@ class SequenceFlatteningTest extends AbstractSequenceTest {
   #[Test]
   public function flatten_with_mapper() {
     $this->assertSequence(['a', 'b', 'c', 'd'], Sequence::of(['a', 'c'])->flatten(function($e) {
-      return Sequence::iterate($e, function($n) { return ++$n; })->limit(2);
+      return Sequence::iterate($e, function($n) { return chr(ord($n) + 1); })->limit(2);
     }));
   }
 

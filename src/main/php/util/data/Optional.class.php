@@ -7,7 +7,7 @@ use util\{Filter, Objects};
 /**
  * An optional
  *
- * @test  xp://util.data.unittest.OptionalTest
+ * @test  util.data.unittest.OptionalTest
  */
 class Optional implements Value, IteratorAggregate {
   public static $EMPTY;

@@ -4,7 +4,7 @@
  * Special case of traversal wrapper geared towards generators, where
  * rewind() does not fail until the generator was completely yielded.
  *
- * @test  xp://util.data.unittest.YieldingOfTest
+ * @test  util.data.unittest.YieldingOfTest
  */
 class YieldingOf extends Iterator {
   private $started= false;

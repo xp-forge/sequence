@@ -5,8 +5,8 @@ use util\Comparator;
 /**
  * Aggregations factory
  *
- * @see   xp://util.data.ICollector
- * @test  xp://util.data.unittest.AggregationsTest
+ * @see   util.data.ICollector
+ * @test  util.data.unittest.AggregationsTest
  */
 final class Aggregations {
 

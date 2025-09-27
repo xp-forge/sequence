@@ -6,8 +6,8 @@ use util\XPIterator;
 /**
  * Iterates over Sequence instances
  *
- * @see  xp://util.data.Sequence#iterator
- * @test xp://util.data.unittest.SequenceIteratorTest
+ * @see  util.data.Sequence#iterator
+ * @test util.data.unittest.SequenceIteratorTest
  */
 class SequenceIterator implements XPIterator, IteratorAggregate {
   private $it;

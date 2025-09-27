@@ -5,7 +5,7 @@
  * a util.data.CannotReset exceptions to make it distinguishable from other
  * exceptions.
  *
- * @test  xp://util.data.unittest.TraversalOfTest
+ * @test  util.data.unittest.TraversalOfTest
  */
 class TraversalOf extends Iterator {
 

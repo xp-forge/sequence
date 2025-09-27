@@ -86,7 +86,7 @@ class SequenceCreationTest extends AbstractSequenceTest {
   public function concat_after_mapping() {
     $this->assertSequence(
       [2, 4, 6, 'EOF'],
-      Sequence::of([1, 2, 3])->map(fn($e) => $e * 2)->concat(['EOF'])
+      Sequence::of([1, 2, 3])->map(function($e) { return $e * 2; })->concat(['EOF'])
     );
   }
 

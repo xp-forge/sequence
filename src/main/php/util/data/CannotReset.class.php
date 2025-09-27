@@ -5,7 +5,7 @@ use lang\XPException;
 /**
  * Indicates the underlying value is streamed and cannot be reset
  *
- * @see   xp://util.data.Iterator#rewind
+ * @see   util.data.Iterator#rewind
  */
 class CannotReset extends XPException {
 

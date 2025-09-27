@@ -6,8 +6,8 @@ use util\collections\{HashSet, HashTable, Vector};
 /**
  * Collector factory
  *
- * @see   xp://util.data.ICollector
- * @test  xp://util.data.unittest.CollectorsTest
+ * @see   util.data.ICollector
+ * @test  util.data.unittest.CollectorsTest
  */
 final class Collectors {
 

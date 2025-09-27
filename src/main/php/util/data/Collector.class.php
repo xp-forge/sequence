@@ -3,8 +3,8 @@
 /**
  * Collector
  *
- * @see   xp://util.data.Sequence#collect
- * @test  xp://util.data.unittest.CollectorsTest
+ * @see   util.data.Sequence#collect
+ * @test  util.data.unittest.CollectorsTest
  */
 class Collector implements ICollector {
   protected $supplier;

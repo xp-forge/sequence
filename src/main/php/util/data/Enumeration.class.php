@@ -15,8 +15,8 @@ use util\XPIterator;
  * @see   php://class.traversable
  * @see   php://language.oop5.iterations
  * @see   php://generators
- * @see   xp://util.XPIterator
- * @test  xp://util.data.unittest.EnumerationTest
+ * @see   util.XPIterator
+ * @test  util.data.unittest.EnumerationTest
  */
 abstract class Enumeration {
 

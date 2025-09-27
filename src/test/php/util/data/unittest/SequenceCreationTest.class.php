@@ -8,7 +8,7 @@ use util\data\Sequence;
  * Tests the three Sequence class' creation methods `of()`, `iterate()`
  * and `generate()`.
  *
- * @see  xp://util.data.Sequence
+ * @see  util.data.Sequence
  */
 class SequenceCreationTest extends AbstractSequenceTest {
   use Enumerables;

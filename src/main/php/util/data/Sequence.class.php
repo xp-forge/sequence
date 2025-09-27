@@ -96,6 +96,22 @@ class Sequence implements Value, IteratorAggregate {
   }
 
   /**
+   * Creates a new stream with an enumeration of elements
+   *
+   * @param  ?iterable|util.XPIterator|function(): iterable $enumerable
+   * @return self
+   * @throws lang.IllegalArgumentException if type of elements argument is incorrect
+   */
+  public function concat($enumerable) {
+    $enumeration= Enumeration::of($enumerable);
+    $f= function() use($enumeration) {
+      yield from $this->elements;
+      yield from $enumeration;
+    };
+    return new self($f());
+  }
+
+  /**
    * Returns the first element of this stream, or an empty optional
    *
    * @param  util.Filter|function(var): bool $filter An optional filter

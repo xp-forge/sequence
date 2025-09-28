@@ -73,4 +73,25 @@ class SequenceCreationTest extends AbstractSequenceTest {
   public function multiple_arguments_supported_in_of(... $input) {
     $this->assertSequence([1, 2, 3, 4, 5, 6], Sequence::of(...$input));
   }
+
+  #[Test]
+  public function concat() {
+    $this->assertSequence(
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      Sequence::of([1, 2, 3])->concat([4, 5, 6])->concat([7, 8, 9])
+    );
+  }
+
+  #[Test]
+  public function concat_after_mapping() {
+    $this->assertSequence(
+      [2, 4, 6, 'EOF'],
+      Sequence::of([1, 2, 3])->map(function($e) { return $e * 2; })->concat(['EOF'])
+    );
+  }
+
+  #[Test, Expect(IllegalArgumentException::class)]
+  public function cannot_concat_non_enumerable() {
+    Sequence::$EMPTY->concat('test');
+  }
 }

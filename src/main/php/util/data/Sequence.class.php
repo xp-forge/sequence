@@ -8,10 +8,10 @@ use util\{Comparator, Filter, Objects};
  * Sequences API for PHP
  *
  * @test  util.data.unittest.SequenceTest
- * @test  util.data.unittest.SequenceCreationTest
- * @test  util.data.unittest.SequenceSortingTest
  * @test  util.data.unittest.SequenceCollectionTest
  * @test  util.data.unittest.SequenceConcatTest
+ * @test  util.data.unittest.SequenceCreationTest
+ * @test  util.data.unittest.SequenceExceptTest
  * @test  util.data.unittest.SequenceFilteringTest
  * @test  util.data.unittest.SequenceFlatteningTest
  * @test  util.data.unittest.SequenceIteratorTest
@@ -19,6 +19,7 @@ use util\{Comparator, Filter, Objects};
  * @test  util.data.unittest.SequenceReductionTest
  * @test  util.data.unittest.SequenceResultSetTest
  * @test  util.data.unittest.SequenceSkipTest
+ * @test  util.data.unittest.SequenceSortingTest
  * @test  util.data.unittest.SequenceWindowTest
  */
 class Sequence implements Value, IteratorAggregate {
@@ -424,6 +425,36 @@ class Sequence implements Value, IteratorAggregate {
       };
     }
 
+    return new self($f());
+  }
+
+  /**
+   * Returns a new sequence yielding values except for those passed to this
+   * method. Uses `util.Objects::equal()` to compare values.
+   *
+   * @param  var... $values
+   * @return self
+   */
+  public function except(... $values) {
+    if (empty($values)) {
+      return $this;
+    } else if (1 === sizeof($values)) {
+      $value= current($values);
+      $f= function() use($value) {
+        foreach ($this->elements as $key => $element) {
+          Objects::equal($element, $value) || yield $key => $element;
+        }
+      };
+    } else {
+      $f= function() use($values) {
+        foreach ($this->elements as $key => $element) {
+          foreach ($values as $value) {
+            if (Objects::equal($element, $value)) continue 2;
+          }
+          yield $key => $element;
+        }
+      };
+    }
     return new self($f());
   }
 

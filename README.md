@@ -94,6 +94,7 @@ The following operations return a new `Sequence` instance on which more intermed
 * **limit** - Stops iteration when limit is reached. Using `limit(10)` stops iteration once ten elements have been returned, `limit(function($e) { return 'stop' === $e; })` will stop once the first element equal to the string *stop* is encountered.
 * **filter** - Filters the sequence by a given criterion. The new sequence will only contain values for which it returns true. Accepts a function or a `util.Filter` instance.
 * **map** - Maps each element in the sequence by applying a function on it and returning a new sequence with the return value of that function.
+* **except** - Returns the sequence with all values except the ones given.
 * **peek** - Calls a function for each element in the sequence; especially useful for debugging, e.g. `peek('var_dump', [])`.
 * **counting** - Increments the integer given as its argument for each element in the sequence.
 * **collecting** - Collects elements in this sequence to a `util.data.ICollector` instance. Unlike the terminal operation below, passes the elements on.

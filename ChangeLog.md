@@ -3,6 +3,12 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #59: Add `except()`, returns a sequence with values except
+  those passed
+  (@thekid)
+* Merged PR #58: Add `concat()`, returns a concatenation of the sequence
+  and the given enumerable
+  (@thekid)
 * Fix *Increment on non-numeric string is deprecated* warning in PHP 8.5+
   (@thekid)
 

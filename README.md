@@ -101,6 +101,7 @@ The following operations return a new `Sequence` instance on which more intermed
 * **flatten** - Flattens sequences inside the sequence and returns a new list containing all values from all sequences.
 * **distinct** - Returns a new sequence which only consists of unique elements. Uniqueness is calculated using the `util.Objects::hashOf()` method by default (*but can be passed another function*).
 * **zip** - Combines values from this sequence with a given enumerable value, optionally using a given transformation function.
+* **concat** - Concatenates this sequence with a given enumerable.
 * **sorted** - Returns a sorted collection. Can be invoked with a comparator function, a `util.Comparator` instance or the sort flags from PHP's sort() function (e.g. `SORT_NUMERIC | SORT_DESC`).
 * **chunked** - Returns a chunked stream with chunks not exceeding the given size. The last chunk may have a smaller size.
 * **windowed** - Returns a sliding window stream - a list of element ranges that you would see if you were looking at the collection through a sliding window of the given size.

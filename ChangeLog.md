@@ -3,6 +3,8 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 10.4.0 / 2025-09-28
+
 * Merged PR #59: Add `except()`, returns a sequence with values except
   those passed
   (@thekid)

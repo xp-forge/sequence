@@ -31,4 +31,15 @@ class SequenceKeyByTest {
       Sequence::of([$one, $two])->keyBy(function($r) { return [$r['_id'] => $r['user']['power']]; })
     );
   }
+
+  #[Test]
+  public function key_by_generator() {
+    $one= ['_id' => 'one', 'user' => ['power' => 1000]];
+    $two= ['_id' => 'two', 'user' => ['power' => 2000]];
+
+    Assert::equals(
+      ['one' => 1000, 'two' => 2000],
+      Sequence::of([$one, $two])->keyBy(function($r) { yield $r['_id'] => $r['user']['power']; })
+    );
+  }
 }

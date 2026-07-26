@@ -67,12 +67,12 @@ if ($first->present()) {
 }
 
 $user= $first->orElse($this->currentUser);
-$user= $first->orUse(fn() => $this->currentUser());
+$user= $first->orUse($this->currentUser(...));
 
 $name= $first
   ->filter(fn($user) => $user->isActive())
   ->whenAbsent($this->currentUser)
-  ->whenAbsent(fn() => $this->guestUser())
+  ->whenAbsent($this->guestUser(...))
   ->map('com.example.User::name')
   ->get()
 ;

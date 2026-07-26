@@ -3,6 +3,12 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+## 11.0.0 / ????-??-??
+
+* Dropped support for PHP 7.x - see xp-framework/rfc#343. Mininum required
+  PHP version is now 8.0.0!
+  (@thekid)
+
 ## 10.5.0 / 2026-07-26
 
 * Added PHP 8.6 to the test matrix - @thekid

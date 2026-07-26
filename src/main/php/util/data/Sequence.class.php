@@ -15,6 +15,7 @@ use util\{Comparator, Filter, Objects};
  * @test  util.data.unittest.SequenceFilteringTest
  * @test  util.data.unittest.SequenceFlatteningTest
  * @test  util.data.unittest.SequenceIteratorTest
+ * @test  util.data.unittest.SequenceKeyByTest
  * @test  util.data.unittest.SequenceMappingTest
  * @test  util.data.unittest.SequenceReductionTest
  * @test  util.data.unittest.SequenceResultSetTest
@@ -176,6 +177,39 @@ class Sequence implements Value, IteratorAggregate {
     $return= [];
     foreach ($instance->elements as $key => $element) {
       $return[$key]= $element;
+    }
+    return $return;
+  }
+
+  /**
+   * Keys the results with one of the following:
+   *
+   * - `'key'`: Uses the elements' "key" field as keys, and the whole element as values.
+   * - `['key' => 'name']`: Uses the elements' ID as keys, and the 'name' field as values.
+   * - `fn($e) => yield $e['key'] => $e['name']`: Most flexible approach.
+   *
+   * @param  string|[:string]|(function(var): iterable) $selector
+   * @return [:var]
+   */
+  public function keyBy($selector) {
+    $return= [];
+    if (is_string($selector)) {
+      foreach ($this->elements as $element) {
+        $return[$element[$selector]]= $element;
+      }
+    } else if (is_array($selector)) {
+      $k= key($selector);
+      $v= $selector[$k];
+      foreach ($this->elements as $element) {
+        $return[$element[$k]]= $element[$v];
+      }
+    } else {
+      $mapper= Functions::$APPLY->newInstance($selector);
+      foreach ($this->elements as $element) {
+        foreach ($mapper($element) as $k => $v) {
+          $return[$k]= $v;
+        }
+      }
     }
     return $return;
   }

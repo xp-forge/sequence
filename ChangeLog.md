@@ -3,6 +3,10 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #60: Add `util.data.Sequence::keyBy()` to produce lookup maps
+  keyed by a given selector
+  (@thekid)
+
 ## 10.4.0 / 2025-09-28
 
 * Merged PR #59: Add `except()`, returns a sequence with values except

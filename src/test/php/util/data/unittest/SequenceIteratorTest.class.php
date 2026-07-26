@@ -58,9 +58,7 @@ class SequenceIteratorTest extends AbstractSequenceTest {
     $seq= Sequence::of($input);
     $this->iterated($seq->iterator());
 
-    Assert::throws(CannotReset::class, function() use($seq) {
-      $this->iterated($seq->iterator());
-    });
+    Assert::throws(CannotReset::class, fn() => $this->iterated($seq->iterator()));
   }
 
   #[Test, Values(from: 'validArrays')]

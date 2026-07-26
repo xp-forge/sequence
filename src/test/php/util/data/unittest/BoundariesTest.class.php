@@ -15,8 +15,8 @@ class BoundariesTest extends AbstractSequenceTest {
 
   /** @return iterable */
   private function comparators() {
-    yield [newinstance(Comparator::class, [], ['compare' => function($a, $b) { return $b->compareTo($a); }])];
-    yield [function($a, $b) { return $b->compareTo($a); }];
+    yield [newinstance(Comparator::class, [], ['compare' => fn($a, $b) => $b->compareTo($a)])];
+    yield [fn($a, $b) => $b->compareTo($a)];
   }
 
   #[Test, Values(from: 'values')]

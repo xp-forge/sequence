@@ -13,13 +13,13 @@ class SequenceZipTest extends AbstractSequenceTest {
 
   #[Test]
   public function transform_using_function() {
-    $result= Sequence::of([1, 2, 3, 4])->zip([1, 0, -1, 6], function($a, $b) { return $a - $b; })->toArray();
+    $result= Sequence::of([1, 2, 3, 4])->zip([1, 0, -1, 6], fn($a, $b) => $a - $b)->toArray();
     Assert::equals([0, 2, 4, -2], $result);
   }
 
   #[Test]
   public function create_map_with_generator() {
-    $result= Sequence::of([1, 2, 3, 4])->zip(['a', 'b', 'c', 'd'], function($a, $b) { yield $a => $b; })->toMap();
+    $result= Sequence::of([1, 2, 3, 4])->zip(['a', 'b', 'c', 'd'], fn($a, $b) => yield $a => $b)->toMap();
     Assert::equals([1 => 'a', 2 => 'b', 3 => 'c', 4 => 'd'], $result);
   }
 

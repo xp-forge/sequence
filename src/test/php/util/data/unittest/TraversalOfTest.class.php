@@ -28,9 +28,7 @@ class TraversalOfTest {
     ]));
     $fixture->rewind();
 
-    Assert::throws(CannotReset::class, function() use($fixture) {
-      $fixture->rewind();
-    });
+    Assert::throws(CannotReset::class, fn() => $fixture->rewind());
   }
 
   #[Test]
@@ -44,8 +42,6 @@ class TraversalOfTest {
     ]));
     $fixture->rewind();
 
-    Assert::throws(IllegalStateException::class, function() use($fixture) {
-      $fixture->current();
-    });
+    Assert::throws(IllegalStateException::class, fn() => $fixture->current());
   }
 }

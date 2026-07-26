@@ -24,9 +24,7 @@ class YieldingOfTest {
     $fixture= new YieldingOf($generator());
     $fixture->rewind();
 
-    Assert::throws(CannotReset::class, function() use($fixture) {
-      $fixture->rewind();
-    });
+    Assert::throws(CannotReset::class, fn() => $fixture->rewind());
   }
 
   #[Test, Values(from: 'fixtures')]
@@ -34,8 +32,6 @@ class YieldingOfTest {
     $fixture= new YieldingOf($generator());
     iterator_to_array($fixture);
 
-    Assert::throws(CannotReset::class, function() use($fixture) {
-      $fixture->rewind();
-    });
+    Assert::throws(CannotReset::class, fn() => $fixture->rewind());
   }
 }

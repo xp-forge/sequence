@@ -9,7 +9,7 @@ class SequenceMappingTest extends AbstractSequenceTest {
 
   #[Test]
   public function with_function() {
-    $this->assertSequence([2, 4, 6, 8], Sequence::of([1, 2, 3, 4])->map(function($e) { return $e * 2; }));
+    $this->assertSequence([2, 4, 6, 8], Sequence::of([1, 2, 3, 4])->map(fn($e) => $e * 2));
   }
 
   #[Test]
@@ -54,14 +54,14 @@ class SequenceMappingTest extends AbstractSequenceTest {
   #[Test]
   public function with_generator() {
     $records= Sequence::of([['unit' => 'yellow', 'amount' => 20], ['unit' => 'blue', 'amount' => 19]]);
-    $generator= function($record) { yield $record['unit'] => $record['amount']; };
+    $generator= fn($record) => yield $record['unit'] => $record['amount'];
     Assert::equals(['yellow' => 20, 'blue' => 19], $records->map($generator)->toMap());
   }
 
   #[Test]
   public function with_generator_and_key() {
     $records= Sequence::of(['color' => 'green', 'price' => 12.99]);
-    $generator= function($value, $key) { yield strtoupper($key) => $value; };
+    $generator= fn($value, $key) => yield strtoupper($key) => $value;
     Assert::equals(['COLOR' => 'green', 'PRICE' => 12.99], $records->map($generator)->toMap());
   }
 }

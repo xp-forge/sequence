@@ -25,7 +25,7 @@ class CollectorsTest {
   /** @return var[][] */
   private function employeesName() {
     return [
-      [function($e) { return $e->name(); }],
+      [fn($e) => $e->name()],
       [[Employee::class, 'name']]
     ];
   }
@@ -33,7 +33,7 @@ class CollectorsTest {
   /** @return var[][] */
   private function employeesDepartment() {
     return [
-      [function($e) { return $e->department(); }],
+      [fn($e) => $e->department()],
       [[Employee::class, 'department']]
     ];
   }
@@ -41,7 +41,7 @@ class CollectorsTest {
   /** @return var[][] */
   private function employeesYears() {
     return [
-      [function($e) { return $e->years(); }],
+      [fn($e) => $e->years()],
       [[Employee::class, 'years']]
     ];
   }
@@ -49,7 +49,7 @@ class CollectorsTest {
   /** @return var[][] */
   private function dinosaurEmployees() {
     return [
-      [function($e) { return $e->years() > 10; }],
+      [fn($e) => $e->years() > 10],
       [[Employee::class, 'isDinosaur']]
     ];
   }
@@ -105,7 +105,7 @@ class CollectorsTest {
     $map[6100]= 'Dude';
 
     Assert::equals($map, Sequence::of($this->people)->collect(Collectors::toMap(
-      function($e) { return $e->id(); },
+      fn($e) => $e->id(),
       $nameOf
     )));
   }
@@ -145,7 +145,7 @@ class CollectorsTest {
   #[Test]
   public function collect_with_key() {
     $result= Sequence::of(['color' => 'green', 'price' => 12.99])->collect(new Collector(
-      function() { return []; },
+      fn() => [],
       function(&$result, $arg, $key) { $result[strtoupper($key)]= $arg; }
     ));
     Assert::equals(['COLOR' => 'green', 'PRICE' => 12.99], $result);
@@ -198,7 +198,7 @@ class CollectorsTest {
   #[Test]
   public function joining_names() {
     Assert::equals('Timm, Alex, Dude', Sequence::of($this->people)
-      ->map(function($e) { return $e->name(); })
+      ->map(fn($e) => $e->name())
       ->collect(Collectors::joining())
     );
   }
@@ -206,7 +206,7 @@ class CollectorsTest {
   #[Test]
   public function joining_names_with_semicolon() {
     Assert::equals('Timm;Alex;Dude', Sequence::of($this->people)
-      ->map(function($e) { return $e->name(); })
+      ->map(fn($e) => $e->name())
       ->collect(Collectors::joining(';'))
     );
   }
@@ -214,7 +214,7 @@ class CollectorsTest {
   #[Test]
   public function joining_names_with_prefix_and_suffix() {
     Assert::equals('(Timm, Alex, Dude)', Sequence::of($this->people)
-      ->map(function($e) { return $e->name(); })
+      ->map(fn($e) => $e->name())
       ->collect(Collectors::joining(', ', '(', ')'))
     );
   }
@@ -234,8 +234,8 @@ class CollectorsTest {
   #[Test]
   public function groupingBy_with_summing_of_years() {
     $collector= Collectors::groupingBy(
-      function($e) { return $e->department(); },
-      Collectors::summing(function($e) { return $e->years(); })
+      fn($e) => $e->department(),
+      Collectors::summing(fn($e) => $e->years())
     );
     Assert::that(Sequence::of($this->people)->collect($collector))
       ->mappedBy([$this, 'map'])
@@ -246,8 +246,8 @@ class CollectorsTest {
   #[Test]
   public function groupingBy_with_averaging_of_years() {
     $collector= Collectors::groupingBy(
-      function($e) { return $e->department(); },
-      Collectors::averaging(function($e) { return $e->years(); })
+      fn($e) => $e->department(),
+      Collectors::averaging(fn($e) => $e->years())
     );
     Assert::that(Sequence::of($this->people)->collect($collector))
       ->mappedBy([$this, 'map'])
@@ -269,7 +269,7 @@ class CollectorsTest {
 
   #[Test]
   public function partitioningBy_handles_non_booleans() {
-    $collector= Collectors::partitioningBy(function($e) { return stristr($e, 'Test'); });
+    $collector= Collectors::partitioningBy(fn($e) => stristr($e, 'Test'));
     Assert::that(Sequence::of(['Test', 'Unittest', 'Trial & Error'])->collect($collector))
       ->mappedBy([$this, 'map'])
       ->isEqualTo([
@@ -283,7 +283,7 @@ class CollectorsTest {
   public function collecting_with_key() {
     Sequence::of($this->people)
       ->collecting($result, new Collector(
-        function() { return []; },
+        fn() => [],
         function(&$return, $element, $key) { $return[$element->department()][]= $key; }
       ))
       ->each()

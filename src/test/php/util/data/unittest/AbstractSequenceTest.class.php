@@ -32,7 +32,7 @@ abstract class AbstractSequenceTest {
    */
   protected function unaryops() {
     return [
-      [function($in) { return $in; }, 'closure'],
+      [fn($in) => $in, 'closure'],
       [[$this, 'unaryop'], 'method'],
       [[Methods::class, 'unaryop'], 'static-method'],
       ['util.data.unittest.Methods::unaryop', 'static-method-string'],

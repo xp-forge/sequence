@@ -2,7 +2,6 @@
 
 use io\streams\MemoryOutputStream;
 use lang\IllegalArgumentException;
-use test\verify\Runtime;
 use test\{Action, Assert, Expect, Test, Values};
 use util\cmd\Console;
 use util\data\Sequence;
@@ -18,7 +17,7 @@ class PeekTest extends AbstractSequenceTest {
   public function values() {
     $debug= [];
     Sequence::of([1, 2, 3, 4])
-      ->filter(function($e) { return $e % 2 > 0; })
+      ->filter(fn($e) => $e % 2 > 0)
       ->peek(function($e) use(&$debug) { $debug[]= $e; })
       ->each()
     ;
@@ -29,7 +28,7 @@ class PeekTest extends AbstractSequenceTest {
   public function keys() {
     $debug= [];
     Sequence::of([1, 2, 3, 4])
-      ->filter(function($e) { return $e % 2 > 0; })
+      ->filter(fn($e) => $e % 2 > 0)
       ->peek(function($e, $key) use(&$debug) { $debug[]= $key; })
       ->each()
     ;
@@ -73,8 +72,8 @@ class PeekTest extends AbstractSequenceTest {
     Sequence::of([])->peek($noncallable);
   }
 
-  #[Test, Runtime(php: '>=7.1.0')]
+  #[Test]
   public function each_with_void() {
-    Assert::equals(4, Sequence::of([1, 2, 3, 4])->peek(eval('return function(int $e): void { };'))->each());
+    Assert::equals(4, Sequence::of([1, 2, 3, 4])->peek(function(int $e): void { })->each());
   }
 }

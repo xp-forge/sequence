@@ -9,7 +9,7 @@ class SequenceFilteringTest extends AbstractSequenceTest {
 
   #[Test]
   public function with_function() {
-    $this->assertSequence([2, 4], Sequence::of([1, 2, 3, 4])->filter(function($e) { return 0 === $e % 2; }));
+    $this->assertSequence([2, 4], Sequence::of([1, 2, 3, 4])->filter(fn($e) => 0 === $e % 2));
   }
 
   #[Test]
@@ -20,14 +20,14 @@ class SequenceFilteringTest extends AbstractSequenceTest {
   #[Test]
   public function with_filter_instance() {
     $this->assertSequence(['Hello', 'World'], Sequence::of(['Hello', '', 'World'])->filter(newinstance(Filter::class, [], [
-      'accept' => function($e) { return strlen($e) > 0; }
+      'accept' => fn($e) => strlen($e) > 0
     ])));
   }
 
   #[Test]
   public function with_generic_filter_instance() {
     $this->assertSequence(['Hello', 'World'], Sequence::of(['Hello', '', 'World'])->filter(newinstance('util.Filter<string>', [], [
-      'accept' => function($e) { return strlen($e) > 0; }
+      'accept' => fn($e) => strlen($e) > 0
     ])));
   }
 

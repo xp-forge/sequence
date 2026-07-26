@@ -113,7 +113,7 @@ trait Enumerables {
     return [
       [''], ['...'], [-1], [0], [1], [0.5], [false], [true],
       [new Name('...')],
-      [function() { return 1; }]
+      [fn() => 1]
     ];
   }
 }

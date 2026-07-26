@@ -18,8 +18,7 @@ class SequenceTest extends AbstractSequenceTest {
    */
   protected function assertNotTwice($seq, $func) {
     $func($seq);
-
-    Assert::that(function() use($seq, $func) { $func($seq); })->throws(CannotReset::class);
+    Assert::that(fn() => $func($seq))->throws(CannotReset::class);
   }
 
   #[Test]
@@ -41,7 +40,7 @@ class SequenceTest extends AbstractSequenceTest {
   public function toArray_optionally_accepts_mapper() {
     Assert::equals(
       [2, 4],
-      Sequence::of([1, 2])->toArray(function($v) { return $v * 2; })
+      Sequence::of([1, 2])->toArray(fn($v) => $v * 2)
     );
   }
 
@@ -59,7 +58,7 @@ class SequenceTest extends AbstractSequenceTest {
   public function toMap_optionally_accepts_mapper() {
     Assert::equals(
       ['a' => 2, 'b' => 4],
-      Sequence::of(['a' => 1, 'b' => 2])->toMap(function($v) { return $v * 2; })
+      Sequence::of(['a' => 1, 'b' => 2])->toMap(fn($v) => $v * 2)
     );
   }
 
@@ -85,12 +84,12 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[Test]
   public function first_returns_first_element_to_match_its_filter() {
-    Assert::equals(2, Sequence::of([1, 2, 3])->first(function($i) { return 0 === $i % 2; })->get());
+    Assert::equals(2, Sequence::of([1, 2, 3])->first(fn($i) => 0 === $i % 2)->get());
   }
 
   #[Test]
   public function first_returns_non_present_optional_if_no_element_matches_its_filter() {
-    Assert::false(Sequence::of([1, 3])->first(function($i) { return 0 === $i % 2; })->present());
+    Assert::false(Sequence::of([1, 3])->first(fn($i) => 0 === $i % 2)->present());
   }
 
   #[Test]
@@ -110,16 +109,12 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[Test]
   public function single_throws_if_more_than_one_element_is_contained() {
-    Assert::throws(TooManyElements::class, function() {
-      Sequence::of([1, 2])->single();
-    });
+    Assert::throws(TooManyElements::class, fn() => Sequence::of([1, 2])->single());
   }
 
   #[Test]
   public function get_single_throws_if_empty() {
-    Assert::throws(NoSuchElement::class, function() {
-      Sequence::of([])->single()->get();
-    });
+    Assert::throws(NoSuchElement::class, fn() => Sequence::of([])->single()->get());
   }
 
   #[Test]
@@ -137,10 +132,9 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[Test]
   public function distinct_with_function() {
-    $function= function($record) { return $record['id']; };
     $this->assertSequence(
       [['id' => 1, 'name' => 'Timm']],
-      Sequence::of([['id' => 1, 'name' => 'Timm'], ['id' => 1]])->distinct($function)
+      Sequence::of([['id' => 1, 'name' => 'Timm'], ['id' => 1]])->distinct(fn($record) => $record['id'])
     );
   }
 
@@ -165,48 +159,48 @@ class SequenceTest extends AbstractSequenceTest {
 
   #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_toArray_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
-    $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->toArray(); });
+    $this->assertNotTwice(Sequence::of($input), fn($seq) => $seq->toArray());
   }
 
   #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_each_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
-    $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->each(); });
+    $this->assertNotTwice(Sequence::of($input), fn($seq) => $seq->each());
   }
 
   #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_first_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
-    $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->first(); });
+    $this->assertNotTwice(Sequence::of($input), fn($seq) => $seq->first());
   }
 
   #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_count_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
-    $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->count(); });
+    $this->assertNotTwice(Sequence::of($input), fn($seq) => $seq->count());
   }
 
   #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_min_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
-    $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->min(); });
+    $this->assertNotTwice(Sequence::of($input), fn($seq) => $seq->min());
   }
 
   #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_max_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
-    $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->max(); });
+    $this->assertNotTwice(Sequence::of($input), fn($seq) => $seq->max());
   }
 
   #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_collect_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
-    $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->collect(new Collector(
-      function() { return 0; },
+    $this->assertNotTwice(Sequence::of($input), fn($seq) => $seq->collect(new Collector(
+      fn() => 0,
       function(&$r, $e) { /* Intentionally empty */ }
-    )); });
+    )));
   }
 
   #[Test, Values(from: 'streamedArrays')]
   public function cannot_use_reduce_on_a_sequence_based_on_a_streamed_enumerable_twice($input) {
-    $this->assertNotTwice(Sequence::of($input), function($seq) { $seq->reduce(
+    $this->assertNotTwice(Sequence::of($input), fn($seq) => $seq->reduce(
       0,
-      function($r, $e) { /* Intentionally empty */ });
-    });
+      function($r, $e) { /* Intentionally empty */ })
+    );
   }
 
   #[Test]

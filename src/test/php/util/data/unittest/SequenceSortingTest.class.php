@@ -21,7 +21,7 @@ class SequenceSortingTest extends AbstractSequenceTest {
     $this->assertSequence(
       [new Date('1977-12-14'), new Date('1979-12-29')],
       Sequence::of([new Date('1979-12-29'), new Date('1977-12-14')])->sorted(newinstance(Comparator::class, [], [
-        'compare' => function($a, $b) { return $b->compareTo($a); }
+        'compare' => fn($a, $b) => $b->compareTo($a)
       ]))
     );
   }
@@ -39,7 +39,7 @@ class SequenceSortingTest extends AbstractSequenceTest {
     $this->assertSequence(
       ['rfc1.txt', 'rfc822.txt', 'rfc2086.txt'],
       Sequence::of(['rfc1.txt', 'rfc2086.txt', 'rfc822.txt'])->sorted(
-        function($a, $b) { return strnatcasecmp($a, $b); }
+        fn($a, $b) => strnatcasecmp($a, $b)
       ),
       'http://sourcefrog.net/projects/natsort/'
     );

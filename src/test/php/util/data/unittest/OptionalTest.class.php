@@ -11,8 +11,8 @@ class OptionalTest {
   private function emptyValues() {
     yield [null];
     yield [Optional::$EMPTY];
-    yield [function() { return null; }];
-    yield [function() { return Optional::$EMPTY; }];
+    yield [fn() => null];
+    yield [fn() => Optional::$EMPTY];
   }
 
   #[Test]
@@ -52,14 +52,12 @@ class OptionalTest {
 
   #[Test]
   public function orUse_returns_value_passed_to_of() {
-    Assert::equals('Test', Optional::of('Test')->orUse(function() {
-      throw new IllegalStateException('Not reached');
-    }));
+    Assert::equals('Test', Optional::of('Test')->orUse(fn() => throw new IllegalStateException('Not reached')));
   }
 
   #[Test]
   public function orUse_invokes_supplier_when_no_value_is_present() {
-    Assert::equals('Succeeded', Optional::$EMPTY->orUse(function() { return 'Succeeded'; }));
+    Assert::equals('Succeeded', Optional::$EMPTY->orUse(fn() => 'Succeeded'));
   }
 
   #[Test]
@@ -79,7 +77,7 @@ class OptionalTest {
 
   #[Test]
   public function whenAbsent_returns_functions_return_value_when_no_value_is_present() {
-    Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent(function() { return 'Succeeded'; })->get());
+    Assert::equals('Succeeded', Optional::$EMPTY->whenAbsent(fn() => 'Succeeded')->get());
   }
 
   #[Test, Values(from: 'emptyValues')]

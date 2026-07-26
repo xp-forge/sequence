@@ -37,7 +37,7 @@ class EnumerationTest {
   #[Test]
   public function lazy_init_via_function() {
     $result= [];
-    foreach (Enumeration::of(function() { return [1, 2, 3]; }) as $value) {
+    foreach (Enumeration::of(fn() => [1, 2, 3]) as $value) {
       $result[]= $value;
     }
     Assert::equals([1, 2, 3], $result);

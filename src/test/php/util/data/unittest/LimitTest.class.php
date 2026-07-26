@@ -12,7 +12,7 @@ class LimitTest extends AbstractSequenceTest {
 
   #[Test]
   public function stops_at_nth_iterator_element() {
-    $this->assertSequence([1, 2], Sequence::iterate(1, function($i) { return ++$i; })->limit(2));
+    $this->assertSequence([1, 2], Sequence::iterate(1, fn($i) => ++$i)->limit(2));
   }
 
   #[Test]
@@ -23,12 +23,12 @@ class LimitTest extends AbstractSequenceTest {
 
   #[Test]
   public function stops_when_given_closure_returns_true() {
-    $this->assertSequence([1, 2], Sequence::of([1, 2, 3, 4])->limit(function($e) { return $e > 2; }));
+    $this->assertSequence([1, 2], Sequence::of([1, 2, 3, 4])->limit(fn($e) => $e > 2));
   }
 
   #[Test]
   public function receives_offset() {
-    $this->assertSequence([1, 2], Sequence::of([1, 2, 3, 4])->limit(function($e, $offset) { return $offset >= 2; }));
+    $this->assertSequence([1, 2], Sequence::of([1, 2, 3, 4])->limit(fn($e, $offset) => $offset >= 2));
   }
 
   #[Test]

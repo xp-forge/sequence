@@ -28,7 +28,7 @@ class SequenceKeyByTest {
 
     Assert::equals(
       ['one' => 1000, 'two' => 2000],
-      Sequence::of([$one, $two])->keyBy(function($r) { return [$r['_id'] => $r['user']['power']]; })
+      Sequence::of([$one, $two])->keyBy(fn($r) => [$r['_id'] => $r['user']['power']])
     );
   }
 
@@ -39,7 +39,7 @@ class SequenceKeyByTest {
 
     Assert::equals(
       ['one' => 1000, 'two' => 2000],
-      Sequence::of([$one, $two])->keyBy(function($r) { yield $r['_id'] => $r['user']['power']; })
+      Sequence::of([$one, $two])->keyBy(fn($r) => yield $r['_id'] => $r['user']['power'])
     );
   }
 }

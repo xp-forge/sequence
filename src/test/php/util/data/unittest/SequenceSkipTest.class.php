@@ -12,12 +12,12 @@ class SequenceSkipTest extends AbstractSequenceTest {
 
   #[Test]
   public function excludes_elements_when_given_closure_returns_true() {
-    $this->assertSequence([3, 4], Sequence::of([1, 2, 3, 4])->skip(function($e) { return $e < 3; }));
+    $this->assertSequence([3, 4], Sequence::of([1, 2, 3, 4])->skip(fn($e) => $e < 3));
   }
 
   #[Test]
   public function receives_offset() {
-    $this->assertSequence([3, 4], Sequence::of([1, 2, 3, 4])->skip(function($e, $offset) { return $offset < 2; }));
+    $this->assertSequence([3, 4], Sequence::of([1, 2, 3, 4])->skip(fn($e, $offset) => $offset < 2));
   }
 
   #[Test]

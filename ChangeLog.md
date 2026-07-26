@@ -3,6 +3,7 @@ Data sequences change log
 
 ## ?.?.? / ????-??-??
 
+* Added PHP 8.6 to the test matrix - @thekid
 * Merged PR #60: Add `util.data.Sequence::keyBy()` to produce lookup maps
   keyed by a given selector
   (@thekid)

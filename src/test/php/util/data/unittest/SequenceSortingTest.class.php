@@ -6,7 +6,11 @@ use util\{Comparator, Date};
 
 class SequenceSortingTest extends AbstractSequenceTest {
 
-  #[Test, Values([[[-1, 1, 2, 6, 8, 11, 6100], [6100, 1, -1, 2, 8, 6, 11]], [['A', 'a', 'b', 'c'], ['c', 'a', 'A', 'b']], [['a100', 'a2', 'a20', 'b1', 'b2'], ['a2', 'a100', 'b1', 'a20', 'b2']]])]
+  #[Test, Values([
+    [[-1, 1, 2, 6, 8, 11, 6100], [6100, 1, -1, 2, 8, 6, 11]],
+    [['A', 'a', 'b', 'c'], ['c', 'a', 'A', 'b']],
+    [['a100', 'a2', 'a20', 'b1', 'b2'], ['a2', 'a100', 'b1', 'a20', 'b2']]
+  ])]
   public function sorted($result, $input) {
     $this->assertSequence($result, Sequence::of($input)->sorted());
   }

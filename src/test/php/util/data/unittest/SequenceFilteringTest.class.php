@@ -45,14 +45,20 @@ class SequenceFilteringTest extends AbstractSequenceTest {
   #[Test]
   public function array_index_is_passed_to_function() {
     $keys= [];
-    Sequence::of([1, 2, 3])->filter(function($e, $key) use(&$keys) { $keys[]= $key; return true; })->each();
+    Sequence::of([1, 2, 3])
+      ->filter(function($e, $key) use(&$keys) { $keys[]= $key; return true; })
+      ->each()
+    ;
     Assert::equals([0, 1, 2], $keys);
   }
 
   #[Test]
   public function map_key_is_passed_to_function() {
     $keys= [];
-    Sequence::of(['one' => 1, 'two' => 2, 'three' => 3])->filter(function($e, $key) use(&$keys) { $keys[]= $key; return true; })->each();
+    Sequence::of(['one' => 1, 'two' => 2, 'three' => 3])
+      ->filter(function($e, $key) use(&$keys) { $keys[]= $key; return true; })
+      ->each()
+    ;
     Assert::equals(['one', 'two', 'three'], $keys);
   }
 }

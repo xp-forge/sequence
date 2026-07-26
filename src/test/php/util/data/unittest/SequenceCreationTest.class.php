@@ -69,7 +69,12 @@ class SequenceCreationTest extends AbstractSequenceTest {
     $this->assertSequence([1, 2, 3], Sequence::of($sequence));
   }
 
-  #[Test, Values([[[1, 2, 3, 4, 5, 6]], [[1, 2, 3], [4, 5, 6]], [[1], [2, 3], [4, 5, 6]], [[1, 2], null, [3, 4, 5, 6]]])]
+  #[Test, Values([
+    [[1, 2, 3, 4, 5, 6]],
+    [[1, 2, 3], [4, 5, 6]],
+    [[1], [2, 3], [4, 5, 6]],
+    [[1, 2], null, [3, 4, 5, 6]]
+  ])]
   public function multiple_arguments_supported_in_of(... $input) {
     $this->assertSequence([1, 2, 3, 4, 5, 6], Sequence::of(...$input));
   }

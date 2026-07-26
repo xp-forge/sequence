@@ -2,7 +2,6 @@
 
 use io\streams\MemoryOutputStream;
 use lang\IllegalArgumentException;
-use test\verify\Runtime;
 use test\{Action, Assert, Expect, Test, Values};
 use util\cmd\Console;
 use util\data\Sequence;
@@ -82,8 +81,8 @@ class EachTest extends AbstractSequenceTest {
     Sequence::of([])->each(null, []);
   }
 
-  #[Test, Runtime(php: '>=7.1.0')]
+  #[Test]
   public function each_with_void() {
-    Assert::equals(4, Sequence::of([1, 2, 3, 4])->each(eval('return function(int $e): void { };')));
+    Assert::equals(4, Sequence::of([1, 2, 3, 4])->each(function(int $e): void { }));
   }
 }

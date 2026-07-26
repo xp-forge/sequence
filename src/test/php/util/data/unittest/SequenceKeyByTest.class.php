@@ -13,7 +13,10 @@ class SequenceKeyByTest {
     Assert::equals(['one' => $one, 'two' => $two], Sequence::of([$one, $two])->keyBy('_id'));
   }
 
-  #[Test, Values([[['_id' => 'power'], ['one' => 1000, 'two' => 2000]], [['power' => '_id'], [1000 => 'one',  2000 => 'two']]])]
+  #[Test, Values([
+    [['_id' => 'power'], ['one' => 1000, 'two' => 2000]],
+    [['power' => '_id'], [1000 => 'one',  2000 => 'two']]
+  ])]
   public function key_by_map($fields, $expected) {
     $one= ['_id' => 'one', 'power' => 1000];
     $two= ['_id' => 'two', 'power' => 2000];

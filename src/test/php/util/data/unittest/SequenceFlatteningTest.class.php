@@ -31,14 +31,20 @@ class SequenceFlatteningTest extends AbstractSequenceTest {
   #[Test]
   public function array_index_is_passed_to_function() {
     $keys= [];
-    Sequence::of([['a', 'b'], ['c', 'd']])->flatten(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->each();
+    Sequence::of([['a', 'b'], ['c', 'd']])
+      ->flatten(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })
+      ->each()
+    ;
     Assert::equals([0, 1], $keys);
   }
 
   #[Test]
   public function map_key_is_passed_to_function() {
     $keys= [];
-    Sequence::of(['one' => [1], 'two' => [2], 'three' => [3]])->flatten(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })->each();
+    Sequence::of(['one' => [1], 'two' => [2], 'three' => [3]])
+      ->flatten(function($e, $key) use(&$keys) { $keys[]= $key; return $e; })
+      ->each()
+    ;
     Assert::equals(['one', 'two', 'three'], $keys);
   }
 
